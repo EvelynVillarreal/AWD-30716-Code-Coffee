@@ -1,0 +1,39 @@
+﻿{
+    "project_url":  "https://luzlnnndzhpilgxacnim.supabase.co",
+    "branches_count":  5,
+    "branches":  {
+                     "value":  [
+                                   {
+                                       "id":  1,
+                                       "name":  "Matriz",
+                                       "director_name":  "Juan Pablo Hidalgo",
+                                       "matrix_share_percent":  0.00
+                                   },
+                                   {
+                                       "id":  2,
+                                       "name":  "Norte",
+                                       "director_name":  "Pending validation",
+                                       "matrix_share_percent":  15.00
+                                   },
+                                   {
+                                       "id":  3,
+                                       "name":  "Quitumbe",
+                                       "director_name":  "Pending validation",
+                                       "matrix_share_percent":  15.00
+                                   },
+                                   {
+                                       "id":  4,
+                                       "name":  "Conocoto",
+                                       "director_name":  "Pending validation",
+                                       "matrix_share_percent":  15.00
+                                   },
+                                   {
+                                       "id":  5,
+                                       "name":  "Tumbaco",
+                                       "director_name":  "Pending validation",
+                                       "matrix_share_percent":  15.00
+                                   }
+                               ],
+                     "Count":  5
+                 }
+}

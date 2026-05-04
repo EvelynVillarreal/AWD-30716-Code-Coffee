@@ -1,0 +1,49 @@
+@startuml
+title American Latin Class - Use Case Diagram
+left to right direction
+
+actor Visitor
+actor Student
+actor Parent
+actor Teacher
+actor "Branch Director" as BranchDirector
+actor "General Director" as GeneralDirector
+actor Administrator
+
+rectangle "American Latin Class System" {
+  usecase "View landing page" as UC1
+  usecase "Submit enrollment request" as UC2
+  usecase "View student attendance summary" as UC3
+  usecase "Submit monthly class plan" as UC4
+  usecase "Register student attendance" as UC5
+  usecase "Register teacher attendance" as UC6
+  usecase "Manage students and scholarships" as UC7
+  usecase "Review branch finance" as UC8
+  usecase "Report income and expenses" as UC9
+  usecase "Manage B2 professional events" as UC10
+  usecase "Calculate dancer settlement" as UC11
+  usecase "Manage users and roles" as UC12
+}
+
+Visitor --> UC1
+Visitor --> UC2
+Parent --> UC3
+Student --> UC3
+Teacher --> UC4
+Teacher --> UC5
+BranchDirector --> UC6
+BranchDirector --> UC8
+BranchDirector --> UC9
+BranchDirector --> UC10
+Administrator --> UC7
+Administrator --> UC10
+Administrator --> UC11
+Administrator --> UC12
+GeneralDirector --> UC8
+GeneralDirector --> UC9
+GeneralDirector --> UC10
+GeneralDirector --> UC11
+GeneralDirector --> UC12
+
+@enduml
+

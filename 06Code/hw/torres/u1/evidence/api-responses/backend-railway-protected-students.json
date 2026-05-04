@@ -1,0 +1,5 @@
+﻿{
+    "endpoint":  "/api/students",
+    "status":  401,
+    "protected":  true
+}

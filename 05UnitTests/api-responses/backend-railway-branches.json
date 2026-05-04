@@ -1,0 +1,49 @@
+﻿{
+    "data":  [
+                 {
+                     "id":  4,
+                     "name":  "Conocoto",
+                     "director_name":  "Pending validation",
+                     "co_director_name":  "Pending validation",
+                     "matrix_share_percent":  "15.00",
+                     "created_at":  "2026-05-03T05:40:36.838435Z",
+                     "updated_at":  "2026-05-03T05:40:36.838435Z"
+                 },
+                 {
+                     "id":  1,
+                     "name":  "Matriz",
+                     "director_name":  "Juan Pablo Hidalgo",
+                     "co_director_name":  "Pending validation",
+                     "matrix_share_percent":  "0.00",
+                     "created_at":  "2026-05-03T05:40:36.838435Z",
+                     "updated_at":  "2026-05-03T05:40:36.838435Z"
+                 },
+                 {
+                     "id":  2,
+                     "name":  "Norte",
+                     "director_name":  "Pending validation",
+                     "co_director_name":  "Pending validation",
+                     "matrix_share_percent":  "15.00",
+                     "created_at":  "2026-05-03T05:40:36.838435Z",
+                     "updated_at":  "2026-05-03T05:40:36.838435Z"
+                 },
+                 {
+                     "id":  3,
+                     "name":  "Quitumbe",
+                     "director_name":  "Pending validation",
+                     "co_director_name":  "Pending validation",
+                     "matrix_share_percent":  "15.00",
+                     "created_at":  "2026-05-03T05:40:36.838435Z",
+                     "updated_at":  "2026-05-03T05:40:36.838435Z"
+                 },
+                 {
+                     "id":  5,
+                     "name":  "Tumbaco",
+                     "director_name":  "Pending validation",
+                     "co_director_name":  "Pending validation",
+                     "matrix_share_percent":  "15.00",
+                     "created_at":  "2026-05-03T05:40:36.838435Z",
+                     "updated_at":  "2026-05-03T05:40:36.838435Z"
+                 }
+             ]
+}

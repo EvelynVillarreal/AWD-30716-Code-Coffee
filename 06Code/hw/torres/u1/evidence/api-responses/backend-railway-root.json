@@ -1,0 +1,24 @@
+﻿{
+    "project":  "American Latin Class Backend API",
+    "framework":  "Slim 4",
+    "orm":  "Eloquent ORM",
+    "database":  "Supabase PostgreSQL",
+    "health":  "/api/health",
+    "public_endpoints":  [
+                             "/api/health",
+                             "/api/branches",
+                             "/api/enrollments",
+                             "/api/auth/login",
+                             "/api/kiosk/attendance"
+                         ],
+    "protected_endpoints":  [
+                                "/api/me",
+                                "/api/me/attendance",
+                                "/api/students",
+                                "/api/class-plans",
+                                "/api/attendance-records",
+                                "/api/professional-events",
+                                "/api/branch-finance-reports",
+                                "/api/dancer-settlements/{studentId}"
+                            ]
+}

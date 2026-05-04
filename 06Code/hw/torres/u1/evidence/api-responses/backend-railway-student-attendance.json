@@ -1,0 +1,11 @@
+﻿{
+    "month":  "2026-05",
+    "summary":  {
+                    "total":  1,
+                    "present":  1,
+                    "late":  0,
+                    "absent":  0,
+                    "excused":  0
+                },
+    "records":  1
+}

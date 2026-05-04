@@ -1,0 +1,20 @@
+Esta materia de la carrera es DESARROLLO WEB AVANZADO
+lo dirige el ingeniero Edison Lascano
+
+Proyecto escogido para la asignatura:
+
+Hemos decidido junto a mi compañera de proyecto (Evelyn Villarreal) desarrollar como proyecto de la materia un sistema web de gestión de estudiantes y de gestión de agencia para una academia de baile llamada "American Latin Class".
+
+
+tenemos una previa a los requisitos en el documento que se encuentra dentro de esta carpeta el archivo se llama: "american_latin_class_requisitos_elicitados".
+
+
+el objetivo real de todo el proyecto es ir aprendiendo en el camino todo lo necesario, para eso el ingeniero nos ira pidiendo diferentes actividades a cumplir, como crear formularios, conectar apis, conectarnos a bases de datos entre otras cosas.
+
+
+Mi nombre es Alexander Torres.
+
+Todo los trabajos de este proyecto deben estar bien hechos siguiendo reglas estrictas del libro "clean code" y además en ingles todo.
+
+Siempre haz los trabajos desde nuestra perspectiva, es decir siempre que pongas comentarios u otra información dentro de los trabajos ponla como si lo hubiese escrito yo.
+

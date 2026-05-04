@@ -1,0 +1,108 @@
+@startuml
+title American Latin Class - Class Diagram
+
+class Branch {
+  +id
+  +name
+  +directorName
+  +coDirectorName
+  +matrixSharePercent
+}
+
+class User {
+  +id
+  +fullName
+  +email
+  +role
+  +branchId
+}
+
+class Student {
+  +id
+  +fullName
+  +level
+  +scholarshipPercent
+  +status
+  +guardianName
+}
+
+class Teacher {
+  +id
+  +fullName
+  +branchId
+  +status
+}
+
+class ClassPlan {
+  +id
+  +teacherName
+  +month
+  +level
+  +objective
+  +activities
+  +status
+}
+
+class AttendanceRecord {
+  +id
+  +personType
+  +personName
+  +attendanceDate
+  +status
+  +evidenceCode
+}
+
+class MonthlyPayment {
+  +id
+  +studentId
+  +period
+  +amount
+  +status
+  +receipt
+}
+
+class BranchFinanceReport {
+  +id
+  +branchId
+  +month
+  +income
+  +expenses
+  +matrixShare
+  +netResult
+}
+
+class ProfessionalEvent {
+  +id
+  +clientName
+  +eventType
+  +eventDate
+  +totalAmount
+  +status
+}
+
+class DancerEventAssignment {
+  +id
+  +studentId
+  +professionalEventId
+  +grossAmount
+  +deductionAmount
+  +netAmount()
+}
+
+Branch "1" -- "many" User
+Branch "1" -- "many" Student
+Branch "1" -- "many" Teacher
+Branch "1" -- "many" ClassPlan
+Branch "1" -- "many" AttendanceRecord
+Branch "1" -- "many" BranchFinanceReport
+Branch "1" -- "many" ProfessionalEvent
+
+Student "1" -- "many" MonthlyPayment
+Student "1" -- "many" AttendanceRecord
+Teacher "1" -- "many" ClassPlan
+Teacher "1" -- "many" AttendanceRecord
+ProfessionalEvent "1" -- "many" DancerEventAssignment
+Student "1" -- "many" DancerEventAssignment
+
+@enduml
+
