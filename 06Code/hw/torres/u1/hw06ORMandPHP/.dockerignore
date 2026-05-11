@@ -1,7 +1,0 @@
-.env
-.env.local
-certs/
-composer.phar
-supabase/
-vendor/
-*.log
