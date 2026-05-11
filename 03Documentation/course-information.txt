@@ -1,0 +1,11 @@
+Course: Advanced Web Development
+Instructor: Engineer Edison Lascano
+
+Project:
+Alexander Torres and Evelyn Villarreal selected American Latin Class as the course project. The project is a web system for student management and agency operations for the American Latin Class dance academy.
+
+Project goal:
+The real goal of the project is to keep learning while building. Each course activity should move the system forward through forms, APIs, database connections, architecture improvements, deployment, and verification.
+
+Working rules:
+All deliverables must be written in English, organized clearly, and developed with Clean Code principles. Comments, documents, and implementation notes should be written from our project perspective.

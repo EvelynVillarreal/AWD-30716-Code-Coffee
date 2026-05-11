@@ -1,4 +1,4 @@
-# HW07 - Project Features
+# Project Features
 
 This folder contains the planning package for the **American Latin Class** system.
 
@@ -7,6 +7,7 @@ The purpose of this assignment is to organize the requirements before building t
 ## Contents
 
 - `requirements.md`: complete functional and non-functional requirements.
+- `elicited-requirements.md`: initial elicited context summarized in English.
 - `user-stories.md`: user stories with acceptance criteria.
 - `project-backlog.md`: prioritized backlog.
 - `meeting-minutes.md`: meeting minutes based on the conversation with Juan Pablo Hidalgo.
@@ -15,7 +16,8 @@ The purpose of this assignment is to organize the requirements before building t
 - `diagrams/class-diagram.puml`: class diagram in PlantUML format.
 - `diagrams/use-case-diagram.puml`: use case diagram in PlantUML format.
 - `implemented-features.md`: evidence that the three Jira features were also programmed.
-- `programmed-features/hw08-front-end-copy/`: copied frontend implementation from HW08, included here as backup evidence.
+- The active implementation now lives in `../06Code/View` and `../06Code/Controller`.
+- Historical copied frontend evidence is archived under `../07Other/legacy-academic-code`.
 
 ## Jira Scope Required by the Assignment
 
@@ -49,4 +51,4 @@ Health check:
 https://american-latin-class-backend-production.up.railway.app/api/health
 ```
 
-The backend was deployed from the local folder with Railway CLI, without uploading the project to a Git repository.
+The backend was deployed from the local `06Code` folder with Railway CLI, without uploading the project to a Git repository.

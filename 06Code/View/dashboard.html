@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | American Latin Class</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header app-header">
+    <a class="brand" href="index.html" aria-label="American Latin Class">
+      <span class="brand-mark">ALC</span>
+      <span>
+        <strong>American Latin Class</strong>
+        <small id="sessionRole">Internal portal</small>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="enrollment.html">Enrollment</a>
+      <a href="attendance-kiosk.html">Attendance</a>
+      <button class="nav-button" id="logoutButton" type="button">Sign out</button>
+    </nav>
+  </header>
+
+  <main class="dashboard-shell">
+    <aside class="sidebar">
+      <p class="eyebrow">Session</p>
+      <h1 id="dashboardTitle">Dashboard</h1>
+      <p id="sessionName" class="muted"></p>
+      <nav class="module-nav" id="moduleNav" aria-label="Modules"></nav>
+    </aside>
+
+    <section class="dashboard-content">
+      <section class="module-view" id="moduleOverview">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h2>General status</h2>
+          </div>
+        </div>
+        <div class="snapshot">
+          <article>
+            <span class="metric" id="totalStudents">0</span>
+            <p>Students</p>
+          </article>
+          <article>
+            <span class="metric" id="b2Students">0</span>
+            <p>B2</p>
+          </article>
+          <article>
+            <span class="metric" id="scholarshipStudents">0</span>
+            <p>Scholarship students</p>
+          </article>
+          <article>
+            <span class="metric" id="reserveAmount">$0</span>
+            <p>Matrix reserve</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="module-view" id="moduleStudents">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Students</p>
+            <h2>Levels and scholarships</h2>
+          </div>
+        </div>
+        <div class="panel table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Branch</th>
+                <th>Level</th>
+                <th>Scholarship</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="module-view" id="moduleStudentProfile">
+        <p class="eyebrow">My progress</p>
+        <h2>Student panel</h2>
+        <div class="profile-grid" id="studentProfile"></div>
+      </section>
+
+      <section class="module-view" id="moduleStudentAttendance">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Monthly attendance</p>
+            <h2>My monthly records</h2>
+          </div>
+          <label class="compact-field">
+            <span>Month</span>
+            <input id="studentAttendanceMonth" type="month">
+          </label>
+        </div>
+        <div class="snapshot attendance-summary">
+          <article>
+            <span class="metric" id="studentAttendanceTotal">0</span>
+            <p>Records</p>
+          </article>
+          <article>
+            <span class="metric" id="studentAttendancePresent">0</span>
+            <p>Present</p>
+          </article>
+          <article>
+            <span class="metric" id="studentAttendanceLate">0</span>
+            <p>Late arrivals</p>
+          </article>
+          <article>
+            <span class="metric" id="studentAttendanceAbsent">0</span>
+            <p>Absences</p>
+          </article>
+        </div>
+        <div class="panel table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Check-in time</th>
+                <th>Status</th>
+                <th>Code</th>
+              </tr>
+            </thead>
+            <tbody id="studentAttendanceTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="module-view" id="moduleClassPlan">
+        <p class="eyebrow">Teachers</p>
+        <h2>Monthly planning</h2>
+        <form class="panel form-stack" id="classPlanForm">
+          <label>
+            <span>Teacher</span>
+            <input id="planTeacher" type="text" placeholder="Andrea Molina" required>
+          </label>
+          <label>
+            <span>Month</span>
+            <input id="planMonth" type="month" required>
+          </label>
+          <label>
+            <span>Level</span>
+            <select id="planLevel">
+              <option>B1</option>
+              <option>B2</option>
+            </select>
+          </label>
+          <label>
+            <span>Objective</span>
+            <input id="planObjective" type="text" placeholder="Improve technique and musicality" required>
+          </label>
+          <label>
+            <span>Activities</span>
+            <textarea id="planActivities" rows="4" placeholder="Warm-up, technique, sequence, and feedback" required></textarea>
+          </label>
+          <button class="button primary" type="submit">Submit plan</button>
+          <p class="notice" id="planMessage" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="module-view" id="moduleAttendance">
+        <p class="eyebrow">Attendance</p>
+        <h2>Daily record</h2>
+        <form class="panel form-grid" id="attendanceForm">
+          <label>
+            <span>Type</span>
+            <select id="attendanceType">
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+            </select>
+          </label>
+          <label>
+            <span>Name</span>
+            <input id="attendanceName" type="text" placeholder="Mateo Vera" required>
+          </label>
+          <label>
+            <span>Date</span>
+            <input id="attendanceDate" type="date" required>
+          </label>
+          <label>
+            <span>Status</span>
+            <select id="attendanceStatus">
+              <option value="present">Present</option>
+              <option value="absent">Absent</option>
+              <option value="late">Late</option>
+              <option value="excused">Excused</option>
+            </select>
+          </label>
+          <button class="button primary full" type="submit">Register attendance</button>
+          <p class="notice full" id="attendanceMessage" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="module-view" id="moduleFinance">
+        <p class="eyebrow">Management</p>
+        <h2>Branch results</h2>
+        <form class="panel inline-form" id="financeForm">
+          <label>
+            <span>Branch</span>
+            <select id="financeBranch"></select>
+          </label>
+          <label>
+            <span>Income</span>
+            <input id="financeIncome" type="number" min="0" value="1200" required>
+          </label>
+          <label>
+            <span>Expenses</span>
+            <input id="financeExpenses" type="number" min="0" value="450" required>
+          </label>
+          <label>
+            <span>Matrix %</span>
+            <input id="financeShare" type="number" min="0" max="100" value="15" required>
+          </label>
+          <button class="button primary" type="submit">Save</button>
+        </form>
+        <div class="panel table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Branch</th>
+                <th>Income</th>
+                <th>Expenses</th>
+                <th>Matrix</th>
+                <th>Net</th>
+              </tr>
+            </thead>
+            <tbody id="financeTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="module-view" id="moduleAgency">
+        <p class="eyebrow">Professional B2</p>
+        <h2>Events and settlements</h2>
+        <div class="dashboard-grid">
+          <form class="panel form-stack" id="eventForm">
+            <label>
+              <span>Client</span>
+              <input id="eventClient" type="text" placeholder="Hotel Sol" required>
+            </label>
+            <label>
+              <span>Event type</span>
+              <input id="eventType" type="text" placeholder="Wedding show" required>
+            </label>
+            <label>
+              <span>Date</span>
+              <input id="eventDate" type="date" required>
+            </label>
+            <label>
+              <span>B2 dancer</span>
+              <input id="eventDancer" type="text" placeholder="Valeria Paz" required>
+            </label>
+            <label>
+              <span>Amount</span>
+              <input id="eventAmount" type="number" min="0" value="160" required>
+            </label>
+            <label>
+              <span>Deduction</span>
+              <input id="eventDeduction" type="number" min="0" value="0" required>
+            </label>
+            <button class="button primary" type="submit">Register event</button>
+            <p class="notice" id="eventMessage" aria-live="polite"></p>
+          </form>
+          <section class="panel">
+            <h3>Settlement</h3>
+            <div id="settlementList" class="settlement-list"></div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="script/app.js?v=20260503-real-auth"></script>
+</body>
+</html>

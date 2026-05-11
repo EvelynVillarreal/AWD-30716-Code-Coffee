@@ -1,2 +1,3 @@
-# EDITABLE
-Assignment 2
+# Project Definition
+
+Initial project definition assets for American Latin Class.

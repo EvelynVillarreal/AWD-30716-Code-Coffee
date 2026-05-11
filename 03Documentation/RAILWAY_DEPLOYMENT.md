@@ -1,6 +1,6 @@
 # Railway Deployment
 
-This backend was deployed to Railway from the local folder, without using a Git repository.
+This backend was deployed to Railway from the local `06Code` folder, without using a Git repository.
 
 ## Public URL
 
@@ -35,6 +35,7 @@ american-latin-class-backend
 The deployment was created with Railway CLI:
 
 ```powershell
+cd 06Code
 npx --yes @railway/cli init --name american-latin-class-backend
 npx --yes @railway/cli add --service american-latin-class-backend
 npx --yes @railway/cli variable set ...
@@ -42,7 +43,7 @@ npx --yes @railway/cli up --service american-latin-class-backend
 npx --yes @railway/cli domain --service american-latin-class-backend
 ```
 
-The service uses the `Dockerfile` in this folder.
+The service uses `06Code/Dockerfile` so the build context includes both `Controller` and `Model`.
 
 ## Environment Variables
 

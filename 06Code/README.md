@@ -1,10 +1,12 @@
 # Code
 
-Codigo fuente copiado desde `COPIA DEL REPO AWD`, conservando las carpetas originales:
+Main source code for **American Latin Class**.
 
-- `hw`
-- `ws`
-- `exams`
+## Structure
 
-El backend principal esta en `hw/torres/u1/hw06ORMandPHP`.
-El frontend principal esta en `hw/torres/u1/hw08Front-EndFrameworks`.
+- `Model`: Eloquent models and domain entities.
+- `View`: public website, enrollment, attendance kiosk, and internal portal.
+- `Controller`: PHP/Slim API controllers, routes, middleware, services, and support code.
+- `Evidence`: technical verification evidence.
+
+Historical `hw`, `ws`, and `exams` delivery folders were archived in `../07Other/legacy-academic-code` so this folder opens directly on the active MVC project.

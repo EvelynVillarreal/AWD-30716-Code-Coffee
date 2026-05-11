@@ -1,6 +1,6 @@
 # Implemented Features Evidence
 
-This document confirms that the three selected project features are not only written as requirements. They are also implemented in the project folders for HW06 and HW08.
+This document confirms that the three selected project features are not only written as requirements. They are also implemented in the active MVC project folders.
 
 Production frontend URL:
 
@@ -30,16 +30,13 @@ https://american-latin-class-backend-production.up.railway.app/api/health
 
 Implemented in:
 
-- `../hw08Front-EndFrameworks/index.html`
-- `../hw08Front-EndFrameworks/enrollment.html`
-- `../hw08Front-EndFrameworks/script/app.js`
-- `../hw08Front-EndFrameworks/css/styles.css`
-- `programmed-features/hw08-front-end-copy/index.html`
-- `programmed-features/hw08-front-end-copy/enrollment.html`
-- `programmed-features/hw08-front-end-copy/script/app.js`
-- `programmed-features/hw08-front-end-copy/css/styles.css`
-- `../hw06ORMandPHP/public/index.php`
-- `../hw06ORMandPHP/src/Models/Student.php`
+- `../06Code/View/index.html`
+- `../06Code/View/enrollment.html`
+- `../06Code/View/script/app.js`
+- `../06Code/View/css/styles.css`
+- `../06Code/Controller/public/index.php`
+- `../06Code/Controller/src/Controller/EnrollmentController.php`
+- `../06Code/Model/Student.php`
 
 Implemented behavior:
 
@@ -53,16 +50,15 @@ Implemented behavior:
 
 Implemented in:
 
-- `../hw08Front-EndFrameworks/login.html`
-- `../hw08Front-EndFrameworks/dashboard.html`
-- `../hw08Front-EndFrameworks/script/app.js`
-- `programmed-features/hw08-front-end-copy/login.html`
-- `programmed-features/hw08-front-end-copy/dashboard.html`
-- `programmed-features/hw08-front-end-copy/script/app.js`
-- `../hw06ORMandPHP/public/index.php`
-- `../hw06ORMandPHP/src/Models/Student.php`
-- `../hw06ORMandPHP/src/Models/AttendanceRecord.php`
-- `../hw06ORMandPHP/src/Models/ClassPlan.php`
+- `../06Code/View/login.html`
+- `../06Code/View/dashboard.html`
+- `../06Code/View/script/app.js`
+- `../06Code/Controller/public/index.php`
+- `../06Code/Controller/src/Controller/AuthController.php`
+- `../06Code/Controller/src/Controller/StudentController.php`
+- `../06Code/Model/Student.php`
+- `../06Code/Model/AttendanceRecord.php`
+- `../06Code/Model/ClassPlan.php`
 
 Implemented behavior:
 
@@ -82,16 +78,15 @@ Implemented behavior:
 
 Implemented in:
 
-- `../hw08Front-EndFrameworks/login.html`
-- `../hw08Front-EndFrameworks/dashboard.html`
-- `../hw08Front-EndFrameworks/script/app.js`
-- `programmed-features/hw08-front-end-copy/login.html`
-- `programmed-features/hw08-front-end-copy/dashboard.html`
-- `programmed-features/hw08-front-end-copy/script/app.js`
-- `../hw06ORMandPHP/public/index.php`
-- `../hw06ORMandPHP/src/Models/BranchFinanceReport.php`
-- `../hw06ORMandPHP/src/Models/ProfessionalEvent.php`
-- `../hw06ORMandPHP/src/Models/DancerEventAssignment.php`
+- `../06Code/View/login.html`
+- `../06Code/View/dashboard.html`
+- `../06Code/View/script/app.js`
+- `../06Code/Controller/public/index.php`
+- `../06Code/Controller/src/Controller/FinanceController.php`
+- `../06Code/Controller/src/Controller/ProfessionalEventController.php`
+- `../06Code/Model/BranchFinanceReport.php`
+- `../06Code/Model/ProfessionalEvent.php`
+- `../06Code/Model/DancerEventAssignment.php`
 
 Implemented behavior:
 
@@ -118,4 +113,4 @@ The PHP backend is also configured and tested locally:
 - Verification result: `database: connected`.
 - Tested flow: enrollment, class plan, attendance, professional event, B2 dancer assignment, finance report, and dancer settlement calculation.
 
-The backend was deployed from the local folder with Railway CLI, without uploading the project to a Git repository.
+The backend was deployed from the local `06Code` folder with Railway CLI, without uploading the project to a Git repository.

@@ -1,3 +1,3 @@
 # Use Cases
 
-Diagramas de casos de uso del proyecto American Latin Class.
+Use case diagrams for the American Latin Class project.

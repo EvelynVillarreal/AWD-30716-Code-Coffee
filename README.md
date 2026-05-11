@@ -1,11 +1,26 @@
 # AWD-30716-Code-Coffee
 
-Repositorio organizado para el proyecto American Latin Class.
+Repository for the **American Latin Class** project.
 
-- `01Definition`: definicion inicial del proyecto.
-- `02Requirements`: requisitos, historias de usuario, backlog y seguimiento.
-- `03Documentation`: documentacion tecnica, despliegue y evidencias.
-- `04UMLDiagrams`: diagramas de casos de uso y clases.
-- `05UnitTests`: respuestas y evidencias de verificacion.
-- `06Code`: codigo fuente conservando la estructura original `hw`, `ws` y `exams`.
-- `07Other`: archivos adicionales, como paquetes de despliegue.
+## Project Map
+
+- `01Definition`: initial project definition.
+- `02Requirements`: requirements, user stories, backlog, and tracking.
+- `03Documentation`: technical documentation, credential guides, deployment notes, and evidence.
+- `04UMLDiagrams`: use case and class diagrams.
+- `05UnitTests`: JSON responses and manual verification evidence.
+- `06Code`: active source code organized directly as an MVC project.
+- `07Other`: additional files, deployment packages, and legacy academic code.
+
+## Main Program
+
+- Model layer: `06Code/Model`
+- View layer: `06Code/View`
+- Controller layer: `06Code/Controller`
+- Technical evidence: `06Code/Evidence`
+
+## Quick Guides
+
+- MVC architecture: `03Documentation/MVC_ARCHITECTURE.md`
+- Credentials and environment variables: `03Documentation/CREDENTIALS_SETUP.md`
+- Recommended repository structure: `03Documentation/PROJECT_STRUCTURE.md`

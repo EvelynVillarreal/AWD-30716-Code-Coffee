@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enrollment | American Latin Class</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="American Latin Class">
+      <span class="brand-mark">ALC</span>
+      <span>
+        <strong>American Latin Class</strong>
+        <small>Dance school</small>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="enrollment.html" aria-current="page">Enrollment</a>
+      <a href="login.html">Portal</a>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-heading">
+      <p class="eyebrow">Public request</p>
+      <h1>Enrollment form</h1>
+      <p>
+        This request is saved for administrative review before activating the
+        student in a branch.
+      </p>
+    </section>
+
+    <section class="section narrow">
+      <form class="panel form-grid" id="enrollmentForm">
+        <label>
+          <span>Full name</span>
+          <input id="enrollName" type="text" placeholder="Camila Rojas" required>
+        </label>
+        <label>
+          <span>Email</span>
+          <input id="enrollEmail" type="email" placeholder="student@example.com" required>
+        </label>
+        <label>
+          <span>National ID</span>
+          <input id="enrollNationalId" type="text" inputmode="numeric" placeholder="1723456789" required>
+        </label>
+        <label>
+          <span>Phone</span>
+          <input id="enrollPhone" type="tel" placeholder="0990000000" required>
+        </label>
+        <label>
+          <span>Preferred branch</span>
+          <select id="enrollBranch"></select>
+        </label>
+        <label>
+          <span>Level</span>
+          <select id="enrollLevel">
+            <option value="B1">B1 - Basic intermediate</option>
+            <option value="B2">B2 - Intermediate advanced</option>
+          </select>
+        </label>
+        <label>
+          <span>Scholarship or agreement</span>
+          <select id="enrollScholarship">
+            <option value="0">No scholarship</option>
+            <option value="50">50%</option>
+            <option value="75">75%</option>
+            <option value="100">100%</option>
+          </select>
+        </label>
+        <label>
+          <span>Guardian</span>
+          <input id="enrollGuardian" type="text" placeholder="Parent or guardian name">
+        </label>
+        <label>
+          <span>Guardian phone</span>
+          <input id="enrollGuardianPhone" type="tel" placeholder="0991112222">
+        </label>
+        <label class="full">
+          <span>Comment</span>
+          <textarea id="enrollNotes" rows="3" placeholder="Schedule, previous experience, or question"></textarea>
+        </label>
+        <button class="button primary full" type="submit">Submit request</button>
+        <p class="notice full" id="enrollmentMessage" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>American Latin Class</span>
+    <a href="login.html">Internal portal</a>
+  </footer>
+
+  <script src="script/app.js?v=20260503-real-auth"></script>
+</body>
+</html>

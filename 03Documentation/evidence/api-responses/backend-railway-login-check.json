@@ -1,6 +1,6 @@
 ﻿{
     "authenticated":  true,
     "role":  "student",
-    "email":  "alumno@americanlatinclass.com",
+    "email":  "student@americanlatinclass.com",
     "token_present":  true
 }
