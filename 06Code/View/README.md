@@ -2,7 +2,7 @@
 
 This folder contains the functional view layer for **American Latin Class**.
 
-The frontend is built with HTML, CSS, and JavaScript. It is organized as a modular website with separate pages for public visitors, enrollment, attendance check-in, login, and role dashboards.
+The frontend is built with HTML, CSS, and vanilla JavaScript. It is organized as a modular website with separate pages for public visitors, enrollment, attendance check-in, login, and role dashboards.
 
 ## Included Pages
 
@@ -17,6 +17,17 @@ The frontend is built with HTML, CSS, and JavaScript. It is organized as a modul
 - Teacher dashboard: monthly class planning and manual attendance registration.
 - Student dashboard: profile information and monthly attendance records.
 - Director dashboard: students, attendance, branch finances, and B2 professional events.
+
+## JavaScript Organization
+
+The project does not use React, Vue, Angular, or another frontend framework. The script is still plain JavaScript, but it is divided into classes:
+
+- `ApiClient`: backend HTTP requests.
+- `SessionStore`: session storage.
+- `BranchStore`: branch data and select options.
+- `PublicPagesController`: public forms and kiosk behavior.
+- `DashboardController`: dashboard modules, data loading, and form handling.
+- `Dom` and `Formatters`: view helpers.
 
 ## Real Access Flow
 

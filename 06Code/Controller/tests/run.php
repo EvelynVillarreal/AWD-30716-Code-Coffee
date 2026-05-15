@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use App\Model\Student;
 use App\Model\User;
-use App\Service\AttendanceSummary;
-use App\Service\BranchAccess;
-use App\Service\DateRange;
-use App\Support\Auth;
+use App\Service\AttendanceSummaryService;
+use App\Service\AuthenticatedUser;
+use App\Service\BranchAccessService;
+use App\Service\DateRangeService;
+use App\Service\JwtTokenService;
+use App\Service\Validation\EnrollmentValidator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/src/bootstrap.php';
@@ -41,12 +42,14 @@ final class TestRunner
 
 $test = new TestRunner();
 
-[$month, $start, $end] = DateRange::month('2026-05');
-$test->assertSame('2026-05', $month, 'DateRange should keep a valid month.');
-$test->assertSame('2026-05-01', $start, 'DateRange should calculate the first day.');
-$test->assertSame('2026-05-31', $end, 'DateRange should calculate the last day.');
+$dateRanges = new DateRangeService();
+$range = $dateRanges->month('2026-05');
+$test->assertSame('2026-05', $range->month(), 'DateRange should keep a valid month.');
+$test->assertSame('2026-05-01', $range->startDate(), 'DateRange should calculate the first day.');
+$test->assertSame('2026-05-31', $range->endDate(), 'DateRange should calculate the last day.');
 
-$summary = AttendanceSummary::fromRecords([
+$attendanceSummary = new AttendanceSummaryService();
+$summary = $attendanceSummary->fromRecords([
     (object) ['status' => 'present'],
     (object) ['status' => 'present'],
     (object) ['status' => 'late'],
@@ -56,14 +59,15 @@ $test->assertSame(4, $summary['total'], 'AttendanceSummary should count total re
 $test->assertSame(2, $summary['present'], 'AttendanceSummary should count present records.');
 $test->assertSame(1, $summary['late'], 'AttendanceSummary should count late records.');
 
-$matrixDirector = ['role' => 'director', 'branch_id' => 1];
-$branchDirector = ['role' => 'director', 'branch_id' => 3];
-$teacher = ['role' => 'teacher', 'branch_id' => 2];
-$test->assertTrue(BranchAccess::canAccessBranch($matrixDirector, 5), 'Matrix director should access every branch.');
-$test->assertTrue(BranchAccess::canAccessBranch($branchDirector, 3), 'Branch director should access own branch.');
-$test->assertTrue(!BranchAccess::canAccessBranch($branchDirector, 2), 'Branch director should not access other branches.');
-$test->assertSame(2, BranchAccess::writableBranchId(['branch_id' => 2], $teacher), 'Teacher should write to own branch.');
-$test->assertSame(null, BranchAccess::writableBranchId(['branch_id' => 1], $teacher), 'Teacher should not write to another branch.');
+$branchAccess = new BranchAccessService();
+$matrixDirector = new AuthenticatedUser(1, 'matrix@example.com', 'Matrix Director', 'director', 1, null);
+$branchDirector = new AuthenticatedUser(2, 'branch@example.com', 'Branch Director', 'director', 3, null);
+$teacher = new AuthenticatedUser(3, 'teacher@example.com', 'Teacher', 'teacher', 2, null);
+$test->assertTrue($branchAccess->canAccessBranch($matrixDirector, 5), 'Matrix director should access every branch.');
+$test->assertTrue($branchAccess->canAccessBranch($branchDirector, 3), 'Branch director should access own branch.');
+$test->assertTrue(!$branchAccess->canAccessBranch($branchDirector, 2), 'Branch director should not access other branches.');
+$test->assertSame(2, $branchAccess->writableBranchId(['branch_id' => 2], $teacher), 'Teacher should write to own branch.');
+$test->assertSame(null, $branchAccess->writableBranchId(['branch_id' => 1], $teacher), 'Teacher should not write to another branch.');
 
 $validEnrollment = [
     'branch_id' => 1,
@@ -75,12 +79,13 @@ $validEnrollment = [
     'scholarship_percent' => 50,
     'comments' => 'Prefiere horario nocturno.',
 ];
-$test->assertSame([], Student::validateEnrollment($validEnrollment), 'Valid enrollment data should pass validation.');
+$enrollmentValidator = new EnrollmentValidator();
+$test->assertSame([], $enrollmentValidator->validate($validEnrollment), 'Valid enrollment data should pass validation.');
 
 $invalidEnrollment = $validEnrollment;
 $invalidEnrollment['email'] = 'not-an-email';
 $invalidEnrollment['scholarship_percent'] = 25;
-$errors = Student::validateEnrollment($invalidEnrollment);
+$errors = $enrollmentValidator->validate($invalidEnrollment);
 $test->assertTrue(isset($errors['email']), 'Invalid email should fail validation.');
 $test->assertTrue(isset($errors['scholarship_percent']), 'Invalid scholarship should fail validation.');
 
@@ -93,15 +98,16 @@ $user->role = 'director';
 $user->branch_id = 1;
 $user->student_id = null;
 
-$token = Auth::issueToken($user);
-$payload = Auth::verifyToken($token);
+$tokens = new JwtTokenService();
+$token = $tokens->issue($user);
+$payload = $tokens->verify($token);
 $test->assertSame('director', $payload['role'] ?? null, 'JWT should keep the user role.');
 $test->assertSame(10, $payload['sub'] ?? null, 'JWT should keep the subject id.');
 
 $_ENV['APP_KEY'] = '';
 $threw = false;
 try {
-    Auth::issueToken($user);
+    $tokens->issue($user);
 } catch (RuntimeException) {
     $threw = true;
 }

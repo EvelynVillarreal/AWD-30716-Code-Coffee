@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use App\Support\ApiResponse;
-use App\Support\Database;
+use App\Support\DatabaseConnection;
+use App\Support\JsonResponder;
 use Dotenv\Dotenv;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,22 +18,23 @@ if (is_file(__DIR__ . '/../.env')) {
 
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'America/Bogota');
 
-Database::boot();
+(new DatabaseConnection())->boot();
+$responder = new JsonResponder();
 
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware(($_ENV['APP_DEBUG'] ?? 'false') === 'true', true, true);
 
-$app->options('/{routes:.*}', static function (Request $request, Response $response): Response {
-    return ApiResponse::cors($response, $request->getHeaderLine('Origin'));
+$app->options('/{routes:.*}', static function (Request $request, Response $response) use ($responder): Response {
+    return $responder->cors($response, $request->getHeaderLine('Origin'));
 });
 
-$app->add(static function (Request $request, RequestHandler $handler): Response {
+$app->add(static function (Request $request, RequestHandler $handler) use ($responder): Response {
     $response = $handler->handle($request);
-    return ApiResponse::cors($response, $request->getHeaderLine('Origin'));
+    return $responder->cors($response, $request->getHeaderLine('Origin'));
 });
 
-(require __DIR__ . '/../routes/api.php')($app);
+(require __DIR__ . '/../routes/api.php')($app, $responder);
 
 $app->run();

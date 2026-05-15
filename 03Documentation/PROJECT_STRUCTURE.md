@@ -11,7 +11,6 @@ This repository keeps the academic delivery folders, but the active program is n
 - Model layer: `06Code/Model`
 - View layer: `06Code/View`
 - Controller layer and API bootstrap: `06Code/Controller`
-- Program evidence: `06Code/Evidence`
 - Requirements: `02Requirements`
 - Technical documentation: `03Documentation`
 - UML diagrams: `04UMLDiagrams`

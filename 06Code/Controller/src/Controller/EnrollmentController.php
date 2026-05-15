@@ -5,28 +5,35 @@ namespace App\Controller;
 
 use App\Model\Branch;
 use App\Model\Student;
-use App\Support\ApiResponse;
+use App\Service\Validation\EnrollmentValidator;
+use App\Support\JsonResponder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class EnrollmentController
 {
+    public function __construct(
+        private readonly JsonResponder $responder,
+        private readonly EnrollmentValidator $validator
+    ) {
+    }
+
     public function store(Request $request, Response $response): Response
     {
         $data = $this->sanitize((array) $request->getParsedBody());
-        $errors = Student::validateEnrollment($data);
+        $errors = $this->validator->validate($data);
 
         if ($errors !== []) {
-            return ApiResponse::json($response, ['errors' => $errors], 422);
+            return $this->responder->json($response, ['errors' => $errors], 422);
         }
 
         if (!Branch::query()->find((int) $data['branch_id'])) {
-            return ApiResponse::json($response, ['message' => 'Selected branch does not exist.'], 422);
+            return $this->responder->json($response, ['message' => 'Selected branch does not exist.'], 422);
         }
 
         $duplicateMessage = $this->duplicateMessage($data);
         if ($duplicateMessage !== null) {
-            return ApiResponse::json($response, ['message' => $duplicateMessage], 422);
+            return $this->responder->json($response, ['message' => $duplicateMessage], 422);
         }
 
         $student = Student::query()->create([
@@ -43,7 +50,7 @@ final class EnrollmentController
             'status' => 'pending',
         ]);
 
-        return ApiResponse::json($response, [
+        return $this->responder->json($response, [
             'message' => 'Enrollment request registered.',
             'data' => $student,
         ], 201);

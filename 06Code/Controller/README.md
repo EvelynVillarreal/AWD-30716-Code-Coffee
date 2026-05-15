@@ -77,16 +77,19 @@ C:\xampp\php\php.exe -S 127.0.0.1:8080 -t public
 ## Architecture
 
 ```text
-public/index.php       Application bootstrap
-routes/api.php         HTTP route definitions
-src/Controller         Request handling and response orchestration
-../Model              Eloquent models
-../View               Static frontend views
-src/Service           Reusable domain helpers
-src/Middleware         Authentication and role checks
-src/Support            Infrastructure helpers
-tests                  Lightweight automated checks
+public/index.php                 Application entry point
+routes/api.php                   Route definitions and dependency composition
+src/Controller                   HTTP controllers
+../Model                         Eloquent models and relationships
+../View                          Static frontend views
+src/Service                      Object-oriented application services
+src/Service/Validation           Request validation classes
+src/Middleware                   Authentication and role checks
+src/Support                      JSON/CORS/database infrastructure
+tests                            Lightweight automated checks
 ```
+
+The controller layer uses constructor injection so each class declares the exact collaborators it needs. Static business helpers were replaced by services such as `AuthService`, `BranchAccessService`, `AuditLogger`, `DateRangeService`, and validator classes.
 
 ## Local Checks
 

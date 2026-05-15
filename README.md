@@ -17,7 +17,7 @@ Repository for the **American Latin Class** project.
 - Model layer: `06Code/Model`
 - View layer: `06Code/View`
 - Controller layer: `06Code/Controller`
-- Technical evidence: `06Code/Evidence`
+- Technical evidence: `03Documentation/evidence` and `05UnitTests`
 
 ## Quick Guides
 

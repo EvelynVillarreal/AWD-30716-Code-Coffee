@@ -7,47 +7,59 @@ use App\Model\Branch;
 use App\Model\DancerEventAssignment;
 use App\Model\ProfessionalEvent;
 use App\Model\Student;
-use App\Service\BranchAccess;
-use App\Support\ApiResponse;
-use App\Support\Audit;
+use App\Service\AuditLogger;
+use App\Service\AuthenticatedUser;
+use App\Service\BranchAccessService;
+use App\Service\Validation\DancerEventAssignmentValidator;
+use App\Service\Validation\ProfessionalEventValidator;
+use App\Support\JsonResponder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class ProfessionalEventController
 {
+    public function __construct(
+        private readonly JsonResponder $responder,
+        private readonly BranchAccessService $branchAccess,
+        private readonly ProfessionalEventValidator $eventValidator,
+        private readonly DancerEventAssignmentValidator $assignmentValidator,
+        private readonly AuditLogger $audit
+    ) {
+    }
+
     public function index(Request $request, Response $response): Response
     {
-        $authUser = (array) $request->getAttribute('auth_user');
+        $authUser = $this->authenticatedUser($request);
         $query = ProfessionalEvent::query()->with('assignments');
 
-        BranchAccess::applyScope($query, $authUser);
+        $this->branchAccess->applyScope($query, $authUser);
 
         $events = $query
             ->orderByDesc('event_date')
             ->get();
 
-        return ApiResponse::json($response, ['data' => $events]);
+        return $this->responder->json($response, ['data' => $events]);
     }
 
     public function store(Request $request, Response $response): Response
     {
-        $authUser = (array) $request->getAttribute('auth_user');
+        $authUser = $this->authenticatedUser($request);
         $data = (array) $request->getParsedBody();
-        $branchId = BranchAccess::writableBranchId($data, $authUser);
+        $branchId = $this->branchAccess->writableBranchId($data, $authUser);
 
         if ($branchId === null) {
-            return ApiResponse::json($response, ['message' => 'This user cannot write records for that branch.'], 403);
+            return $this->responder->json($response, ['message' => 'This user cannot write records for that branch.'], 403);
         }
 
         $data['branch_id'] = $branchId;
-        $errors = ProfessionalEvent::validateEvent($data);
+        $errors = $this->eventValidator->validate($data);
 
         if ($errors !== []) {
-            return ApiResponse::json($response, ['errors' => $errors], 422);
+            return $this->responder->json($response, ['errors' => $errors], 422);
         }
 
         if (!Branch::query()->find($branchId)) {
-            return ApiResponse::json($response, ['message' => 'Selected branch does not exist.'], 422);
+            return $this->responder->json($response, ['message' => 'Selected branch does not exist.'], 422);
         }
 
         $event = ProfessionalEvent::query()->create([
@@ -59,13 +71,13 @@ final class ProfessionalEventController
             'status' => strtolower((string) ($data['status'] ?? 'pending_payment')),
         ]);
 
-        Audit::record($authUser, 'professional_event.created', 'professional_events', (int) $event->id, [
+        $this->audit->record($authUser, 'professional_event.created', 'professional_events', (int) $event->id, [
             'branch_id' => $branchId,
             'event_date' => $event->event_date,
             'status' => $event->status,
         ]);
 
-        return ApiResponse::json($response, [
+        return $this->responder->json($response, [
             'message' => 'Professional event registered.',
             'data' => $event,
         ], 201);
@@ -73,27 +85,27 @@ final class ProfessionalEventController
 
     public function assignDancer(Request $request, Response $response, array $args): Response
     {
-        $authUser = (array) $request->getAttribute('auth_user');
+        $authUser = $this->authenticatedUser($request);
         $event = $this->scopedEvent((int) $args['eventId'], $authUser);
 
         if (!$event) {
-            return ApiResponse::json($response, ['message' => 'Professional event not found.'], 404);
+            return $this->responder->json($response, ['message' => 'Professional event not found.'], 404);
         }
 
         $data = (array) $request->getParsedBody();
-        $errors = DancerEventAssignment::validateAssignment($data);
+        $errors = $this->assignmentValidator->validate($data);
 
         if ($errors !== []) {
-            return ApiResponse::json($response, ['errors' => $errors], 422);
+            return $this->responder->json($response, ['errors' => $errors], 422);
         }
 
         $student = Student::query()->find((int) $data['student_id']);
         if (!$student || $student->level !== 'B2') {
-            return ApiResponse::json($response, ['message' => 'Only B2 dancers can be assigned to professional events.'], 422);
+            return $this->responder->json($response, ['message' => 'Only B2 dancers can be assigned to professional events.'], 422);
         }
 
-        if (!BranchAccess::canAccessBranch($authUser, (int) $student->branch_id)) {
-            return ApiResponse::json($response, ['message' => 'This user cannot assign dancers from that branch.'], 403);
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $student->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot assign dancers from that branch.'], 403);
         }
 
         $assignment = DancerEventAssignment::query()->create([
@@ -105,12 +117,12 @@ final class ProfessionalEventController
             'payment_status' => strtolower((string) ($data['payment_status'] ?? 'pending')),
         ]);
 
-        Audit::record($authUser, 'dancer_event_assignment.created', 'dancer_event_assignments', (int) $assignment->id, [
+        $this->audit->record($authUser, 'dancer_event_assignment.created', 'dancer_event_assignments', (int) $assignment->id, [
             'professional_event_id' => (int) $event->id,
             'student_id' => (int) $data['student_id'],
         ]);
 
-        return ApiResponse::json($response, [
+        return $this->responder->json($response, [
             'message' => 'B2 dancer event assignment registered.',
             'data' => $assignment,
         ], 201);
@@ -118,16 +130,16 @@ final class ProfessionalEventController
 
     public function settlement(Request $request, Response $response, array $args): Response
     {
-        $authUser = (array) $request->getAttribute('auth_user');
+        $authUser = $this->authenticatedUser($request);
         $studentId = (int) $args['studentId'];
         $studentQuery = Student::query()->where('level', 'B2');
 
-        BranchAccess::applyScope($studentQuery, $authUser);
+        $this->branchAccess->applyScope($studentQuery, $authUser);
 
         $student = $studentQuery->find($studentId);
 
         if (!$student) {
-            return ApiResponse::json($response, ['message' => 'B2 dancer not found.'], 404);
+            return $this->responder->json($response, ['message' => 'B2 dancer not found.'], 404);
         }
 
         $assignments = DancerEventAssignment::query()
@@ -139,7 +151,7 @@ final class ProfessionalEventController
         $deductions = $assignments->sum('deduction_amount');
         $netAmount = $grossAmount - $deductions;
 
-        return ApiResponse::json($response, [
+        return $this->responder->json($response, [
             'data' => [
                 'student' => $student,
                 'events_attended' => $assignments->count(),
@@ -152,11 +164,22 @@ final class ProfessionalEventController
         ]);
     }
 
-    private function scopedEvent(int $eventId, array $authUser): ?ProfessionalEvent
+    private function scopedEvent(int $eventId, AuthenticatedUser $authUser): ?ProfessionalEvent
     {
         $query = ProfessionalEvent::query();
-        BranchAccess::applyScope($query, $authUser);
+        $this->branchAccess->applyScope($query, $authUser);
 
         return $query->find($eventId);
+    }
+
+    private function authenticatedUser(Request $request): AuthenticatedUser
+    {
+        $user = $request->getAttribute('auth_user');
+
+        if (!$user instanceof AuthenticatedUser) {
+            throw new \RuntimeException('Authenticated user was not attached to the request.');
+        }
+
+        return $user;
     }
 }

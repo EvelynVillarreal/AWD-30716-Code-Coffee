@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Support\ApiResponse;
+use App\Support\JsonResponder;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,9 +11,13 @@ use Throwable;
 
 final class HomeController
 {
+    public function __construct(private readonly JsonResponder $responder)
+    {
+    }
+
     public function index(Request $request, Response $response): Response
     {
-        return ApiResponse::json($response, [
+        return $this->responder->json($response, [
             'project' => 'American Latin Class Backend API',
             'framework' => 'Slim 4',
             'architecture' => 'MVC controllers with Eloquent models',
@@ -45,16 +49,16 @@ final class HomeController
         try {
             Capsule::connection()->select('select 1');
 
-            return ApiResponse::json($response, [
+            return $this->responder->json($response, [
                 'status' => 'ok',
                 'database' => 'connected',
                 'project' => 'American Latin Class',
             ]);
-        } catch (Throwable $exception) {
-            return ApiResponse::json($response, [
+        } catch (Throwable) {
+            return $this->responder->json($response, [
                 'status' => 'review',
                 'database' => 'not connected',
-                'message' => $exception->getMessage(),
+                'message' => 'Database connection could not be verified.',
             ], 503);
         }
     }
