@@ -70,6 +70,85 @@ class Dom {
   }
 }
 
+class Validators {
+  static name(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) return 'Full name is required.';
+    if (!/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s'-]+$/.test(trimmed)) return 'Full name must contain only letters.';
+    if (trimmed.length < 2) return 'Full name must be at least 2 characters.';
+    if (trimmed.length > 120) return 'Full name must not exceed 120 characters.';
+    return '';
+  }
+
+  static email(value) {
+    const trimmed = (value || '').trim().toLowerCase();
+    if (!trimmed) return 'Email is required.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return 'Enter a valid email address.';
+    if (trimmed.length > 254) return 'Email must not exceed 254 characters.';
+    return '';
+  }
+
+  static ecuadorianId(value) {
+    const cleaned = (value || '').replace(/\D+/g, '');
+    if (!cleaned) return 'National ID is required.';
+    if (!/^\d{10}$/.test(cleaned)) return 'National ID must be exactly 10 digits.';
+
+    const province = parseInt(cleaned.substring(0, 2), 10);
+    if (province < 1 || province > 24) return 'Invalid national ID: province code is out of range.';
+
+    const thirdDigit = parseInt(cleaned[2], 10);
+    if (thirdDigit > 5) return 'Invalid national ID.';
+
+    const digits = cleaned.split('').map(Number);
+    const coefficients = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+    let sum = 0;
+
+    for (let i = 0; i < 9; i++) {
+      let product = digits[i] * coefficients[i];
+      if (product >= 10) product -= 9;
+      sum += product;
+    }
+
+    const calculatedCheck = (10 - (sum % 10)) % 10;
+    if (calculatedCheck !== digits[9]) return 'Invalid national ID: check digit does not match.';
+
+    return '';
+  }
+
+  static phone(value) {
+    const cleaned = (value || '').replace(/\D+/g, '');
+    if (!cleaned) return 'Phone is required.';
+    if (cleaned.length < 7 || cleaned.length > 15) return 'Phone must be between 7 and 15 digits.';
+    return '';
+  }
+
+  static guardianName(value) {
+    const trimmed = (value || '').trim();
+    if (!trimmed) return '';
+    if (!/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s'-]+$/.test(trimmed)) return 'Guardian name must contain only letters.';
+    if (trimmed.length > 120) return 'Guardian name must not exceed 120 characters.';
+    return '';
+  }
+
+  static guardianPhone(value) {
+    const cleaned = (value || '').replace(/\D+/g, '');
+    if (!cleaned) return '';
+    if (cleaned.length < 7 || cleaned.length > 15) return 'Guardian phone must be between 7 and 15 digits.';
+    return '';
+  }
+
+  static enrollmentForm(data) {
+    return {
+      full_name: Validators.name(data.full_name),
+      email: Validators.email(data.email),
+      national_id: Validators.ecuadorianId(data.national_id),
+      phone: Validators.phone(data.phone),
+      guardian_name: Validators.guardianName(data.guardian_name),
+      guardian_phone: Validators.guardianPhone(data.guardian_phone)
+    };
+  }
+}
+
 class Formatters {
   static currency(value) {
     return `$${Number(value || 0).toLocaleString("en-US", {
@@ -241,7 +320,7 @@ class PublicPagesController {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const payload = {
+      const data = {
         branch_id: Number(document.getElementById("enrollBranch").value),
         national_id: Formatters.digitsOnly(document.getElementById("enrollNationalId").value),
         full_name: document.getElementById("enrollName").value.trim(),
@@ -254,11 +333,21 @@ class PublicPagesController {
         comments: document.getElementById("enrollNotes").value.trim()
       };
 
+      const errors = Validators.enrollmentForm(data);
+      const hasErrors = this.showFieldErrors(errors);
+
+      if (hasErrors) {
+        Dom.showMessage("enrollmentMessage", "Please fix the highlighted fields before submitting.");
+        return;
+      }
+
+      this.clearFieldErrors();
+
       try {
         await this.apiClient.request("/api/enrollments", {
           method: "POST",
           auth: false,
-          body: payload
+          body: data
         });
 
         form.reset();
@@ -267,6 +356,49 @@ class PublicPagesController {
       } catch (error) {
         Dom.showMessage("enrollmentMessage", error.message);
       }
+    });
+  }
+
+  showFieldErrors(errors) {
+    const fieldMap = {
+      full_name: "enrollName",
+      email: "enrollEmail",
+      national_id: "enrollNationalId",
+      phone: "enrollPhone",
+      guardian_name: "enrollGuardian",
+      guardian_phone: "enrollGuardianPhone"
+    };
+
+    let hasErrors = false;
+
+    Object.entries(fieldMap).forEach(([key, fieldId]) => {
+      const message = errors[key] || '';
+      const input = document.getElementById(fieldId);
+      const errorEl = document.getElementById(`${fieldId}Error`);
+
+      if (errorEl) {
+        errorEl.textContent = message;
+      }
+
+      if (input) {
+        input.classList.toggle('input-error', !!message);
+      }
+
+      if (message) {
+        hasErrors = true;
+      }
+    });
+
+    return hasErrors;
+  }
+
+  clearFieldErrors() {
+    document.querySelectorAll('.field-error').forEach((el) => {
+      el.textContent = '';
+    });
+
+    document.querySelectorAll('.input-error').forEach((el) => {
+      el.classList.remove('input-error');
     });
   }
 

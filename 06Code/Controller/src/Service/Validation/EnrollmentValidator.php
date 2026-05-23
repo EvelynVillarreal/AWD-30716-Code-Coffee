@@ -27,8 +27,10 @@ final class EnrollmentValidator
         $nationalId = preg_replace('/\D+/', '', (string) ($data['national_id'] ?? ''));
         if ($nationalId === '') {
             $errors['national_id'] = 'National ID is required.';
-        } elseif (strlen($nationalId) < 6 || strlen($nationalId) > 20) {
-            $errors['national_id'] = 'National ID length is not valid.';
+        } elseif (!preg_match('/^\d{10}$/', $nationalId)) {
+            $errors['national_id'] = 'National ID must be exactly 10 digits.';
+        } elseif (!$this->isValidEcuadorianId($nationalId)) {
+            $errors['national_id'] = 'National ID is not a valid Ecuadorian ID.';
         }
 
         if (!filter_var((string) ($data['email'] ?? ''), FILTER_VALIDATE_EMAIL)) {
@@ -57,5 +59,34 @@ final class EnrollmentValidator
         }
 
         return $errors;
+    }
+
+    private function isValidEcuadorianId(string $id): bool
+    {
+        $province = (int) substr($id, 0, 2);
+        if ($province < 1 || $province > 24) {
+            return false;
+        }
+
+        $thirdDigit = (int) $id[2];
+        if ($thirdDigit > 5) {
+            return false;
+        }
+
+        $coefficients = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+        $sum = 0;
+
+        for ($i = 0; $i < 9; $i++) {
+            $product = (int) $id[$i] * $coefficients[$i];
+            if ($product >= 10) {
+                $product -= 9;
+            }
+            $sum += $product;
+        }
+
+        $checkDigit = (int) $id[9];
+        $calculated = (10 - ($sum % 10)) % 10;
+
+        return $calculated === $checkDigit;
     }
 }
