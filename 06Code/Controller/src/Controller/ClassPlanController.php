@@ -23,6 +23,31 @@ final class ClassPlanController
     ) {
     }
 
+    public function index(Request $request, Response $response): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $filters = $request->getQueryParams();
+        $query = ClassPlan::query()->orderByDesc('month')->orderByDesc('created_at');
+
+        $this->branchAccess->applyScope($query, $authUser);
+
+        if (!empty($filters['branch_id'])) {
+            $branchId = (int) $filters['branch_id'];
+
+            if (!$this->branchAccess->canAccessBranch($authUser, $branchId)) {
+                return $this->responder->json($response, ['data' => []]);
+            }
+
+            $query->where('branch_id', $branchId);
+        }
+
+        if ($authUser->role() === 'teacher') {
+            $query->where('teacher_name', $authUser->name());
+        }
+
+        return $this->responder->json($response, ['data' => $query->get()]);
+    }
+
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->authenticatedUser($request);
@@ -51,6 +76,7 @@ final class ClassPlanController
             'level' => strtoupper((string) $data['level']),
             'objective' => trim((string) $data['objective']),
             'activities' => trim((string) $data['activities']),
+            'document_url' => trim((string) ($data['document_url'] ?? '')),
             'status' => 'submitted',
         ]);
 

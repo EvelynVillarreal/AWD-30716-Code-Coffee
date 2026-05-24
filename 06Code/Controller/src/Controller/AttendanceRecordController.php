@@ -9,9 +9,12 @@ use App\Model\Student;
 use App\Service\AuditLogger;
 use App\Service\AuthenticatedUser;
 use App\Service\BranchAccessService;
+use App\Service\DateRangeService;
 use App\Service\EvidenceCodeGenerator;
+use App\Service\TeacherPayrollService;
 use App\Service\Validation\AttendanceValidator;
 use App\Support\JsonResponder;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -22,8 +25,59 @@ final class AttendanceRecordController
         private readonly BranchAccessService $branchAccess,
         private readonly AttendanceValidator $validator,
         private readonly EvidenceCodeGenerator $evidenceCodes,
-        private readonly AuditLogger $audit
+        private readonly AuditLogger $audit,
+        private readonly DateRangeService $dateRanges,
+        private readonly TeacherPayrollService $payroll
     ) {
+    }
+
+    public function index(Request $request, Response $response): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $filters = $request->getQueryParams();
+
+        try {
+            $range = $this->dateRanges->month((string) ($filters['month'] ?? null));
+        } catch (InvalidArgumentException $exception) {
+            return $this->responder->json($response, ['message' => $exception->getMessage()], 422);
+        }
+
+        $query = AttendanceRecord::query()
+            ->whereBetween('attendance_date', [$range->startDate(), $range->endDate()])
+            ->orderByDesc('attendance_date')
+            ->orderByDesc('check_in_at');
+
+        if ($authUser->role() === 'teacher') {
+            $query
+                ->where('person_type', 'teacher')
+                ->where('person_name', $authUser->name());
+        } else {
+            $this->branchAccess->applyScope($query, $authUser);
+
+            if (!empty($filters['branch_id'])) {
+                $branchId = (int) $filters['branch_id'];
+
+                if (!$this->branchAccess->canAccessBranch($authUser, $branchId)) {
+                    return $this->responder->json($response, ['data' => []]);
+                }
+
+                $query->where('branch_id', $branchId);
+            }
+
+            if (!empty($filters['person_type'])) {
+                $query->where('person_type', strtolower((string) $filters['person_type']));
+            }
+        }
+
+        $records = $query->get();
+
+        return $this->responder->json($response, [
+            'month' => $range->month(),
+            'teacher_payroll' => $this->payroll->summarize(
+                $records->filter(fn($record) => $record->person_type === 'teacher')
+            ),
+            'data' => $records,
+        ]);
     }
 
     public function store(Request $request, Response $response): Response
@@ -74,6 +128,9 @@ final class AttendanceRecordController
             'level' => $student?->level ?? strtoupper((string) ($data['level'] ?? '')),
             'attendance_date' => trim((string) $data['attendance_date']),
             'check_in_at' => $data['check_in_at'] ?? null,
+            'expected_start_time' => $data['expected_start_time'] ?? null,
+            'duration_hours' => (float) ($data['duration_hours'] ?? 1),
+            'pay_rate' => 12,
             'status' => strtolower((string) $data['status']),
             'source' => 'manual',
             'evidence_code' => $this->evidenceCodes->makeAttendanceCode(),

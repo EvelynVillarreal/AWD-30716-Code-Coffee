@@ -11,4 +11,5 @@ This folder contains technical documentation, course information, deployment ins
 - `BACKEND_API.md`: controller API notes.
 - `RENDER_DEPLOYMENT.md`: current Render backend deployment notes.
 - `RAILWAY_DEPLOYMENT.md`: legacy Railway deployment notes.
+- `CHANGES_2026-05-24.md`: redesign and functional change log.
 - `evidence/`: screenshots and JSON responses for manual verification.

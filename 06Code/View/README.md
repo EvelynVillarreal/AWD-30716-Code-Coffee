@@ -2,21 +2,22 @@
 
 This folder contains the functional view layer for **American Latin Class**.
 
-The frontend is built with HTML, CSS, and vanilla JavaScript. It is organized as a modular website with separate pages for public visitors, enrollment, attendance check-in, login, and role dashboards.
+The frontend is built with HTML, CSS, vanilla JavaScript, Bootstrap 5, and Bootstrap Icons. It is organized as a modular website with separate pages for public visitors, pricing, enrollment, teacher check-in, login, and role dashboards.
 
 ## Included Pages
 
 - `index.html`: public marketing home page for people interested in the dance academy.
+- `pricing.html`: monthly style prices and promotional offer cards.
 - `enrollment.html`: public enrollment request form for new students.
-- `attendance-kiosk.html`: student attendance check-in by national ID.
+- `attendance-kiosk.html`: teacher attendance station for the school computer.
 - `login.html`: one shared login for teachers, students, and directors.
 - `dashboard.html`: role-based dashboard after login.
 
 ## Internal Modules
 
-- Teacher dashboard: monthly class planning and manual attendance registration.
-- Student dashboard: profile information and monthly attendance records.
-- Director dashboard: students, attendance, branch finances, and B2 professional events.
+- Student dashboard: progress, schedule, events, attendance percentage, and monthly calendar.
+- Teacher dashboard: work summary, student attendance control, planning document URL, and work log.
+- Director dashboard: students, teachers, teacher payroll, planning review, branch finances, and B2 professional events.
 
 ## JavaScript Organization
 
@@ -45,10 +46,10 @@ The public academic users use English-only role names and emails. Spanish alias
 accounts such as `alumno@americanlatinclass.com` should not be used in
 production data.
 
-Attendance kiosk test:
+Teacher station:
 
 ```text
-1723456789
+attendance-kiosk.html
 ```
 
 ## Backend Integration
@@ -61,7 +62,7 @@ https://american-latin-class.onrender.com
 
 The backend URL is configured in `script/config.js` through `window.API_BASE_URL`.
 
-The frontend does not write directly to Supabase. Public enrollment, comments, login, attendance check-in, class planning, attendance, finance, and event operations go through the backend.
+The frontend does not write directly to Supabase. Public enrollment, login, teacher check-in, class planning, attendance, student/teacher management, finance, and event operations go through the backend.
 
 ## Deploy to Netlify
 

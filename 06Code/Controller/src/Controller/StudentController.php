@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\AttendanceRecord;
+use App\Model\Branch;
 use App\Model\Student;
+use App\Service\AuditLogger;
 use App\Service\AttendanceSummaryService;
 use App\Service\AuthenticatedUser;
 use App\Service\BranchAccessService;
 use App\Service\DateRangeService;
+use App\Service\Validation\StudentProfileValidator;
 use App\Support\JsonResponder;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -20,7 +23,9 @@ final class StudentController
         private readonly JsonResponder $responder,
         private readonly BranchAccessService $branchAccess,
         private readonly DateRangeService $dateRanges,
-        private readonly AttendanceSummaryService $attendanceSummary
+        private readonly AttendanceSummaryService $attendanceSummary,
+        private readonly StudentProfileValidator $profileValidator,
+        private readonly AuditLogger $audit
     ) {
     }
 
@@ -49,6 +54,107 @@ final class StudentController
             ->get();
 
         return $this->responder->json($response, ['data' => $students]);
+    }
+
+    public function store(Request $request, Response $response): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $data = $this->normalizedStudentData((array) $request->getParsedBody());
+        $branchId = $this->branchAccess->writableBranchId($data, $authUser);
+
+        if ($branchId === null) {
+            return $this->responder->json($response, ['message' => 'This user cannot create students for that branch.'], 403);
+        }
+
+        $data['branch_id'] = $branchId;
+        $errors = $this->profileValidator->validate($data);
+
+        if ($errors !== []) {
+            return $this->responder->json($response, ['errors' => $errors], 422);
+        }
+
+        if (!Branch::query()->find($branchId)) {
+            return $this->responder->json($response, ['message' => 'Selected branch does not exist.'], 422);
+        }
+
+        $student = Student::query()->create($data);
+        $this->audit->record($authUser, 'student.created', 'students', (int) $student->id, [
+            'branch_id' => $branchId,
+            'scholarship_percent' => $student->scholarship_percent,
+        ]);
+
+        return $this->responder->json($response, [
+            'message' => 'Student created.',
+            'data' => $student->load('branch'),
+        ], 201);
+    }
+
+    public function update(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $student = Student::query()->find((int) $args['studentId']);
+
+        if (!$student) {
+            return $this->responder->json($response, ['message' => 'Student was not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $student->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot update that student.'], 403);
+        }
+
+        $data = $this->normalizedStudentData(array_merge($student->toArray(), (array) $request->getParsedBody()));
+        $branchId = $this->branchAccess->writableBranchId($data, $authUser);
+
+        if ($branchId === null) {
+            return $this->responder->json($response, ['message' => 'This user cannot move the student to that branch.'], 403);
+        }
+
+        $data['branch_id'] = $branchId;
+        $errors = $this->profileValidator->validate($data);
+
+        if ($errors !== []) {
+            return $this->responder->json($response, ['errors' => $errors], 422);
+        }
+
+        $student->fill($data);
+        $student->save();
+
+        $this->audit->record($authUser, 'student.updated', 'students', (int) $student->id, [
+            'branch_id' => $branchId,
+            'scholarship_percent' => $student->scholarship_percent,
+            'status' => $student->status,
+        ]);
+
+        return $this->responder->json($response, [
+            'message' => 'Student updated.',
+            'data' => $student->load('branch'),
+        ]);
+    }
+
+    public function destroy(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $student = Student::query()->find((int) $args['studentId']);
+
+        if (!$student) {
+            return $this->responder->json($response, ['message' => 'Student was not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $student->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot remove that student.'], 403);
+        }
+
+        $student->status = 'inactive';
+        $student->save();
+
+        $this->audit->record($authUser, 'student.deactivated', 'students', (int) $student->id, [
+            'branch_id' => (int) $student->branch_id,
+        ]);
+
+        return $this->responder->json($response, [
+            'message' => 'Student deactivated.',
+            'data' => $student,
+        ]);
     }
 
     public function attendance(Request $request, Response $response): Response
@@ -87,5 +193,26 @@ final class StudentController
         }
 
         return $user;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function normalizedStudentData(array $data): array
+    {
+        return [
+            'branch_id' => (int) ($data['branch_id'] ?? 0),
+            'national_id' => preg_replace('/\D+/', '', (string) ($data['national_id'] ?? '')),
+            'full_name' => trim((string) ($data['full_name'] ?? '')),
+            'email' => strtolower(trim((string) ($data['email'] ?? ''))),
+            'phone' => trim((string) ($data['phone'] ?? '')),
+            'level' => strtoupper((string) ($data['level'] ?? 'B1')),
+            'scholarship_percent' => (int) ($data['scholarship_percent'] ?? 0),
+            'guardian_name' => trim((string) ($data['guardian_name'] ?? '')),
+            'guardian_phone' => trim((string) ($data['guardian_phone'] ?? '')),
+            'comments' => trim((string) ($data['comments'] ?? '')),
+            'status' => strtolower((string) ($data['status'] ?? 'active')),
+        ];
     }
 }

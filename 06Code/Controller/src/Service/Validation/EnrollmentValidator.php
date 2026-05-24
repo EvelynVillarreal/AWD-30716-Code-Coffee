@@ -50,8 +50,8 @@ final class EnrollmentValidator
         }
 
         $scholarship = (int) ($data['scholarship_percent'] ?? 0);
-        if (!in_array($scholarship, [0, 50, 75, 100], true)) {
-            $errors['scholarship_percent'] = 'Scholarship must be 0, 50, 75, or 100.';
+        if (!in_array($scholarship, [0, 25, 50, 75, 100], true)) {
+            $errors['scholarship_percent'] = 'Scholarship must be 0, 25, 50, 75, or 100.';
         }
 
         if (strlen(trim((string) ($data['comments'] ?? ''))) > 1000) {

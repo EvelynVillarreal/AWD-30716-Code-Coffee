@@ -19,7 +19,7 @@ create table if not exists public.students (
   email text not null,
   phone text not null,
   level text not null check (level in ('B1', 'B2')),
-  scholarship_percent integer not null default 0 check (scholarship_percent in (0, 50, 75, 100)),
+  scholarship_percent integer not null default 0 check (scholarship_percent in (0, 25, 50, 75, 100)),
   guardian_name text,
   guardian_phone text,
   comments text,
@@ -30,6 +30,9 @@ create table if not exists public.students (
 
 alter table public.students add column if not exists national_id text;
 alter table public.students add column if not exists comments text;
+alter table public.students drop constraint if exists students_scholarship_percent_check;
+alter table public.students add constraint students_scholarship_percent_check
+  check (scholarship_percent in (0, 25, 50, 75, 100));
 
 create unique index if not exists students_national_id_unique
   on public.students (national_id)
@@ -65,6 +68,7 @@ create table if not exists public.class_plans (
   level text not null check (level in ('B1', 'B2')),
   objective text not null,
   activities text not null,
+  document_url text,
   status text not null default 'submitted' check (status in ('submitted', 'approved', 'rejected')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -80,8 +84,11 @@ create table if not exists public.attendance_records (
   level text,
   attendance_date date not null,
   check_in_at timestamptz,
+  expected_start_time time,
+  duration_hours numeric(4,2) not null default 1,
+  pay_rate numeric(10,2) not null default 12,
   status text not null check (status in ('present', 'absent', 'late', 'excused')),
-  source text not null default 'manual' check (source in ('manual', 'kiosk')),
+  source text not null default 'manual' check (source in ('manual', 'kiosk', 'teacher_kiosk')),
   evidence_code text not null,
   notes text,
   created_at timestamptz not null default now(),
@@ -92,7 +99,14 @@ alter table public.attendance_records add column if not exists student_id bigint
 alter table public.attendance_records add column if not exists national_id text;
 alter table public.attendance_records add column if not exists level text;
 alter table public.attendance_records add column if not exists check_in_at timestamptz;
+alter table public.attendance_records add column if not exists expected_start_time time;
+alter table public.attendance_records add column if not exists duration_hours numeric(4,2) not null default 1;
+alter table public.attendance_records add column if not exists pay_rate numeric(10,2) not null default 12;
 alter table public.attendance_records add column if not exists source text not null default 'manual';
+alter table public.attendance_records drop constraint if exists attendance_records_source_check;
+alter table public.attendance_records add constraint attendance_records_source_check
+  check (source in ('manual', 'kiosk', 'teacher_kiosk'));
+alter table public.class_plans add column if not exists document_url text;
 
 create unique index if not exists attendance_kiosk_student_day_unique
   on public.attendance_records (student_id, attendance_date, source)

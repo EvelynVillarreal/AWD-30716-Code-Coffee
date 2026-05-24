@@ -33,6 +33,13 @@ The schema creates:
 
 It also enables row-level security and creates policies for the backend database role.
 
+The current schema also includes the redesign tables/fields used by the portal:
+
+- `students.scholarship_percent` accepts `0`, `25`, `50`, `75`, and `100`.
+- `class_plans.document_url` stores a planning document link.
+- `attendance_records.expected_start_time`, `duration_hours`, and `pay_rate`
+  support teacher check-in and payroll calculations.
+
 ## 2. Configure Backend Credentials
 
 In Supabase, open `Project Settings > Database` and copy the PostgreSQL connection values.

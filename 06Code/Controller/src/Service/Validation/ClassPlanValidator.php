@@ -22,6 +22,11 @@ final class ClassPlanValidator
             }
         }
 
+        $documentUrl = trim((string) ($data['document_url'] ?? ''));
+        if ($documentUrl !== '' && !filter_var($documentUrl, FILTER_VALIDATE_URL)) {
+            $errors['document_url'] = 'Planning document must be a valid URL.';
+        }
+
         return $errors;
     }
 }

@@ -18,11 +18,13 @@ The goal is to show that the project can move from static forms to a real API wi
 - Required `APP_KEY` for token signing.
 - Branch-scoped director permissions.
 - Audit log support for protected write actions.
-- Student attendance kiosk by national ID.
+- Teacher attendance station for school-computer check-in.
 - Monthly attendance endpoint for students.
-- Student listing by branch, level, and scholarship status.
-- Teacher class planning endpoint.
-- Student and teacher attendance endpoint.
+- Student listing and director-managed student create/update/deactivation.
+- Teacher listing and director-managed teacher create/update/deactivation.
+- Teacher class planning endpoint with optional planning document URL.
+- Student and teacher attendance endpoints.
+- Teacher payroll summary at `$12` per class hour.
 - Professional B2 event endpoint.
 - B2 dancer event assignment endpoint.
 - Automatic dancer settlement calculation for paid events, penalties, and deductions.
@@ -134,11 +136,20 @@ This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
 | GET | `/api/branches` | List branches |
 | POST | `/api/enrollments` | Register a new enrollment request |
 | POST | `/api/auth/login` | Login with stored user credentials |
-| POST | `/api/kiosk/attendance` | Register student check-in by national ID |
+| POST | `/api/teacher-attendance/check-in` | Register teacher check-in from the school station |
 | GET | `/api/me` | Get current authenticated user profile |
 | GET | `/api/me/attendance` | Get student monthly attendance |
 | GET | `/api/students` | Protected director student list |
+| POST | `/api/students` | Protected director student creation |
+| PATCH | `/api/students/{studentId}` | Protected director student update |
+| DELETE | `/api/students/{studentId}` | Protected director student deactivation |
+| GET | `/api/teachers` | Protected director teacher list |
+| POST | `/api/teachers` | Protected director teacher creation |
+| PATCH | `/api/teachers/{teacherId}` | Protected director teacher update |
+| DELETE | `/api/teachers/{teacherId}` | Protected director teacher deactivation |
+| GET | `/api/class-plans` | Protected teacher/director class plan list |
 | POST | `/api/class-plans` | Protected teacher/director class plan |
+| GET | `/api/attendance-records` | Protected teacher/director attendance records and teacher payroll summary |
 | POST | `/api/attendance-records` | Protected teacher/director attendance |
 | GET | `/api/professional-events` | Protected director event list |
 | POST | `/api/professional-events` | Protected director event creation |

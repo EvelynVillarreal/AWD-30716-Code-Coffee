@@ -2,6 +2,8 @@
 
 Repository for the **American Latin Class** project.
 
+Current system version: **ALCSystem v2**.
+
 ## Project Map
 
 - `01Definition`: initial project definition.
@@ -31,3 +33,4 @@ Repository for the **American Latin Class** project.
 - Credentials and environment variables: `03Documentation/CREDENTIALS_SETUP.md`
 - Render deployment: `03Documentation/RENDER_DEPLOYMENT.md`
 - Recommended repository structure: `03Documentation/PROJECT_STRUCTURE.md`
+- 2026-05-24 redesign notes: `03Documentation/CHANGES_2026-05-24.md`

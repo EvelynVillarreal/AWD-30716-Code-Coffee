@@ -7,6 +7,7 @@ use App\Service\AuthenticatedUser;
 use App\Service\BranchAccessService;
 use App\Service\DateRangeService;
 use App\Service\JwtTokenService;
+use App\Service\TeacherPayrollService;
 use App\Service\Validation\EnrollmentValidator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -59,6 +60,16 @@ $test->assertSame(4, $summary['total'], 'AttendanceSummary should count total re
 $test->assertSame(2, $summary['present'], 'AttendanceSummary should count present records.');
 $test->assertSame(1, $summary['late'], 'AttendanceSummary should count late records.');
 
+$teacherPayroll = new TeacherPayrollService();
+$teacherPay = $teacherPayroll->summarize([
+    (object) ['status' => 'present', 'duration_hours' => 1, 'pay_rate' => 12],
+    (object) ['status' => 'late', 'duration_hours' => 1.5, 'pay_rate' => 12],
+    (object) ['status' => 'absent', 'duration_hours' => 1, 'pay_rate' => 12],
+]);
+$test->assertSame(3, $teacherPay['records'], 'TeacherPayroll should count teacher records.');
+$test->assertSame(2.5, $teacherPay['payable_hours'], 'TeacherPayroll should count present and late hours.');
+$test->assertSame(30.0, $teacherPay['gross_amount'], 'TeacherPayroll should calculate payment at the record rate.');
+
 $branchAccess = new BranchAccessService();
 $matrixDirector = new AuthenticatedUser(1, 'matrix@example.com', 'Matrix Director', 'director', 1, null);
 $branchDirector = new AuthenticatedUser(2, 'branch@example.com', 'Branch Director', 'director', 3, null);
@@ -81,10 +92,12 @@ $validEnrollment = [
 ];
 $enrollmentValidator = new EnrollmentValidator();
 $test->assertSame([], $enrollmentValidator->validate($validEnrollment), 'Valid enrollment data should pass validation.');
+$validEnrollment['scholarship_percent'] = 25;
+$test->assertSame([], $enrollmentValidator->validate($validEnrollment), 'A 25 percent scholarship should be valid.');
 
 $invalidEnrollment = $validEnrollment;
 $invalidEnrollment['email'] = 'not-an-email';
-$invalidEnrollment['scholarship_percent'] = 25;
+$invalidEnrollment['scholarship_percent'] = 40;
 $errors = $enrollmentValidator->validate($invalidEnrollment);
 $test->assertTrue(isset($errors['email']), 'Invalid email should fail validation.');
 $test->assertTrue(isset($errors['scholarship_percent']), 'Invalid scholarship should fail validation.');

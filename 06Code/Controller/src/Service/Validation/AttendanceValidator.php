@@ -37,6 +37,35 @@ final class AttendanceValidator
      * @param array<string, mixed> $data
      * @return array<string, string>
      */
+    public function validateTeacherKiosk(array $data): array
+    {
+        $errors = [];
+
+        if (!filter_var((string) ($data['email'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Teacher email is required.';
+        }
+
+        if (empty($data['branch_id'])) {
+            $errors['branch_id'] = 'Branch is required.';
+        }
+
+        $expectedTime = trim((string) ($data['expected_start_time'] ?? ''));
+        if ($expectedTime !== '' && !preg_match('/^\d{2}:\d{2}$/', $expectedTime)) {
+            $errors['expected_start_time'] = 'Expected start time must use HH:MM format.';
+        }
+
+        $duration = (float) ($data['duration_hours'] ?? 1);
+        if ($duration < 0.25 || $duration > 8) {
+            $errors['duration_hours'] = 'Duration must be between 0.25 and 8 hours.';
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, string>
+     */
     public function validateKiosk(array $data): array
     {
         $errors = [];
