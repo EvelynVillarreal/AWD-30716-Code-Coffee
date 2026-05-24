@@ -1,4 +1,7 @@
 Controller/.env
 Controller/vendor/
-Evidence/
 View/
+.git
+*.md
+Evidence/
+render.yaml

@@ -1,6 +1,6 @@
 class AppConfig {
   constructor() {
-    this.apiBase = "https://american-latin-class-backend-production.up.railway.app";
+    this.apiBase = window.API_BASE_URL || "https://american-latin-class-backend-production.up.railway.app";
     this.sessionKey = "alc-session";
 
     this.roleLabels = {
