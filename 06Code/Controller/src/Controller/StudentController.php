@@ -77,6 +77,11 @@ final class StudentController
             return $this->responder->json($response, ['message' => 'Selected branch does not exist.'], 422);
         }
 
+        $duplicateMessage = $this->duplicateMessage($data);
+        if ($duplicateMessage !== null) {
+            return $this->responder->json($response, ['message' => $duplicateMessage], 422);
+        }
+
         $student = Student::query()->create($data);
         $this->audit->record($authUser, 'student.created', 'students', (int) $student->id, [
             'branch_id' => $branchId,
@@ -114,6 +119,11 @@ final class StudentController
 
         if ($errors !== []) {
             return $this->responder->json($response, ['errors' => $errors], 422);
+        }
+
+        $duplicateMessage = $this->duplicateMessage($data, (int) $student->id);
+        if ($duplicateMessage !== null) {
+            return $this->responder->json($response, ['message' => $duplicateMessage], 422);
         }
 
         $student->fill($data);
@@ -214,5 +224,36 @@ final class StudentController
             'comments' => trim((string) ($data['comments'] ?? '')),
             'status' => strtolower((string) ($data['status'] ?? 'active')),
         ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function duplicateMessage(array $data, ?int $exceptStudentId = null): ?string
+    {
+        $query = Student::query()->where('national_id', $data['national_id']);
+        if ($exceptStudentId !== null) {
+            $query->where('id', '<>', $exceptStudentId);
+        }
+
+        if ($query->exists()) {
+            return 'There is already a student with this national ID.';
+        }
+
+        $query = Student::query()->whereRaw('lower(email) = ?', [$data['email']]);
+        if ($exceptStudentId !== null) {
+            $query->where('id', '<>', $exceptStudentId);
+        }
+
+        if ($query->exists()) {
+            return 'There is already a student with this email.';
+        }
+
+        $query = Student::query()->where('phone', $data['phone']);
+        if ($exceptStudentId !== null) {
+            $query->where('id', '<>', $exceptStudentId);
+        }
+
+        return $query->exists() ? 'There is already a student with this phone.' : null;
     }
 }

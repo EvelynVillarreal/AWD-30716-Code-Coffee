@@ -30,6 +30,20 @@ final class AttendanceValidator
             $errors['status'] = 'Status must be present, absent, late, or excused.';
         }
 
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) ($data['attendance_date'] ?? ''))) {
+            $errors['attendance_date'] = 'Attendance date must use YYYY-MM-DD format.';
+        }
+
+        $expectedTime = trim((string) ($data['expected_start_time'] ?? ''));
+        if ($expectedTime !== '' && !preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $expectedTime)) {
+            $errors['expected_start_time'] = 'Expected start time must use HH:MM format.';
+        }
+
+        $duration = (float) ($data['duration_hours'] ?? 1);
+        if ($duration < 0.25 || $duration > 8) {
+            $errors['duration_hours'] = 'Duration must be between 0.25 and 8 hours.';
+        }
+
         return $errors;
     }
 
@@ -50,7 +64,9 @@ final class AttendanceValidator
         }
 
         $expectedTime = trim((string) ($data['expected_start_time'] ?? ''));
-        if ($expectedTime !== '' && !preg_match('/^\d{2}:\d{2}$/', $expectedTime)) {
+        if ($expectedTime === '') {
+            $errors['expected_start_time'] = 'Expected start time is required.';
+        } elseif (!preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $expectedTime)) {
             $errors['expected_start_time'] = 'Expected start time must use HH:MM format.';
         }
 

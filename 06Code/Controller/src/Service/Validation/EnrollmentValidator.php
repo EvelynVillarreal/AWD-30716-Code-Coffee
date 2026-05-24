@@ -20,8 +20,13 @@ final class EnrollmentValidator
             $errors['branch_id'] = 'Branch is required.';
         }
 
-        if (trim((string) ($data['full_name'] ?? '')) === '') {
+        $fullName = trim((string) ($data['full_name'] ?? ''));
+        if ($fullName === '') {
             $errors['full_name'] = 'Full name is required.';
+        } elseif (!preg_match("/^[\p{L}\s'-]+$/u", $fullName)) {
+            $errors['full_name'] = 'Full name must contain only letters.';
+        } elseif (strlen($fullName) > 120) {
+            $errors['full_name'] = 'Full name must not exceed 120 characters.';
         }
 
         $nationalId = preg_replace('/\D+/', '', (string) ($data['national_id'] ?? ''));
@@ -33,8 +38,11 @@ final class EnrollmentValidator
             $errors['national_id'] = 'National ID is not a valid Ecuadorian ID.';
         }
 
-        if (!filter_var((string) ($data['email'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+        $email = (string) ($data['email'] ?? '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'A valid email is required.';
+        } elseif (strlen($email) > 254) {
+            $errors['email'] = 'Email must not exceed 254 characters.';
         }
 
         $phone = preg_replace('/[^\d+]+/', '', (string) ($data['phone'] ?? ''));

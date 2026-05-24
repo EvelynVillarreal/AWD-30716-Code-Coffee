@@ -11,26 +11,41 @@ class AppConfig {
 
     this.modulesByRole = {
       student: [
-        { id: "student-overview", icon: "bi-speedometer2", label: "Progress" },
-        { id: "student-schedule", icon: "bi-calendar-week", label: "Schedule" },
-        { id: "student-attendance", icon: "bi-calendar2-check", label: "Attendance" },
-        { id: "student-events", icon: "bi-stars", label: "Events" }
+        { id: "student-overview", slug: "overview", icon: "bi-speedometer2", label: "Progress" },
+        { id: "student-schedule", slug: "schedule", icon: "bi-calendar-week", label: "Schedule" },
+        { id: "student-attendance", slug: "attendance", icon: "bi-calendar2-check", label: "Attendance" },
+        { id: "student-events", slug: "events", icon: "bi-stars", label: "Events" }
       ],
       teacher: [
-        { id: "teacher-overview", icon: "bi-clock-history", label: "Work summary" },
-        { id: "teacher-student-attendance", icon: "bi-person-check", label: "Student attendance" },
-        { id: "teacher-planning", icon: "bi-file-earmark-arrow-up", label: "Planning" },
-        { id: "teacher-work-log", icon: "bi-table", label: "Work log" }
+        { id: "teacher-overview", slug: "overview", icon: "bi-clock-history", label: "Work summary" },
+        { id: "teacher-student-attendance", slug: "students", icon: "bi-person-check", label: "Student attendance" },
+        { id: "teacher-planning", slug: "planning", icon: "bi-file-earmark-arrow-up", label: "Planning" },
+        { id: "teacher-work-log", slug: "work-log", icon: "bi-table", label: "Work log" }
       ],
       director: [
-        { id: "director-overview", icon: "bi-grid", label: "Overview" },
-        { id: "director-students", icon: "bi-mortarboard", label: "Students" },
-        { id: "director-teachers", icon: "bi-person-workspace", label: "Teachers" },
-        { id: "director-payroll", icon: "bi-cash-coin", label: "Payroll" },
-        { id: "director-planning", icon: "bi-journal-check", label: "Planning" },
-        { id: "director-finance", icon: "bi-bar-chart", label: "Finance" },
-        { id: "director-events", icon: "bi-calendar-event", label: "B2 events" }
+        { id: "director-overview", slug: "overview", icon: "bi-grid", label: "Overview" },
+        { id: "director-students", slug: "students", icon: "bi-mortarboard", label: "Students" },
+        { id: "director-teachers", slug: "teachers", icon: "bi-person-workspace", label: "Teachers" },
+        { id: "director-payroll", slug: "payroll", icon: "bi-cash-coin", label: "Payroll" },
+        { id: "director-planning", slug: "planning", icon: "bi-journal-check", label: "Planning" },
+        { id: "director-finance", slug: "finance", icon: "bi-bar-chart", label: "Finance" },
+        { id: "director-events", slug: "events", icon: "bi-calendar-event", label: "B2 events" }
       ]
+    };
+
+    this.routeAliases = {
+      overview: "overview",
+      overviews: "overview",
+      students: "students",
+      teachers: "teachers",
+      techers: "teachers",
+      payroll: "payroll",
+      planning: "planning",
+      finance: "finance",
+      events: "events",
+      attendance: "attendance",
+      schedule: "schedule",
+      "work-log": "work-log"
     };
 
     this.defaultSchedules = {
@@ -90,7 +105,7 @@ class Validators {
   static name(value) {
     const trimmed = (value || "").trim();
     if (!trimmed) return "Full name is required.";
-    if (!/^[a-zA-ZÀ-ÿñÑ\s'-]+$/.test(trimmed)) return "Full name must contain only letters.";
+    if (!/^[\p{L}\s'-]+$/u.test(trimmed)) return "Full name must contain only letters.";
     if (trimmed.length < 2) return "Full name must be at least 2 characters.";
     if (trimmed.length > 120) return "Full name must not exceed 120 characters.";
     return "";
@@ -140,7 +155,7 @@ class Validators {
   static guardianName(value) {
     const trimmed = (value || "").trim();
     if (!trimmed) return "";
-    if (!/^[a-zA-ZÀ-ÿñÑ\s'-]+$/.test(trimmed)) return "Guardian name must contain only letters.";
+    if (!/^[\p{L}\s'-]+$/u.test(trimmed)) return "Guardian name must contain only letters.";
     return "";
   }
 
@@ -159,6 +174,112 @@ class Validators {
       phone: Validators.phone(data.phone),
       guardian_name: Validators.guardianName(data.guardian_name),
       guardian_phone: Validators.guardianPhone(data.guardian_phone)
+    };
+  }
+
+  static password(value, required = true) {
+    if (!value && !required) return "";
+    if (!value) return "Password is required.";
+    if (String(value).length < 8) return "Password must be at least 8 characters.";
+    return "";
+  }
+
+  static url(value) {
+    const trimmed = (value || "").trim();
+    if (!trimmed) return "";
+
+    try {
+      const parsed = new URL(trimmed);
+      return ["http:", "https:"].includes(parsed.protocol) ? "" : "URL must start with http or https.";
+    } catch {
+      return "Enter a valid URL.";
+    }
+  }
+
+  static required(value, label) {
+    return String(value ?? "").trim() ? "" : `${label} is required.`;
+  }
+
+  static option(value, allowed, label) {
+    return allowed.includes(String(value)) ? "" : `${label} has an invalid value.`;
+  }
+
+  static numberRange(value, min, max, label) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return `${label} must be a number.`;
+    if (number < min || number > max) return `${label} must be between ${min} and ${max}.`;
+    return "";
+  }
+
+  static studentForm(data) {
+    return {
+      full_name: Validators.name(data.full_name),
+      email: Validators.email(data.email),
+      national_id: Validators.ecuadorianId(data.national_id),
+      phone: Validators.phone(data.phone),
+      branch_id: Validators.numberRange(data.branch_id, 1, 9999, "Branch"),
+      level: Validators.option(data.level, ["B1", "B2"], "Level"),
+      scholarship_percent: Validators.option(String(data.scholarship_percent), ["0", "25", "50", "75", "100"], "Scholarship"),
+      status: Validators.option(data.status, ["pending", "active", "inactive"], "Status")
+    };
+  }
+
+  static teacherForm(data) {
+    return {
+      name: Validators.name(data.name),
+      email: Validators.email(data.email),
+      branch_id: Validators.numberRange(data.branch_id, 1, 9999, "Branch"),
+      password: Validators.password(data.password)
+    };
+  }
+
+  static teacherKioskForm(data) {
+    return {
+      email: Validators.email(data.email),
+      branch_id: Validators.numberRange(data.branch_id, 1, 9999, "Branch"),
+      expected_start_time: /^\d{2}:\d{2}$/.test(data.expected_start_time || "") ? "" : "Expected start time is required.",
+      duration_hours: Validators.numberRange(data.duration_hours, 0.25, 8, "Class hours"),
+      style: Validators.required(data.style, "Style")
+    };
+  }
+
+  static attendanceForm(data) {
+    return {
+      person_name: Validators.name(data.person_name),
+      attendance_date: Validators.required(data.attendance_date, "Date"),
+      status: Validators.option(data.status, ["present", "late", "absent", "excused"], "Status"),
+      level: Validators.option(data.level, ["B1", "B2"], "Level")
+    };
+  }
+
+  static classPlanForm(data) {
+    return {
+      teacher_name: Validators.name(data.teacher_name),
+      month: /^\d{4}-\d{2}$/.test(data.month || "") ? "" : "Month is required.",
+      level: Validators.option(data.level, ["B1", "B2"], "Level"),
+      objective: Validators.required(data.objective, "Objective"),
+      activities: Validators.required(data.activities, "Activities"),
+      document_url: Validators.url(data.document_url)
+    };
+  }
+
+  static financeForm(data) {
+    return {
+      branch_id: Validators.numberRange(data.branch_id, 1, 9999, "Branch"),
+      income: Validators.numberRange(data.income, 0, 999999, "Income"),
+      expenses: Validators.numberRange(data.expenses, 0, 999999, "Expenses"),
+      matrix_share_percent: Validators.numberRange(data.matrix_share_percent, 0, 100, "Matrix percent")
+    };
+  }
+
+  static eventForm(data) {
+    return {
+      client_name: Validators.required(data.client_name, "Client"),
+      event_type: Validators.required(data.event_type, "Event type"),
+      event_date: Validators.required(data.event_date, "Date"),
+      dancer_name: Validators.name(data.dancer_name),
+      total_amount: Validators.numberRange(data.total_amount, 0, 999999, "Amount"),
+      deduction_amount: Validators.numberRange(data.deduction_amount, 0, 999999, "Deduction")
     };
   }
 }
@@ -245,7 +366,23 @@ class ApiClient {
 
   async parseJson(response) {
     const text = await response.text();
-    return text ? JSON.parse(text) : {};
+    if (!text) return {};
+
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      try {
+        return JSON.parse(text);
+      } catch {
+        throw new Error("The backend returned malformed JSON. Please redeploy Render and try again.");
+      }
+    }
+
+    const preview = text.trim().replace(/\s+/g, " ").slice(0, 90);
+    throw new Error(
+      `The backend returned HTML instead of JSON for ${response.url}. ` +
+      `Verify Render is deployed with ALCSystem v2 and Supabase has the latest schema. ` +
+      `Preview: ${preview}`
+    );
   }
 
   firstError(errors) {
@@ -296,9 +433,24 @@ class PublicPagesController {
   }
 
   init() {
+    this.initPasswordToggles();
     this.initEnrollmentPage();
     this.initLoginPage();
     this.initTeacherKioskPage();
+  }
+
+  initPasswordToggles() {
+    document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        if (!input) return;
+
+        const visible = input.type === "text";
+        input.type = visible ? "password" : "text";
+        button.setAttribute("aria-label", visible ? "Show password" : "Hide password");
+        button.innerHTML = `<i class="bi ${visible ? "bi-eye" : "bi-eye-slash"}"></i>`;
+      });
+    });
   }
 
   initEnrollmentPage() {
@@ -381,6 +533,21 @@ class PublicPagesController {
     const form = document.getElementById("loginForm");
     if (!form) return;
 
+    const clearLoginFields = () => {
+      form.reset();
+      Dom.setValue("loginEmail", "");
+      Dom.setValue("loginPassword", "");
+    };
+
+    window.addEventListener("pageshow", () => {
+      if (this.sessionStore.get()?.token) {
+        window.location.replace("dashboard.html");
+        return;
+      }
+
+      clearLoginFields();
+    });
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
@@ -395,8 +562,10 @@ class PublicPagesController {
         });
 
         this.sessionStore.set(payload);
-        window.location.href = "dashboard.html";
+        clearLoginFields();
+        window.location.replace("dashboard.html");
       } catch (error) {
+        Dom.setValue("loginPassword", "");
         Dom.showMessage("loginMessage", error.message);
       }
     });
@@ -409,17 +578,25 @@ class PublicPagesController {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      const data = {
+        email: document.getElementById("teacherKioskEmail").value.trim().toLowerCase(),
+        branch_id: Number(document.getElementById("teacherKioskBranch").value),
+        expected_start_time: document.getElementById("teacherExpectedStart").value,
+        duration_hours: Number(document.getElementById("teacherDurationHours").value),
+        style: document.getElementById("teacherKioskStyle").value
+      };
+      const validationError = Object.values(Validators.teacherKioskForm(data)).find(Boolean);
+
+      if (validationError) {
+        Dom.showMessage("teacherKioskMessage", validationError);
+        return;
+      }
+
       try {
         const payload = await this.apiClient.request("/api/teacher-attendance/check-in", {
           method: "POST",
           auth: false,
-          body: {
-            email: document.getElementById("teacherKioskEmail").value.trim().toLowerCase(),
-            branch_id: Number(document.getElementById("teacherKioskBranch").value),
-            expected_start_time: document.getElementById("teacherExpectedStart").value,
-            duration_hours: Number(document.getElementById("teacherDurationHours").value),
-            style: document.getElementById("teacherKioskStyle").value
-          }
+          body: data
         });
 
         Dom.showMessage("teacherKioskMessage", `${payload.message} Code: ${payload.data.evidence_code}.`);
@@ -468,6 +645,8 @@ class DashboardController {
     this.currentUser = session.user;
     this.setDefaultMonth();
     this.renderShell();
+    this.currentModule = this.moduleFromCurrentPath()?.id || this.currentModule;
+    this.syncActiveModuleButton();
     this.bindShell();
     await this.reloadData();
   }
@@ -502,21 +681,67 @@ class DashboardController {
   bindShell() {
     document.getElementById("logoutButton").addEventListener("click", () => {
       this.sessionStore.clear();
-      window.location.href = "login.html";
+      window.location.replace("login.html");
     });
 
     document.getElementById("moduleNav").addEventListener("click", (event) => {
       const button = event.target.closest("[data-module]");
       if (!button) return;
 
-      this.currentModule = button.dataset.module;
-      document.querySelectorAll("[data-module]").forEach((item) => {
-        item.classList.toggle("active", item === button);
-      });
-      this.render();
+      this.activateModule(button.dataset.module, true);
     });
 
     document.getElementById("dashboardMonth").addEventListener("change", () => this.reloadData());
+
+    window.addEventListener("popstate", () => {
+      const module = this.moduleFromCurrentPath();
+      if (module) {
+        this.activateModule(module.id, false);
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      const session = this.sessionStore.get();
+      if (!session?.token || !session?.user) {
+        window.location.replace("login.html");
+      }
+    });
+  }
+
+  modules() {
+    return this.config.modulesByRole[this.currentUser.role] || [];
+  }
+
+  moduleFromCurrentPath() {
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    const rawSlug = parts[0] === "dashboard" ? parts[1] : "";
+    const slug = this.config.routeAliases[rawSlug || "overview"] || "overview";
+
+    return this.modules().find((module) => module.slug === slug) || this.modules()[0] || null;
+  }
+
+  moduleById(moduleId) {
+    return this.modules().find((module) => module.id === moduleId) || this.modules()[0] || null;
+  }
+
+  activateModule(moduleId, pushUrl) {
+    const module = this.moduleById(moduleId);
+    if (!module) return;
+
+    this.currentModule = module.id;
+    this.syncActiveModuleButton();
+
+    if (pushUrl) {
+      window.history.pushState({ module: module.id }, "", `/dashboard/${module.slug}`);
+    }
+
+    this.render();
+  }
+
+  syncActiveModuleButton() {
+    document.querySelectorAll("[data-module]").forEach((button) => {
+      button.classList.toggle("active", button.dataset.module === this.currentModule);
+    });
   }
 
   async reloadData() {
@@ -524,6 +749,11 @@ class DashboardController {
       await this.loadData();
       this.render();
     } catch (error) {
+      if (!this.sessionStore.get()?.token) {
+        window.location.replace("login.html");
+        return;
+      }
+
       document.getElementById("moduleHost").innerHTML = `<div class="alert alert-danger">${Dom.escape(error.message)}</div>`;
     }
   }
@@ -682,7 +912,7 @@ class DashboardController {
         <input type="hidden" id="attendanceType" value="student">
         <label>
           <span>Student name</span>
-          <input id="attendanceName" class="form-control" type="text" placeholder="Mateo Vera" required>
+          <input id="attendanceName" class="form-control" type="text" placeholder="Mateo Vera" maxlength="120" pattern="[A-Za-zÀ-ÿñÑ\\s'-]+" required>
         </label>
         <label>
           <span>Date</span>
@@ -727,11 +957,11 @@ class DashboardController {
         </label>
         <label>
           <span>Planning document URL</span>
-          <input id="planDocumentUrl" class="form-control" type="url" placeholder="https://drive.google.com/...">
+          <input id="planDocumentUrl" class="form-control" type="url" placeholder="https://drive.google.com/..." inputmode="url">
         </label>
         <label class="full">
           <span>Objective</span>
-          <input id="planObjective" class="form-control" type="text" placeholder="Improve rhythm and footwork" required>
+          <input id="planObjective" class="form-control" type="text" placeholder="Improve rhythm and footwork" maxlength="180" required>
         </label>
         <label class="full">
           <span>Activities</span>
@@ -775,10 +1005,10 @@ class DashboardController {
   renderDirectorStudents() {
     return `
       <form class="module-card form-grid" id="studentForm">
-        <label><span>Name</span><input id="studentName" class="form-control" required></label>
-        <label><span>Email</span><input id="studentEmail" class="form-control" type="email" required></label>
-        <label><span>National ID</span><input id="studentNationalId" class="form-control" required></label>
-        <label><span>Phone</span><input id="studentPhone" class="form-control" required></label>
+        <label><span>Name</span><input id="studentName" class="form-control" maxlength="120" pattern="[A-Za-zÀ-ÿñÑ\\s'-]+" required></label>
+        <label><span>Email</span><input id="studentEmail" class="form-control" type="email" autocomplete="off" autocapitalize="none" spellcheck="false" required></label>
+        <label><span>National ID</span><input id="studentNationalId" class="form-control" inputmode="numeric" maxlength="10" pattern="\\d{10}" required></label>
+        <label><span>Phone</span><input id="studentPhone" class="form-control" type="tel" inputmode="tel" maxlength="15" pattern="[0-9+\\s-]{7,15}" required></label>
         <label><span>Branch</span><select id="studentBranch" class="form-select" data-branch-select></select></label>
         <label><span>Level</span><select id="studentLevel" class="form-select"><option>B1</option><option>B2</option></select></label>
         <label><span>Scholarship</span><select id="studentScholarship" class="form-select">${this.scholarshipOptions(0)}</select></label>
@@ -816,10 +1046,18 @@ class DashboardController {
   renderDirectorTeachers() {
     return `
       <form class="module-card form-grid" id="teacherForm">
-        <label><span>Name</span><input id="teacherName" class="form-control" required></label>
-        <label><span>Email</span><input id="teacherEmail" class="form-control" type="email" required></label>
+        <label><span>Name</span><input id="teacherName" class="form-control" maxlength="120" pattern="[A-Za-zÀ-ÿñÑ\\s'-]+" required></label>
+        <label><span>Email</span><input id="teacherEmail" class="form-control" type="email" autocomplete="off" autocapitalize="none" spellcheck="false" required></label>
         <label><span>Branch</span><select id="teacherBranch" class="form-select" data-branch-select></select></label>
-        <label><span>Initial password</span><input id="teacherPassword" class="form-control" type="password" value="ALC2026*" required></label>
+        <label>
+          <span>Initial password</span>
+          <div class="input-group">
+            <input id="teacherPassword" class="form-control" type="password" value="ALC2026*" autocomplete="new-password" minlength="8" required>
+            <button class="btn btn-outline-secondary password-toggle" type="button" data-password-toggle="teacherPassword" aria-label="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </label>
         <button class="btn btn-warning fw-bold full" type="submit"><i class="bi bi-plus-circle"></i> Add teacher</button>
         <p class="notice full" id="teacherMessage"></p>
       </form>
@@ -963,6 +1201,7 @@ class DashboardController {
   }
 
   bindRenderedModule() {
+    this.bindPasswordToggles();
     this.bindAttendanceForm();
     this.bindClassPlanForm();
     this.bindStudentForm();
@@ -977,23 +1216,52 @@ class DashboardController {
     Dom.setValue("eventDate", today);
   }
 
+  bindPasswordToggles() {
+    document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+      if (button.dataset.bound === "true") return;
+
+      button.dataset.bound = "true";
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        if (!input) return;
+
+        const visible = input.type === "text";
+        input.type = visible ? "password" : "text";
+        button.setAttribute("aria-label", visible ? "Show password" : "Hide password");
+        button.innerHTML = `<i class="bi ${visible ? "bi-eye" : "bi-eye-slash"}"></i>`;
+      });
+    });
+  }
+
+  validationError(errors) {
+    return Object.values(errors).find(Boolean) || "";
+  }
+
   bindAttendanceForm() {
     const form = document.getElementById("attendanceForm");
     if (!form) return;
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const data = {
+        branch_id: this.currentUser.branch_id || 1,
+        person_type: "student",
+        person_name: document.getElementById("attendanceName").value.trim(),
+        attendance_date: document.getElementById("attendanceDate").value,
+        status: document.getElementById("attendanceStatus").value,
+        level: document.getElementById("attendanceLevel").value
+      };
+      const validationError = this.validationError(Validators.attendanceForm(data));
+
+      if (validationError) {
+        Dom.showMessage("attendanceMessage", validationError);
+        return;
+      }
+
       try {
         const payload = await this.apiClient.request("/api/attendance-records", {
           method: "POST",
-          body: {
-            branch_id: this.currentUser.branch_id || 1,
-            person_type: "student",
-            person_name: document.getElementById("attendanceName").value.trim(),
-            attendance_date: document.getElementById("attendanceDate").value,
-            status: document.getElementById("attendanceStatus").value,
-            level: document.getElementById("attendanceLevel").value
-          }
+          body: data
         });
         Dom.showMessage("attendanceMessage", `Attendance saved: ${payload.data.evidence_code}.`);
         form.reset();
@@ -1010,18 +1278,26 @@ class DashboardController {
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const data = {
+        branch_id: this.currentUser.branch_id || 1,
+        teacher_name: document.getElementById("planTeacher").value.trim(),
+        month: document.getElementById("planMonth").value,
+        level: document.getElementById("planLevel").value,
+        objective: document.getElementById("planObjective").value.trim(),
+        activities: document.getElementById("planActivities").value.trim(),
+        document_url: document.getElementById("planDocumentUrl").value.trim()
+      };
+      const validationError = this.validationError(Validators.classPlanForm(data));
+
+      if (validationError) {
+        Dom.showMessage("planMessage", validationError);
+        return;
+      }
+
       try {
         await this.apiClient.request("/api/class-plans", {
           method: "POST",
-          body: {
-            branch_id: this.currentUser.branch_id || 1,
-            teacher_name: document.getElementById("planTeacher").value.trim(),
-            month: document.getElementById("planMonth").value,
-            level: document.getElementById("planLevel").value,
-            objective: document.getElementById("planObjective").value.trim(),
-            activities: document.getElementById("planActivities").value.trim(),
-            document_url: document.getElementById("planDocumentUrl").value.trim()
-          }
+          body: data
         });
         Dom.showMessage("planMessage", "Planning submitted for director review.");
         await this.reloadData();
@@ -1037,19 +1313,27 @@ class DashboardController {
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const data = {
+        branch_id: Number(document.getElementById("studentBranch").value),
+        national_id: Formatters.digitsOnly(document.getElementById("studentNationalId").value),
+        full_name: document.getElementById("studentName").value.trim(),
+        email: document.getElementById("studentEmail").value.trim().toLowerCase(),
+        phone: document.getElementById("studentPhone").value.trim(),
+        level: document.getElementById("studentLevel").value,
+        scholarship_percent: Number(document.getElementById("studentScholarship").value),
+        status: document.getElementById("studentStatus").value
+      };
+      const validationError = this.validationError(Validators.studentForm(data));
+
+      if (validationError) {
+        Dom.showMessage("studentMessage", validationError);
+        return;
+      }
+
       try {
         await this.apiClient.request("/api/students", {
           method: "POST",
-          body: {
-            branch_id: Number(document.getElementById("studentBranch").value),
-            national_id: Formatters.digitsOnly(document.getElementById("studentNationalId").value),
-            full_name: document.getElementById("studentName").value.trim(),
-            email: document.getElementById("studentEmail").value.trim().toLowerCase(),
-            phone: document.getElementById("studentPhone").value.trim(),
-            level: document.getElementById("studentLevel").value,
-            scholarship_percent: Number(document.getElementById("studentScholarship").value),
-            status: document.getElementById("studentStatus").value
-          }
+          body: data
         });
         Dom.showMessage("studentMessage", "Student created.");
         await this.reloadData();
@@ -1072,14 +1356,21 @@ class DashboardController {
   async saveStudent(studentId) {
     const student = this.data.students.find((item) => Number(item.id) === Number(studentId));
     if (!student) return;
+    const data = {
+      ...student,
+      scholarship_percent: Number(document.querySelector(`[data-student-scholarship="${studentId}"]`).value),
+      status: document.querySelector(`[data-student-status="${studentId}"]`).value
+    };
+    const validationError = this.validationError(Validators.studentForm(data));
+
+    if (validationError) {
+      window.alert(validationError);
+      return;
+    }
 
     await this.apiClient.request(`/api/students/${studentId}`, {
       method: "PATCH",
-      body: {
-        ...student,
-        scholarship_percent: Number(document.querySelector(`[data-student-scholarship="${studentId}"]`).value),
-        status: document.querySelector(`[data-student-status="${studentId}"]`).value
-      }
+      body: data
     });
     await this.reloadData();
   }
@@ -1095,15 +1386,23 @@ class DashboardController {
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const data = {
+        name: document.getElementById("teacherName").value.trim(),
+        email: document.getElementById("teacherEmail").value.trim().toLowerCase(),
+        branch_id: Number(document.getElementById("teacherBranch").value),
+        password: document.getElementById("teacherPassword").value
+      };
+      const validationError = this.validationError(Validators.teacherForm(data));
+
+      if (validationError) {
+        Dom.showMessage("teacherMessage", validationError);
+        return;
+      }
+
       try {
         await this.apiClient.request("/api/teachers", {
           method: "POST",
-          body: {
-            name: document.getElementById("teacherName").value.trim(),
-            email: document.getElementById("teacherEmail").value.trim().toLowerCase(),
-            branch_id: Number(document.getElementById("teacherBranch").value),
-            password: document.getElementById("teacherPassword").value
-          }
+          body: data
         });
         Dom.showMessage("teacherMessage", "Teacher created.");
         await this.reloadData();
@@ -1128,15 +1427,23 @@ class DashboardController {
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const data = {
+        branch_id: Number(document.getElementById("financeBranch").value),
+        month: this.selectedMonth(),
+        income: Number(document.getElementById("financeIncome").value),
+        expenses: Number(document.getElementById("financeExpenses").value),
+        matrix_share_percent: Number(document.getElementById("financeShare").value)
+      };
+      const validationError = this.validationError(Validators.financeForm(data));
+
+      if (validationError) {
+        window.alert(validationError);
+        return;
+      }
+
       await this.apiClient.request("/api/branch-finance-reports", {
         method: "POST",
-        body: {
-          branch_id: Number(document.getElementById("financeBranch").value),
-          month: this.selectedMonth(),
-          income: Number(document.getElementById("financeIncome").value),
-          expenses: Number(document.getElementById("financeExpenses").value),
-          matrix_share_percent: Number(document.getElementById("financeShare").value)
-        }
+        body: data
       });
       await this.reloadData();
     });
@@ -1148,17 +1455,27 @@ class DashboardController {
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const data = {
+        branch_id: this.currentUser.branch_id || 1,
+        client_name: document.getElementById("eventClient").value.trim(),
+        event_type: document.getElementById("eventType").value.trim(),
+        event_date: document.getElementById("eventDate").value,
+        dancer_name: document.getElementById("eventDancer").value.trim(),
+        total_amount: Number(document.getElementById("eventAmount").value),
+        deduction_amount: Number(document.getElementById("eventDeduction").value),
+        status: "paid"
+      };
+      const validationError = this.validationError(Validators.eventForm(data));
+
+      if (validationError) {
+        Dom.showMessage("eventMessage", validationError);
+        return;
+      }
+
       try {
         const eventPayload = await this.apiClient.request("/api/professional-events", {
           method: "POST",
-          body: {
-            branch_id: this.currentUser.branch_id || 1,
-            client_name: document.getElementById("eventClient").value.trim(),
-            event_type: document.getElementById("eventType").value.trim(),
-            event_date: document.getElementById("eventDate").value,
-            total_amount: Number(document.getElementById("eventAmount").value),
-            status: "paid"
-          }
+          body: data
         });
 
         const dancer = this.findSelectedDancer();
@@ -1167,8 +1484,8 @@ class DashboardController {
             method: "POST",
             body: {
               student_id: dancer.id,
-              gross_amount: Number(document.getElementById("eventAmount").value),
-              deduction_amount: Number(document.getElementById("eventDeduction").value),
+              gross_amount: data.total_amount,
+              deduction_amount: data.deduction_amount,
               payment_status: "paid"
             }
           });

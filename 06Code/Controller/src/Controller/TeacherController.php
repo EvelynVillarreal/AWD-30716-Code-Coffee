@@ -56,6 +56,10 @@ final class TeacherController
             return $this->responder->json($response, ['message' => 'Selected branch does not exist.'], 422);
         }
 
+        if (User::query()->whereRaw('lower(email) = ?', [$data['email']])->exists()) {
+            return $this->responder->json($response, ['message' => 'There is already a user with this email.'], 422);
+        }
+
         $teacher = User::query()->create([
             'email' => $data['email'],
             'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
@@ -101,6 +105,15 @@ final class TeacherController
 
         if ($errors !== []) {
             return $this->responder->json($response, ['errors' => $errors], 422);
+        }
+
+        if (
+            User::query()
+                ->whereRaw('lower(email) = ?', [$data['email']])
+                ->where('id', '<>', (int) $teacher->id)
+                ->exists()
+        ) {
+            return $this->responder->json($response, ['message' => 'There is already a user with this email.'], 422);
         }
 
         $teacher->email = $data['email'];

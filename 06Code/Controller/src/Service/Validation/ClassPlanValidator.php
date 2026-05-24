@@ -22,6 +22,19 @@ final class ClassPlanValidator
             }
         }
 
+        $teacherName = trim((string) ($data['teacher_name'] ?? ''));
+        if ($teacherName !== '' && !preg_match("/^[\p{L}\s'-]+$/u", $teacherName)) {
+            $errors['teacher_name'] = 'Teacher name must contain only letters.';
+        }
+
+        if (!preg_match('/^\d{4}-\d{2}$/', (string) ($data['month'] ?? ''))) {
+            $errors['month'] = 'Month must use YYYY-MM format.';
+        }
+
+        if (!in_array(strtoupper((string) ($data['level'] ?? '')), ['B1', 'B2'], true)) {
+            $errors['level'] = 'Level must be B1 or B2.';
+        }
+
         $documentUrl = trim((string) ($data['document_url'] ?? ''));
         if ($documentUrl !== '' && !filter_var($documentUrl, FILTER_VALIDATE_URL)) {
             $errors['document_url'] = 'Planning document must be a valid URL.';

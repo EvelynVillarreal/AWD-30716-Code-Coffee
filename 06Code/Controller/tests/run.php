@@ -9,6 +9,8 @@ use App\Service\DateRangeService;
 use App\Service\JwtTokenService;
 use App\Service\TeacherPayrollService;
 use App\Service\Validation\EnrollmentValidator;
+use App\Service\Validation\StudentProfileValidator;
+use App\Service\Validation\TeacherAccountValidator;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/src/bootstrap.php';
@@ -101,6 +103,21 @@ $invalidEnrollment['scholarship_percent'] = 40;
 $errors = $enrollmentValidator->validate($invalidEnrollment);
 $test->assertTrue(isset($errors['email']), 'Invalid email should fail validation.');
 $test->assertTrue(isset($errors['scholarship_percent']), 'Invalid scholarship should fail validation.');
+
+$studentProfileValidator = new StudentProfileValidator();
+$test->assertSame([], $studentProfileValidator->validate($validEnrollment + ['status' => 'active']), 'Director student data should validate a correct Ecuadorian ID.');
+$invalidStudentProfile = $validEnrollment + ['status' => 'active'];
+$invalidStudentProfile['national_id'] = '1723456789';
+$studentErrors = $studentProfileValidator->validate($invalidStudentProfile);
+$test->assertTrue(isset($studentErrors['national_id']), 'Director student data should reject an invalid Ecuadorian ID.');
+
+$teacherAccountValidator = new TeacherAccountValidator();
+$test->assertSame([], $teacherAccountValidator->validate([
+    'name' => 'Andrea Molina',
+    'email' => 'teacher@americanlatinclass.com',
+    'branch_id' => 1,
+    'password' => 'ALC2026*',
+], true), 'Teacher account data should accept valid typed input.');
 
 $_ENV['APP_KEY'] = str_repeat('a', 64);
 $user = new User();

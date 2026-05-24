@@ -16,12 +16,20 @@ final class TeacherAccountValidator
     {
         $errors = [];
 
-        if (trim((string) ($data['name'] ?? '')) === '') {
+        $name = trim((string) ($data['name'] ?? ''));
+        if ($name === '') {
             $errors['name'] = 'Teacher name is required.';
+        } elseif (!preg_match("/^[\p{L}\s'-]+$/u", $name)) {
+            $errors['name'] = 'Teacher name must contain only letters.';
+        } elseif (strlen($name) > 120) {
+            $errors['name'] = 'Teacher name must not exceed 120 characters.';
         }
 
-        if (!filter_var((string) ($data['email'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+        $email = (string) ($data['email'] ?? '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'A valid teacher email is required.';
+        } elseif (strlen($email) > 254) {
+            $errors['email'] = 'Email must not exceed 254 characters.';
         }
 
         if (empty($data['branch_id'])) {

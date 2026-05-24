@@ -20,16 +20,36 @@ final class StudentProfileValidator
             $errors['branch_id'] = 'Branch is required.';
         }
 
-        if (trim((string) ($data['full_name'] ?? '')) === '') {
+        $name = trim((string) ($data['full_name'] ?? ''));
+        if ($name === '') {
             $errors['full_name'] = 'Full name is required.';
+        } elseif (!preg_match("/^[\p{L}\s'-]+$/u", $name)) {
+            $errors['full_name'] = 'Full name must contain only letters.';
+        } elseif (strlen($name) > 120) {
+            $errors['full_name'] = 'Full name must not exceed 120 characters.';
         }
 
-        if (!filter_var((string) ($data['email'] ?? ''), FILTER_VALIDATE_EMAIL)) {
+        $nationalId = preg_replace('/\D+/', '', (string) ($data['national_id'] ?? ''));
+        if ($nationalId === '') {
+            $errors['national_id'] = 'National ID is required.';
+        } elseif (!preg_match('/^\d{10}$/', $nationalId)) {
+            $errors['national_id'] = 'National ID must be exactly 10 digits.';
+        } elseif (!$this->isValidEcuadorianId($nationalId)) {
+            $errors['national_id'] = 'National ID is not a valid Ecuadorian ID.';
+        }
+
+        $email = (string) ($data['email'] ?? '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'A valid email is required.';
+        } elseif (strlen($email) > 254) {
+            $errors['email'] = 'Email must not exceed 254 characters.';
         }
 
-        if (trim((string) ($data['phone'] ?? '')) === '') {
+        $phone = preg_replace('/[^\d+]+/', '', (string) ($data['phone'] ?? ''));
+        if ($phone === '') {
             $errors['phone'] = 'Phone is required.';
+        } elseif (strlen($phone) < 7 || strlen($phone) > 20) {
+            $errors['phone'] = 'Phone length is not valid.';
         }
 
         $level = strtoupper((string) ($data['level'] ?? ''));
@@ -48,5 +68,34 @@ final class StudentProfileValidator
         }
 
         return $errors;
+    }
+
+    private function isValidEcuadorianId(string $id): bool
+    {
+        $province = (int) substr($id, 0, 2);
+        if ($province < 1 || $province > 24) {
+            return false;
+        }
+
+        $thirdDigit = (int) $id[2];
+        if ($thirdDigit > 5) {
+            return false;
+        }
+
+        $coefficients = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+        $sum = 0;
+
+        for ($i = 0; $i < 9; $i++) {
+            $product = (int) $id[$i] * $coefficients[$i];
+            if ($product >= 10) {
+                $product -= 9;
+            }
+            $sum += $product;
+        }
+
+        $checkDigit = (int) $id[9];
+        $calculated = (10 - ($sum % 10)) % 10;
+
+        return $calculated === $checkDigit;
     }
 }

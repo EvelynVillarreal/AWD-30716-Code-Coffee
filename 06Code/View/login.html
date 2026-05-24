@@ -40,14 +40,19 @@
       <p class="eyebrow">Internal access</p>
       <h1>School portal</h1>
       <p class="muted">Students, teachers, and directors use one access point with role-based modules.</p>
-      <form class="form-stack" id="loginForm">
+      <form class="form-stack" id="loginForm" autocomplete="off">
         <label>
           <span>Email</span>
-          <input id="loginEmail" class="form-control form-control-lg" type="email" placeholder="student@americanlatinclass.com" required>
+          <input id="loginEmail" class="form-control form-control-lg" type="email" placeholder="student@americanlatinclass.com" autocomplete="off" autocapitalize="none" spellcheck="false" required>
         </label>
         <label>
           <span>Password</span>
-          <input id="loginPassword" class="form-control form-control-lg" type="password" placeholder="********" required>
+          <div class="input-group input-group-lg">
+            <input id="loginPassword" class="form-control" type="password" placeholder="********" autocomplete="new-password" required>
+            <button class="btn btn-outline-secondary password-toggle" type="button" data-password-toggle="loginPassword" aria-label="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
         </label>
         <button class="btn btn-warning btn-lg fw-bold" type="submit">
           <i class="bi bi-box-arrow-in-right"></i>
@@ -60,6 +65,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script/config.js"></script>
-  <script src="script/app.js?v=20260524-product-redesign"></script>
+  <script src="script/app.js?v=20260524-validation-routing"></script>
 </body>
 </html>
