@@ -23,7 +23,7 @@ services:
       - key: DB_SSLMODE
         value: require
       - key: FRONTEND_ORIGINS
-        value: https://american-latin-class-frontend.onrender.com,https://creative-pothos-6c7a4c.netlify.app/
+        value: https://american-latin-class-frontend.onrender.com,https://creative-pothos-6c7a4c.netlify.app
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
