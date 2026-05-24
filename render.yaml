@@ -2,7 +2,7 @@ services:
   - type: web
     name: american-latin-class-api
     runtime: image
-    repo: https://github.com/YOUR_USER/YOUR_REPO
+    repo: https://github.com/EvelynVillarreal/AWD-30716-Code-Coffee
     plan: free
     region: oregon
     dockerfilePath: ./06Code/Dockerfile
@@ -23,7 +23,7 @@ services:
       - key: DB_SSLMODE
         value: require
       - key: FRONTEND_ORIGINS
-        value: https://american-latin-class-frontend.onrender.com,https://YOUR_NETLIFY_URL.netlify.app
+        value: https://american-latin-class-frontend.onrender.com,https://creative-pothos-6c7a4c.netlify.app/
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
@@ -36,7 +36,7 @@ services:
 staticSites:
   - type: static
     name: american-latin-class-frontend
-    repo: https://github.com/YOUR_USER/YOUR_REPO
+    repo: https://github.com/EvelynVillarreal/AWD-30716-Code-Coffee
     plan: free
     region: oregon
     buildCommand: ""
