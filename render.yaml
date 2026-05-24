@@ -32,24 +32,3 @@ services:
         value: America/Bogota
     healthCheckPath: /api/health
     autoDeploy: true
-
-  - type: static
-    name: american-latin-class-frontend
-    repo: https://github.com/EvelynVillarreal/AWD-30716-Code-Coffee
-    plan: free
-    region: oregon
-    buildCommand: ""
-    publishPath: ./06Code/View
-    headers:
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin
-      - path: /*
-        name: Cache-Control
-        value: no-cache, no-store, must-revalidate
-      - path: /script/*
-        name: Cache-Control
-        value: no-cache, no-store, must-revalidate
