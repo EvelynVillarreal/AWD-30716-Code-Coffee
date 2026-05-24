@@ -1,5 +1,7 @@
 # Railway Deployment
 
+> Legacy note: the current backend is deployed on Render. See `RENDER_DEPLOYMENT.md` for the active deployment instructions.
+
 This backend was deployed to Railway from the local `06Code` folder, without using a Git repository.
 
 ## Public URL

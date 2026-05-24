@@ -20,10 +20,10 @@
         }
     },
     "scripts": {
-        "start": "php -S 127.0.0.1:8080 -t public",
-        "start:production": "php -S 0.0.0.0:${PORT:-8080} -t public",
-        "lint": "php tests/lint.php",
-        "test": "php tests/run.php",
+        "start": "@php -S 127.0.0.1:8080 -t public",
+        "start:production": "@php -S 0.0.0.0:${PORT:-8080} -t public",
+        "lint": "@php tests/lint.php",
+        "test": "@php tests/run.php",
         "check": [
             "@lint",
             "@test"

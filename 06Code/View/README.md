@@ -52,8 +52,10 @@ Attendance kiosk test:
 The frontend calls the deployed PHP backend:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
+
+The backend URL is configured in `script/config.js` through `window.API_BASE_URL`.
 
 The frontend does not write directly to Supabase. Public enrollment, comments, login, attendance check-in, class planning, attendance, finance, and event operations go through the backend.
 
@@ -62,11 +64,13 @@ The frontend does not write directly to Supabase. Public enrollment, comments, l
 Current production deploy:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
-Deployment command:
+Netlify deploys from GitHub using:
 
-```powershell
-npx netlify-cli deploy --prod --dir .
+```text
+Base directory: 06Code/View
+Build command: empty
+Publish directory: .
 ```

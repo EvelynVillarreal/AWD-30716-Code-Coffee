@@ -1,6 +1,6 @@
 # Credentials Setup
 
-This project needs credentials only for services that cannot be committed to Git: Supabase database access, Railway environment variables, and optional Jira automation.
+This project needs credentials only for services that cannot be committed to Git: Supabase database access, Render environment variables, and optional Jira automation.
 
 ## 1. Generate `APP_KEY`
 
@@ -44,7 +44,7 @@ DB_PASSWORD=your_database_password
 DB_SSLMODE=require
 ```
 
-If the database password is unknown, reset it from Supabase **Project Settings > Database** and then update Railway and local `.env`.
+If the database password is unknown, reset it from Supabase **Project Settings > Database** and then update Render and local `.env`.
 
 ## 3. Apply the Database Schema
 
@@ -75,12 +75,12 @@ having count(*) > 1;
 
 Fix or merge duplicate records, then rerun the schema script.
 
-## 4. Configure Railway
+## 4. Configure Render
 
-In Railway:
+In Render:
 
-1. Open the backend service.
-2. Go to **Variables**.
+1. Open the backend web service.
+2. Go to **Environment**.
 3. Add or update:
 
 ```env
@@ -95,7 +95,7 @@ DB_DATABASE=postgres
 DB_USERNAME=postgres.your_project_ref
 DB_PASSWORD=your_database_password
 DB_SSLMODE=require
-FRONTEND_ORIGINS=https://creative-pothos-6c7a4c.netlify.app,http://127.0.0.1:5173,http://localhost:5173
+FRONTEND_ORIGINS=https://american-latin-class-frontend.netlify.app,https://creative-pothos-6c7a4c.netlify.app,https://american-latin-class-frontend.onrender.com,http://127.0.0.1:5173,http://localhost:5173
 ```
 
 Redeploy the service after updating variables.
@@ -108,4 +108,4 @@ Jira automation uses an Atlassian API token.
 2. Create an API token.
 3. Store it outside Git, for example in PowerShell session variables before running the Jira script.
 
-Do not commit API tokens, `.env`, database passwords, or Railway variables.
+Do not commit API tokens, `.env`, database passwords, or Render variables.

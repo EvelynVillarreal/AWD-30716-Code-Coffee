@@ -66,7 +66,7 @@ Infrastructure classes for JSON responses, CORS headers, and Eloquent database b
 
 Static HTML pages, CSS, and JavaScript. The frontend still uses vanilla JavaScript for Netlify compatibility, but the script is organized into classes:
 
-- `ApiClient`: calls the Railway backend.
+- `ApiClient`: calls the deployed backend configured in `View/script/config.js`.
 - `SessionStore`: owns browser session persistence.
 - `BranchStore`: loads and exposes branch names.
 - `PublicPagesController`: enrollment, login, and kiosk pages.

@@ -34,8 +34,7 @@ SCRUM - American Latin Class
 The programmed frontend is available at:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 The implemented files are documented in `../implemented-features.md`.
-

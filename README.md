@@ -19,8 +19,15 @@ Repository for the **American Latin Class** project.
 - Controller layer: `06Code/Controller`
 - Technical evidence: `03Documentation/evidence` and `05UnitTests`
 
+## Current Deployments
+
+- Frontend: `https://american-latin-class-frontend.netlify.app`
+- Backend API: `https://american-latin-class.onrender.com`
+- Backend health check: `https://american-latin-class.onrender.com/api/health`
+
 ## Quick Guides
 
 - MVC architecture: `03Documentation/MVC_ARCHITECTURE.md`
 - Credentials and environment variables: `03Documentation/CREDENTIALS_SETUP.md`
+- Render deployment: `03Documentation/RENDER_DEPLOYMENT.md`
 - Recommended repository structure: `03Documentation/PROJECT_STRUCTURE.md`

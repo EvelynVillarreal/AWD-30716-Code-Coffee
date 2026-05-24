@@ -5,7 +5,7 @@ This document confirms that the three selected project features are not only wri
 Production frontend URL:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 Connected Supabase project:
@@ -17,13 +17,13 @@ https://luzlnnndzhpilgxacnim.supabase.co
 Public backend review URL:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
 
 Backend health check:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app/api/health
+https://american-latin-class.onrender.com/api/health
 ```
 
 ## Feature 1: Public Landing and Enrollment
@@ -109,8 +109,8 @@ The PHP backend is also configured and tested locally:
 - ORM: Eloquent ORM.
 - Database: Supabase PostgreSQL.
 - Local route: `http://127.0.0.1:8080/api/health`.
-- Public Railway route: `https://american-latin-class-backend-production.up.railway.app/api/health`.
+- Public Render route: `https://american-latin-class.onrender.com/api/health`.
 - Verification result: `database: connected`.
 - Tested flow: enrollment, class plan, attendance, professional event, B2 dancer assignment, finance report, and dancer settlement calculation.
 
-The backend was deployed from the local `06Code` folder with Railway CLI, without uploading the project to a Git repository.
+The backend is deployed from GitHub with Render using the Dockerfile in `06Code`.

@@ -7,7 +7,7 @@ Evidence generated on May 3, 2026.
 Frontend deployed in Netlify:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 Supabase project:
@@ -22,16 +22,16 @@ Backend local verification:
 http://127.0.0.1:8080/api/health
 ```
 
-Backend deployed on Railway:
+Backend deployed on Render:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
 
-Railway health check:
+Render health check:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app/api/health
+https://american-latin-class.onrender.com/api/health
 ```
 
 ## Screenshots
@@ -99,7 +99,15 @@ Summary:
 - 9 implementation tasks created.
 - Each feature has 3 tasks.
 
-## Railway Deployment
+## Render Deployment
+
+The current backend is deployed to Render from GitHub using `06Code/Dockerfile`.
+
+```text
+https://american-latin-class.onrender.com/api/health
+```
+
+## Legacy Railway Deployment
 
 The backend was deployed to Railway from the local `06Code` folder with:
 
@@ -111,7 +119,7 @@ No Git repository was used for this deployment.
 
 ## Backend Verification Result
 
-The backend was tested locally and on Railway with:
+The backend was tested locally and on the deployed backend with:
 
 ```text
 GET /api/health

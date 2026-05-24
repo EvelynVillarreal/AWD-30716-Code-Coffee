@@ -34,21 +34,21 @@ This keeps the Jira board small enough for the assignment, but still connected t
 The programmed frontend for the selected features is published here:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 ## Public Backend
 
-The PHP backend is published on Railway:
+The PHP backend is published on Render:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
 
 Health check:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app/api/health
+https://american-latin-class.onrender.com/api/health
 ```
 
-The backend was deployed from the local `06Code` folder with Railway CLI, without uploading the project to a Git repository.
+The backend is deployed from GitHub with Render using the Dockerfile in `06Code`.

@@ -156,7 +156,7 @@ As an administrator or reviewer, I want protected operations to be auditable and
 | ID | Test Case | Steps | Expected Result | Status |
 | --- | --- | --- | --- | --- |
 | CP-ALC-49 | API health check | 1. Send `GET /api/health`. | The API returns status `ok` and database `connected` when configured. | Functional |
-| CP-ALC-50 | Railway backend deployment | 1. Open the Railway backend URL. 2. Check `/api/health`. | The deployed backend responds successfully. | Functional |
+| CP-ALC-50 | Render backend deployment | 1. Open the Render backend URL. 2. Check `/api/health`. | The deployed backend responds successfully. | Functional |
 | CP-ALC-51 | Netlify frontend deployment | 1. Open the Netlify URL. | The deployed frontend loads successfully. | Functional |
 | CP-ALC-52 | Protected write audit log | 1. Submit class plan, attendance, finance, or event data through a protected route. | The system records an audit entry when the audit table is available. | Functional |
 | CP-ALC-53 | Sensitive writes through backend | 1. Review frontend requests. | The browser calls the PHP API and does not write sensitive records directly to Supabase. | Functional |

@@ -108,19 +108,19 @@ composer run check
 
 ## Public Backend URL
 
-Railway production backend:
+Render production backend:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
 
 Health check:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app/api/health
+https://american-latin-class.onrender.com/api/health
 ```
 
-This URL is deployed from the local `06Code` folder using Railway CLI. No Git repository was used for the deployment.
+This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
 
 ## Endpoints
 
@@ -151,7 +151,7 @@ Verified on May 3, 2026 with XAMPP PHP 8.2:
 - Composer dependencies are installed in `vendor/`.
 - `GET /api/health` returns `database: connected`.
 - `GET /api/branches` returns Supabase branches.
-- Railway public backend returns Supabase branches.
+- Render public backend returns Supabase branches.
 - `GET /api/students` without token returns `401`.
 - Login was tested with student and director accounts.
 - Student monthly attendance was tested through `GET /api/me/attendance`.

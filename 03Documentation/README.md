@@ -9,5 +9,6 @@ This folder contains technical documentation, course information, deployment ins
 - `CREDENTIALS_SETUP.md`: steps to obtain and configure credentials.
 - `SUPABASE_SETUP.md`: Supabase setup notes.
 - `BACKEND_API.md`: controller API notes.
-- `RAILWAY_DEPLOYMENT.md`: Railway deployment notes.
+- `RENDER_DEPLOYMENT.md`: current Render backend deployment notes.
+- `RAILWAY_DEPLOYMENT.md`: legacy Railway deployment notes.
 - `evidence/`: screenshots and JSON responses for manual verification.

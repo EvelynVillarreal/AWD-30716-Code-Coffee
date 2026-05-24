@@ -126,7 +126,7 @@ foreach ($row in $featureRows) {
 
 foreach ($row in $taskRows) {
     $parentKey = $createdFeatures[$row.Parent]
-    $description = "$($row.Description)`n`nImplemented frontend: https://creative-pothos-6c7a4c.netlify.app"
+    $description = "$($row.Description)`n`nImplemented frontend: https://american-latin-class-frontend.netlify.app"
 
     $fields = @{
         project = @{ key = $ProjectKey }
