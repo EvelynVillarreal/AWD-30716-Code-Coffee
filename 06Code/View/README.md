@@ -41,6 +41,10 @@ student@americanlatinclass.com / ALC2026*
 director@americanlatinclass.com / ALC2026*
 ```
 
+The public academic users use English-only role names and emails. Spanish alias
+accounts such as `alumno@americanlatinclass.com` should not be used in
+production data.
+
 Attendance kiosk test:
 
 ```text

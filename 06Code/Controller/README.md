@@ -68,6 +68,10 @@ The local environment is already configured with a limited backend database role
 
 6. Run `database/supabase_schema.sql` in Supabase SQL Editor.
 
+If production has old Spanish alias users, run
+`database/normalize_english_users.sql` afterward to keep academic login users
+English-only.
+
 7. Start the API:
 
 ```powershell

@@ -9,6 +9,16 @@ The current project uses Supabase PostgreSQL through the PHP controller API. The
 3. Open `SQL Editor`.
 4. Run `06Code/Controller/database/supabase_schema.sql`.
 
+If an existing Supabase database has Spanish alias users from earlier manual tests,
+run `06Code/Controller/database/normalize_english_users.sql` after the schema.
+This keeps the academic access accounts English-only:
+
+```text
+teacher@americanlatinclass.com / ALC2026*
+student@americanlatinclass.com / ALC2026*
+director@americanlatinclass.com / ALC2026*
+```
+
 The schema creates:
 
 - `branches`
