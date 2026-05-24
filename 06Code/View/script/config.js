@@ -1,1 +1,1 @@
-window.API_BASE_URL = "https://american-latin-class-api.onrender.com";
+window.API_BASE_URL = "https://american-latin-class.onrender.com";
