@@ -146,4 +146,4 @@ Additional protected-flow checks:
 - `GET /api/students` without token returns `401`.
 - `POST /api/auth/login` authenticates the student account through the backend.
 - `GET /api/me/attendance` returns the student's monthly attendance.
-- `POST /api/kiosk/attendance` registers or detects the student's daily check-in by national ID.
+- `POST /api/kiosk/attendance` is historical evidence from the earlier student self-check-in flow.

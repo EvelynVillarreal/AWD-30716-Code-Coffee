@@ -81,8 +81,10 @@ The current implementation covers the selected academic MVP:
 - Backend enrollment validation.
 - Login with hashed passwords and signed tokens.
 - Role-based teacher, student, and director dashboards.
-- Student attendance kiosk by national ID.
+- Teacher-controlled student attendance records.
+- Teacher attendance station for school-computer check-in.
 - Monthly student attendance summary.
+- Student profile photo upload.
 - Teacher class planning.
 - Manual attendance registration.
 - Branch finance report registration.

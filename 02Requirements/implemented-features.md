@@ -66,13 +66,14 @@ Implemented behavior:
 - Login is validated by the backend using stored users, hashed passwords, signed tokens, and role checks.
 - Role-based dashboard modules after login.
 - Student table with branch, B1/B2 level, scholarship percentage, and status.
-- Parent/student follow-up section.
+- Student portal follow-up section with attendance, schedule, progress, events, and profile photo.
 - Teacher monthly class planning form.
 - Student and teacher attendance form.
 - Student monthly attendance view.
-- Separate attendance kiosk endpoint where students register attendance with national ID.
+- Teacher-controlled student attendance registration.
+- Separate teacher attendance station for school-computer check-in.
 - Attendance evidence code generation.
-- Backend endpoints: `POST /api/auth/login`, `GET /api/me/attendance`, `POST /api/kiosk/attendance`, `GET /api/students`, `POST /api/class-plans`, and `POST /api/attendance-records`.
+- Backend endpoints: `POST /api/auth/login`, `GET /api/me/attendance`, `PATCH /api/me/photo`, `POST /api/teacher-attendance/check-in`, `GET /api/students`, `POST /api/class-plans`, and `POST /api/attendance-records`.
 
 ## Feature 3: Branch Finance and Professional Dancer Agency
 
@@ -101,7 +102,7 @@ Implemented behavior:
 
 ## Backend Verification
 
-The frontend is functional through the deployed backend. The public home, enrollment form, attendance kiosk, login, and role dashboards are separated into different pages so the system is modular. The frontend no longer stores role sessions through editable demo buttons or writes directly to Supabase.
+The frontend is functional through the deployed backend. The public home, enrollment form, teacher attendance station, login, and role dashboards are separated into different pages so the system is modular. The frontend no longer stores role sessions through editable demo buttons or writes directly to Supabase.
 
 The PHP backend is also configured and tested locally:
 

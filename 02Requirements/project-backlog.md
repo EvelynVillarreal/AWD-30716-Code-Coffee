@@ -16,11 +16,11 @@
 | PB-004 | Register students with B1/B2 level | Must | FR-007 |
 | PB-005 | Register scholarship percentage | Must | FR-008 |
 | PB-006 | Register student attendance | Must | FR-017 |
-| PB-006A | Build attendance kiosk by national ID | Must | FR-019A |
-| PB-006B | Show monthly attendance in student dashboard | Must | FR-019B |
+| PB-006A | Build teacher attendance station | Must | FR-019 |
+| PB-006B | Show monthly attendance in student dashboard | Must | FR-010 |
 | PB-007 | Register teacher attendance | Must | FR-018 |
 | PB-008 | Submit teacher monthly class plans | Must | FR-015 |
-| PB-009 | Show parent section | Must | FR-012 |
+| PB-009 | Add student profile photo upload | Must | FR-012 |
 | PB-010 | Register branch income and expenses | Must | FR-025, FR-026 |
 | PB-011 | Calculate branch result and matrix share | Must | FR-027, FR-028 |
 | PB-012 | Register B2 professional events | Must | FR-032 |
