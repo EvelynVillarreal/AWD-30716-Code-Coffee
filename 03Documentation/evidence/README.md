@@ -52,9 +52,9 @@ https://american-latin-class.onrender.com/api/health
 - `screenshots/backend-local-root.png`: backend API root information.
 - `screenshots/backend-local-health.png`: backend health endpoint connected to Supabase.
 - `screenshots/backend-local-branches.png`: backend branch list from Supabase.
-- `screenshots/backend-railway-root.png`: Railway backend API root information.
-- `screenshots/backend-railway-health.png`: Railway backend health endpoint connected to Supabase.
-- `screenshots/backend-railway-branches.png`: Railway backend branch list from Supabase.
+- `screenshots/backend-legacy-root.png`: archived backend API root information from the retired deployment.
+- `screenshots/backend-legacy-health.png`: archived backend health endpoint connected to Supabase.
+- `screenshots/backend-legacy-branches.png`: archived backend branch list from Supabase.
 - `screenshots/use-case-diagram.png`: rendered use case diagram.
 - `screenshots/class-diagram.png`: rendered class diagram.
 
@@ -64,13 +64,13 @@ https://american-latin-class.onrender.com/api/health
 - `api-responses/backend-local-root.json`: backend root JSON response.
 - `api-responses/backend-local-health.json`: backend health JSON response.
 - `api-responses/backend-local-branches.json`: backend branch list from Supabase.
-- `api-responses/backend-railway-root.json`: Railway backend root JSON response.
-- `api-responses/backend-railway-health.json`: Railway backend health JSON response.
-- `api-responses/backend-railway-branches.json`: Railway backend branch list from Supabase.
-- `api-responses/backend-railway-protected-students.json`: proof that student list requires authentication.
-- `api-responses/backend-railway-login-check.json`: sanitized login verification without storing the token.
-- `api-responses/backend-railway-student-attendance.json`: monthly attendance verification for the student dashboard.
-- `api-responses/backend-railway-kiosk-attendance.json`: historical attendance kiosk verification by national ID.
+- `api-responses/backend-legacy-root.json`: archived deployed backend root JSON response.
+- `api-responses/backend-legacy-health.json`: archived deployed backend health JSON response.
+- `api-responses/backend-legacy-branches.json`: archived deployed backend branch list from Supabase.
+- `api-responses/backend-legacy-protected-students.json`: proof that student list requires authentication.
+- `api-responses/backend-legacy-login-check.json`: sanitized login verification without storing the token.
+- `api-responses/backend-legacy-student-attendance.json`: monthly attendance verification for the student dashboard.
+- `api-responses/backend-legacy-kiosk-attendance.json`: historical attendance kiosk verification by national ID.
 - `api-responses/supabase-branches-check.json`: direct Supabase REST check.
 
 ## Jira Evidence
@@ -107,15 +107,11 @@ The current backend is deployed to Render from GitHub using `06Code/Dockerfile`.
 https://american-latin-class.onrender.com/api/health
 ```
 
-## Archived Railway Deployment Evidence
+## Archived Backend Deployment Evidence
 
-The earlier backend deployment was deployed to Railway from the local `06Code` folder with:
-
-```text
-railway up
-```
-
-No Git repository was used for this deployment.
+The earlier backend deployment was published from the local `06Code` folder.
+It is preserved only as historical evidence. The active production backend is
+the Render service documented in `../RENDER_DEPLOYMENT.md`.
 
 ## Backend Verification Result
 

@@ -37,16 +37,16 @@ https://creative-pothos-6c7a4c.netlify.app
 
 ## Public Backend
 
-The PHP backend is published on Railway:
+The PHP backend is currently published on Render:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
 
 Health check:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app/api/health
+https://american-latin-class.onrender.com/api/health
 ```
 
-The backend was deployed from the local folder with Railway CLI, without uploading the project to a Git repository.
+The active backend is deployed from GitHub through Render.

@@ -1,4 +1,4 @@
-const apiBase = "https://american-latin-class-backend-production.up.railway.app";
+const apiBase = "https://american-latin-class.onrender.com";
 const sessionKey = "alc-session";
 
 const roleLabels = {

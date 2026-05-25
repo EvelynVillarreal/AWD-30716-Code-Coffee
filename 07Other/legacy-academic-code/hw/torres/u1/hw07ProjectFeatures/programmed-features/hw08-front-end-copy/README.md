@@ -41,7 +41,7 @@ Attendance kiosk test:
 The frontend calls the deployed PHP backend:
 
 ```text
-https://american-latin-class-backend-production.up.railway.app
+https://american-latin-class.onrender.com
 ```
 
 The frontend does not write directly to Supabase. Public enrollment, comments, login, attendance check-in, class planning, attendance, finance, and event operations go through the backend.

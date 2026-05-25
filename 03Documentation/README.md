@@ -12,6 +12,5 @@ This folder contains technical documentation, course information, deployment ins
 - `URI_DESIGN_DOCUMENT_ALCSYSTEM.md`: RESTful URI design document for the current backend and frontend routes.
 - `ALCSystem_URI_Design_Document.docx`: Word version of the URI design document.
 - `RENDER_DEPLOYMENT.md`: current Render backend deployment notes.
-- `RAILWAY_DEPLOYMENT.md`: archived legacy Railway deployment notes.
 - `CHANGES_2026-05-24.md`: redesign and functional change log.
 - `evidence/`: screenshots and JSON responses for manual verification.
