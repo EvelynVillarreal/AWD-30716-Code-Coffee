@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Model\AttendanceRecord;
 use App\Model\Student;
+use App\Model\User;
 use App\Service\AttendanceSummaryService;
 use App\Service\AuthenticatedUser;
 use App\Service\AuthService;
@@ -52,7 +53,8 @@ final class AuthController
     public function me(Request $request, Response $response): Response
     {
         $authUser = $this->authenticatedUser($request);
-        $payload = ['user' => $authUser->toArray()];
+        $user = User::query()->with('student')->find($authUser->id());
+        $payload = ['user' => $user ? $this->auth->publicUser($user) : $authUser->toArray()];
 
         if ($authUser->isStudent()) {
             try {

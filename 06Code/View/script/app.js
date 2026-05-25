@@ -801,6 +801,7 @@ class DashboardController {
   async loadData() {
     const month = this.selectedMonth();
     this.data.me = await this.apiClient.request(`/api/me?month=${encodeURIComponent(month)}`);
+    this.syncCurrentUser(this.data.me.user);
 
     if (this.currentUser.role === "student") {
       const attendancePayload = await this.apiClient.request(`/api/me/attendance?month=${encodeURIComponent(month)}`);
@@ -835,6 +836,16 @@ class DashboardController {
       this.data.financeReports = financePayload.data || [];
       this.data.events = eventsPayload.data || [];
     }
+  }
+
+  syncCurrentUser(userPayload) {
+    if (!userPayload) return;
+
+    const session = this.sessionStore.get();
+    const nextUser = { ...(session?.user || this.currentUser), ...userPayload };
+    this.sessionStore.set({ ...(session || {}), user: nextUser });
+    this.currentUser = nextUser;
+    this.renderSessionProfile(this.config.roleLabels[this.currentUser.role] || "School portal");
   }
 
   render() {
