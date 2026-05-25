@@ -8,6 +8,9 @@
 
 begin;
 
+alter table public.students add column if not exists photo_url text;
+alter table public.users add column if not exists avatar_url text;
+
 do $$
 declare
   v_student_id bigint;
