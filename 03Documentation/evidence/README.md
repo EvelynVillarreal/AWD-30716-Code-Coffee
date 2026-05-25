@@ -39,14 +39,14 @@ https://american-latin-class.onrender.com/api/health
 - `screenshots/frontend-netlify.png`: deployed frontend home page on Netlify.
 - `screenshots/frontend-netlify-home.png`: public home page with academy information.
 - `screenshots/frontend-netlify-enrollment.png`: public enrollment form.
-- `screenshots/frontend-netlify-attendance-kiosk.png`: student attendance kiosk by national ID.
+- `screenshots/frontend-netlify-attendance-kiosk.png`: historical attendance kiosk evidence from the earlier self-check-in flow.
 - `screenshots/frontend-netlify-login.png`: single shared login for teachers, students, and directors.
 - `screenshots/frontend-netlify-dashboard-director.png`: director dashboard with finance module.
 - `screenshots/frontend-netlify-dashboard-student-attendance.png`: student monthly attendance view.
 - `screenshots/frontend-local-home.png`: local frontend home verification.
 - `screenshots/frontend-local-enrollment.png`: local enrollment verification.
 - `screenshots/frontend-local-login.png`: local login verification.
-- `screenshots/frontend-local-attendance-kiosk.png`: local attendance kiosk verification.
+- `screenshots/frontend-local-attendance-kiosk.png`: historical local attendance kiosk verification.
 - `screenshots/frontend-local-dashboard-director.png`: local dashboard verification.
 - `screenshots/frontend-local-dashboard-student-attendance.png`: local student attendance verification.
 - `screenshots/backend-local-root.png`: backend API root information.
@@ -70,7 +70,7 @@ https://american-latin-class.onrender.com/api/health
 - `api-responses/backend-railway-protected-students.json`: proof that student list requires authentication.
 - `api-responses/backend-railway-login-check.json`: sanitized login verification without storing the token.
 - `api-responses/backend-railway-student-attendance.json`: monthly attendance verification for the student dashboard.
-- `api-responses/backend-railway-kiosk-attendance.json`: attendance kiosk verification by national ID.
+- `api-responses/backend-railway-kiosk-attendance.json`: historical attendance kiosk verification by national ID.
 - `api-responses/supabase-branches-check.json`: direct Supabase REST check.
 
 ## Jira Evidence
@@ -107,9 +107,9 @@ The current backend is deployed to Render from GitHub using `06Code/Dockerfile`.
 https://american-latin-class.onrender.com/api/health
 ```
 
-## Legacy Railway Deployment
+## Archived Railway Deployment Evidence
 
-The backend was deployed to Railway from the local `06Code` folder with:
+The earlier backend deployment was deployed to Railway from the local `06Code` folder with:
 
 ```text
 railway up

@@ -9,3 +9,6 @@
 **/.netlify/
 .tools/
 *.log
+~$*.docx
+~$*.xlsx
+~$*.pptx

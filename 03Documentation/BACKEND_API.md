@@ -118,18 +118,18 @@ This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
 
 ## Local Verification
 
-Verified on May 3, 2026 with XAMPP PHP 8.2:
+Verified for the current MVC backend with XAMPP PHP 8.2:
 
 - `pdo_pgsql` and `pgsql` are enabled in `C:\xampp\php\php.ini`.
 - Composer dependencies are installed in `vendor/`.
 - `GET /api/health` returns `database: connected`.
 - `GET /api/branches` returns Supabase branches.
-- Render public backend returns Supabase branches.
+- Render public backend is the current production API target.
 - `GET /api/students` without token returns `401`.
 - Login was tested with student and director accounts.
 - Student monthly attendance was tested through `GET /api/me/attendance`.
-- The attendance kiosk was tested through `POST /api/kiosk/attendance`.
-- A protected backend flow was tested: login, student attendance, director student list, and kiosk check-in.
+- Teacher check-in is handled through `POST /api/teacher-attendance/check-in`.
+- A protected backend flow was tested: login, student attendance, director student list, teacher records, class plans, attendance records, and finance reports.
 - Test records were removed from Supabase after verification.
 
 Current local API URL:
