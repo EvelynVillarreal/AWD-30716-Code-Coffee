@@ -139,6 +139,7 @@ This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
 | POST | `/api/teacher-attendance/check-in` | Register teacher check-in from the school station |
 | GET | `/api/me` | Get current authenticated user profile |
 | GET | `/api/me/attendance` | Get student monthly attendance |
+| PATCH | `/api/me/photo` | Protected student profile photo update |
 | GET | `/api/students` | Protected director student list |
 | POST | `/api/students` | Protected director student creation |
 | PATCH | `/api/students/{studentId}` | Protected director student update |
