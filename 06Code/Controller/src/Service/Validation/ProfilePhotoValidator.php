@@ -8,7 +8,7 @@ namespace App\Service\Validation;
  */
 final class ProfilePhotoValidator
 {
-    private const MAX_LENGTH = 900000;
+    private const MAX_IMAGE_BYTES = 900000;
 
     /**
      * @param array<string, mixed> $data
@@ -24,23 +24,38 @@ final class ProfilePhotoValidator
             return $errors;
         }
 
-        if (strlen($photoUrl) > self::MAX_LENGTH) {
-            $errors['photo_url'] = 'Profile photo must be smaller than 900 KB.';
+        if ($this->isAllowedDataUri($photoUrl, $errors) || $this->isAllowedRemoteUrl($photoUrl)) {
             return $errors;
         }
 
-        if ($this->isAllowedDataUri($photoUrl) || $this->isAllowedRemoteUrl($photoUrl)) {
-            return $errors;
+        if (!isset($errors['photo_url'])) {
+            $errors['photo_url'] = 'Profile photo must be a PNG, JPEG, WEBP data image, or a valid image URL.';
         }
-
-        $errors['photo_url'] = 'Profile photo must be a PNG, JPEG, WEBP data image, or a valid image URL.';
 
         return $errors;
     }
 
-    private function isAllowedDataUri(string $photoUrl): bool
+    /**
+     * @param array<string, string> $errors
+     */
+    private function isAllowedDataUri(string $photoUrl, array &$errors): bool
     {
-        return (bool) preg_match('/^data:image\/(?:png|jpeg|jpg|webp);base64,[A-Za-z0-9+\/=]+$/', $photoUrl);
+        if (!preg_match('/^data:image\/(?:png|jpeg|jpg|webp);base64,([A-Za-z0-9+\/=]+)$/', $photoUrl, $matches)) {
+            return false;
+        }
+
+        $decoded = base64_decode($matches[1], true);
+        if ($decoded === false) {
+            $errors['photo_url'] = 'Profile photo image data is not valid Base64.';
+            return false;
+        }
+
+        if (strlen($decoded) > self::MAX_IMAGE_BYTES) {
+            $errors['photo_url'] = 'Profile photo must be smaller than 900 KB.';
+            return false;
+        }
+
+        return true;
     }
 
     private function isAllowedRemoteUrl(string $photoUrl): bool

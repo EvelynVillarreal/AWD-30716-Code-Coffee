@@ -128,6 +128,13 @@ $profilePhotoValidator = new ProfilePhotoValidator();
 $test->assertSame([], $profilePhotoValidator->validate([
     'photo_url' => 'data:image/png;base64,' . base64_encode('fake-image'),
 ]), 'Profile photo validator should accept PNG data URIs.');
+$test->assertSame([], $profilePhotoValidator->validate([
+    'photo_url' => 'data:image/jpeg;base64,' . base64_encode(str_repeat('a', 899000)),
+]), 'Profile photo validator should measure decoded image bytes, not Base64 length.');
+$largePhotoErrors = $profilePhotoValidator->validate([
+    'photo_url' => 'data:image/webp;base64,' . base64_encode(str_repeat('a', 900001)),
+]);
+$test->assertTrue(isset($largePhotoErrors['photo_url']), 'Profile photo validator should reject decoded images over 900 KB.');
 $photoErrors = $profilePhotoValidator->validate(['photo_url' => 'javascript:alert(1)']);
 $test->assertTrue(isset($photoErrors['photo_url']), 'Profile photo validator should reject unsafe URLs.');
 
