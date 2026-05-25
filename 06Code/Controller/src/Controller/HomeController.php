@@ -34,6 +34,7 @@ final class HomeController
             'protected_endpoints' => [
                 '/api/me',
                 '/api/me/attendance',
+                '/api/me/photo',
                 '/api/students',
                 '/api/teachers',
                 '/api/class-plans',

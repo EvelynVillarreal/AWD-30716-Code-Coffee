@@ -10,6 +10,7 @@ use App\Controller\FinanceController;
 use App\Controller\HomeController;
 use App\Controller\KioskController;
 use App\Controller\ProfessionalEventController;
+use App\Controller\ProfilePhotoController;
 use App\Controller\StudentController;
 use App\Controller\TeacherAttendanceController;
 use App\Controller\TeacherController;
@@ -29,6 +30,7 @@ use App\Service\Validation\DancerEventAssignmentValidator;
 use App\Service\Validation\EnrollmentValidator;
 use App\Service\Validation\FinanceReportValidator;
 use App\Service\Validation\ProfessionalEventValidator;
+use App\Service\Validation\ProfilePhotoValidator;
 use App\Service\Validation\StudentProfileValidator;
 use App\Service\Validation\TeacherAccountValidator;
 use App\Support\JsonResponder;
@@ -57,6 +59,7 @@ return static function (App $app, JsonResponder $responder): void {
     $enrollmentValidator = new EnrollmentValidator();
     $financeValidator = new FinanceReportValidator();
     $eventValidator = new ProfessionalEventValidator();
+    $profilePhotoValidator = new ProfilePhotoValidator();
     $assignmentValidator = new DancerEventAssignmentValidator();
     $studentProfileValidator = new StudentProfileValidator();
     $teacherAccountValidator = new TeacherAccountValidator();
@@ -73,6 +76,7 @@ return static function (App $app, JsonResponder $responder): void {
     $attendanceController = new AttendanceRecordController($responder, $branchAccess, $attendanceValidator, $evidenceCodes, $audit, $dateRanges, $teacherPayroll);
     $financeController = new FinanceController($responder, $branchAccess, $financeValidator, $audit);
     $eventController = new ProfessionalEventController($responder, $branchAccess, $eventValidator, $assignmentValidator, $audit);
+    $profilePhotoController = new ProfilePhotoController($responder, $profilePhotoValidator);
 
     $app->get('/', [$homeController, 'index']);
     $app->get('/api/health', [$homeController, 'health']);
@@ -86,6 +90,9 @@ return static function (App $app, JsonResponder $responder): void {
         ->add(new RoleMiddleware($responder, $authService, ['teacher', 'student', 'director']));
 
     $app->get('/api/me/attendance', [$studentController, 'attendance'])
+        ->add(new RoleMiddleware($responder, $authService, ['student']));
+
+    $app->patch('/api/me/photo', [$profilePhotoController, 'update'])
         ->add(new RoleMiddleware($responder, $authService, ['student']));
 
     $app->get('/api/students', [$studentController, 'index'])

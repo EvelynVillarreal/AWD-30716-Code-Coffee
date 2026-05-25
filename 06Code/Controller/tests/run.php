@@ -10,6 +10,7 @@ use App\Service\JwtTokenService;
 use App\Service\TeacherPayrollService;
 use App\Service\Validation\EcuadorianNationalIdValidator;
 use App\Service\Validation\EnrollmentValidator;
+use App\Service\Validation\ProfilePhotoValidator;
 use App\Service\Validation\StudentProfileValidator;
 use App\Service\Validation\TeacherAccountValidator;
 
@@ -122,6 +123,13 @@ $test->assertSame([], $teacherAccountValidator->validate([
     'branch_id' => 1,
     'password' => 'ALC2026*',
 ], true), 'Teacher account data should accept valid typed input.');
+
+$profilePhotoValidator = new ProfilePhotoValidator();
+$test->assertSame([], $profilePhotoValidator->validate([
+    'photo_url' => 'data:image/png;base64,' . base64_encode('fake-image'),
+]), 'Profile photo validator should accept PNG data URIs.');
+$photoErrors = $profilePhotoValidator->validate(['photo_url' => 'javascript:alert(1)']);
+$test->assertTrue(isset($photoErrors['photo_url']), 'Profile photo validator should reject unsafe URLs.');
 
 $_ENV['APP_KEY'] = str_repeat('a', 64);
 $user = new User();

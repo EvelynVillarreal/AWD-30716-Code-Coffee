@@ -54,6 +54,8 @@ final class AuthService
      */
     public function publicUser(User $user): array
     {
+        $studentPhoto = $user->student_id ? ($user->student?->photo_url ?? null) : null;
+
         return [
             'id' => $user->id,
             'email' => $user->email,
@@ -61,7 +63,8 @@ final class AuthService
             'role' => $user->role,
             'branch_id' => $user->branch_id,
             'student_id' => $user->student_id,
-            'avatar_url' => $user->avatar_url ?? null,
+            'avatar_url' => $user->avatar_url ?? $studentPhoto,
+            'photo_url' => $studentPhoto,
         ];
     }
 

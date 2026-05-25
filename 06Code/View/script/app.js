@@ -221,6 +221,15 @@ class Validators {
     return "";
   }
 
+  static imageFile(file) {
+    if (!file) return "Choose a profile photo.";
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      return "Profile photo must be PNG, JPEG, or WEBP.";
+    }
+    if (file.size > 900000) return "Profile photo must be smaller than 900 KB.";
+    return "";
+  }
+
   static studentForm(data) {
     return {
       full_name: Validators.name(data.full_name),
@@ -870,6 +879,7 @@ class DashboardController {
     const total = Number(summary.total || 0);
     const attended = Number(summary.present || 0) + Number(summary.late || 0);
     const percent = total > 0 ? Math.round((attended / total) * 100) : 0;
+    const profilePhoto = student.photo_url || this.currentUser.photo_url || this.currentUser.avatar_url || "";
 
     return `
       ${this.renderMetrics([
@@ -882,6 +892,24 @@ class DashboardController {
         <h3>${Dom.escape(student.full_name || this.currentUser.name)}</h3>
         <p class="muted">Status: ${Dom.escape(student.status || "active")} | Email: ${Dom.escape(student.email || this.currentUser.email)}</p>
       </section>
+      <form class="module-card profile-photo-card" id="profilePhotoForm">
+        <div class="profile-photo-preview ${profilePhoto ? "has-image" : ""}">
+          <img id="profilePhotoPreview" src="${Dom.escape(profilePhoto)}" alt="">
+          <span>${Dom.escape(Dom.initials(student.full_name || this.currentUser.name))}</span>
+        </div>
+        <div class="form-stack">
+          <div>
+            <h3>Profile photo</h3>
+            <p class="muted">Upload a PNG, JPEG, or WEBP image. The portal will show it in the session header.</p>
+          </div>
+          <label>
+            <span>Student photo</span>
+            <input id="profilePhotoInput" class="form-control" type="file" accept="image/png,image/jpeg,image/webp" required>
+          </label>
+          <button class="btn btn-warning fw-bold" type="submit"><i class="bi bi-image"></i> Save photo</button>
+          <p class="notice" id="profilePhotoMessage"></p>
+        </div>
+      </form>
     `;
   }
 
@@ -1241,6 +1269,7 @@ class DashboardController {
     this.bindTeacherActions();
     this.bindFinanceForm();
     this.bindEventForm();
+    this.bindProfilePhotoForm();
 
     const today = new Date().toISOString().slice(0, 10);
     Dom.setValue("attendanceDate", today);
@@ -1261,6 +1290,65 @@ class DashboardController {
         button.setAttribute("aria-label", visible ? "Show password" : "Hide password");
         button.innerHTML = `<i class="bi ${visible ? "bi-eye" : "bi-eye-slash"}"></i>`;
       });
+    });
+  }
+
+  bindProfilePhotoForm() {
+    const form = document.getElementById("profilePhotoForm");
+    const input = document.getElementById("profilePhotoInput");
+    const preview = document.getElementById("profilePhotoPreview");
+    if (!form || !input) return;
+
+    input.addEventListener("change", async () => {
+      const file = input.files?.[0];
+      const error = Validators.imageFile(file);
+      if (error) {
+        Dom.showMessage("profilePhotoMessage", error);
+        return;
+      }
+
+      const dataUrl = await this.fileToDataUrl(file);
+      if (preview) {
+        preview.src = dataUrl;
+        preview.closest(".profile-photo-preview")?.classList.add("has-image");
+      }
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const file = input.files?.[0];
+      const error = Validators.imageFile(file);
+
+      if (error) {
+        Dom.showMessage("profilePhotoMessage", error);
+        return;
+      }
+
+      try {
+        const photoUrl = await this.fileToDataUrl(file);
+        const payload = await this.apiClient.request("/api/me/photo", {
+          method: "PATCH",
+          body: { photo_url: photoUrl }
+        });
+        const session = this.sessionStore.get();
+        const updatedUser = { ...(session?.user || this.currentUser), ...(payload.user || {}), avatar_url: photoUrl, photo_url: photoUrl };
+        this.sessionStore.set({ ...session, user: updatedUser });
+        this.currentUser = updatedUser;
+        this.data.me = { ...(this.data.me || {}), user: updatedUser, student: payload.student || this.data.me?.student };
+        this.renderSessionProfile(this.config.roleLabels[this.currentUser.role] || "School portal");
+        Dom.showMessage("profilePhotoMessage", "Profile photo saved.");
+      } catch (requestError) {
+        Dom.showMessage("profilePhotoMessage", requestError.message);
+      }
+    });
+  }
+
+  fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("Profile photo could not be read."));
+      reader.readAsDataURL(file);
     });
   }
 
