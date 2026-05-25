@@ -367,8 +367,19 @@ a {
 
 .price-card {
   display: grid;
+  overflow: hidden;
+}
+
+.price-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.price-card div {
+  display: grid;
   gap: 10px;
-  padding: 20px;
+  padding: 18px;
 }
 
 .price-card span {
@@ -381,9 +392,17 @@ a {
 }
 
 .price-card a {
-  color: var(--alc-blue);
+  width: fit-content;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--alc-graphite);
+  color: var(--alc-yellow);
   font-weight: 900;
   text-decoration: none;
+}
+
+.price-card a:hover {
+  background: var(--alc-ink);
 }
 
 .offer-card {
