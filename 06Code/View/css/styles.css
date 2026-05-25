@@ -89,6 +89,69 @@ a {
   font-size: 12px;
 }
 
+.session-profile {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: 6px 10px 6px 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.session-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--alc-yellow);
+  color: #1c1a12;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.session-avatar img {
+  width: 100%;
+  height: 100%;
+  display: none;
+  object-fit: cover;
+}
+
+.session-avatar.has-image img {
+  display: block;
+}
+
+.session-avatar.has-image span {
+  display: none;
+}
+
+.session-profile-text {
+  min-width: 0;
+  display: grid;
+  line-height: 1.1;
+}
+
+.session-profile-text strong,
+.session-profile-text small {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-profile-text strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.session-profile-text small {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 11px;
+}
+
 .btn {
   border-radius: 8px;
 }
@@ -701,5 +764,9 @@ label span,
 
   .calendar-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .session-profile-text {
+    display: none;
   }
 }

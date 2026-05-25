@@ -99,6 +99,16 @@ class Dom {
   static statusClass(status) {
     return `status-dot status-${String(status || "pending").toLowerCase()}`;
   }
+
+  static initials(name) {
+    const parts = String(name || "ALC")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2);
+
+    return (parts.map((part) => part[0]).join("") || "AL").toUpperCase();
+  }
 }
 
 class Validators {
@@ -665,6 +675,7 @@ class DashboardController {
     Dom.setText("sessionRole", label);
     Dom.setText("dashboardTitle", label);
     Dom.setText("sessionName", this.currentUser.name);
+    this.renderSessionProfile(label);
 
     const modules = this.config.modulesByRole[this.currentUser.role] || [];
     const nav = document.getElementById("moduleNav");
@@ -676,6 +687,26 @@ class DashboardController {
     `).join("");
 
     this.currentModule = modules[0]?.id || null;
+  }
+
+  renderSessionProfile(label) {
+    Dom.setText("sessionHeaderName", this.currentUser.name || this.currentUser.email || "Signed in");
+    Dom.setText("sessionHeaderRole", label);
+    Dom.setText("sessionAvatarInitials", Dom.initials(this.currentUser.name || this.currentUser.email));
+
+    const avatar = document.getElementById("sessionAvatarImage");
+    const avatarShell = avatar?.closest(".session-avatar");
+    const avatarUrl = this.currentUser.avatar_url || this.currentUser.photo_url || "";
+
+    if (!avatar || !avatarShell) return;
+
+    if (avatarUrl) {
+      avatar.src = avatarUrl;
+      avatarShell.classList.add("has-image");
+    } else {
+      avatar.removeAttribute("src");
+      avatarShell.classList.remove("has-image");
+    }
   }
 
   bindShell() {

@@ -61,6 +61,7 @@ final class AuthService
             'role' => $user->role,
             'branch_id' => $user->branch_id,
             'student_id' => $user->student_id,
+            'avatar_url' => $user->avatar_url ?? null,
         ];
     }
 
