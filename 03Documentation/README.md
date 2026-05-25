@@ -9,6 +9,8 @@ This folder contains technical documentation, course information, deployment ins
 - `CREDENTIALS_SETUP.md`: steps to obtain and configure credentials.
 - `SUPABASE_SETUP.md`: Supabase setup notes.
 - `BACKEND_API.md`: controller API notes.
+- `URI_DESIGN_DOCUMENT_ALCSYSTEM.md`: RESTful URI design document for the current backend and frontend routes.
+- `ALCSystem_URI_Design_Document.docx`: Word version of the URI design document.
 - `RENDER_DEPLOYMENT.md`: current Render backend deployment notes.
 - `RAILWAY_DEPLOYMENT.md`: legacy Railway deployment notes.
 - `CHANGES_2026-05-24.md`: redesign and functional change log.
