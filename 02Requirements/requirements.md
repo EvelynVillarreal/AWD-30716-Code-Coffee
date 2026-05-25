@@ -9,13 +9,13 @@ American Latin Class is a dance academy with multiple branches. The academy trai
 
 B2 dancers can participate in paid professional opportunities managed by the academy, such as quinceanera shows, wedding dances, choreographies, private classes, shows, television appearances, and special events.
 
-The system must support academic management, branch administration, financial control, teacher planning, student attendance, scholarship control, parent communication, and professional dancer event history.
+The system must support public academy presentation, pricing, enrollment requests, academic management, branch administration, financial control, teacher planning, teacher-controlled student attendance, scholarship control, profile photos, and professional dancer event history.
 
 ## 2. Product Vision
 
 We want to build a web platform that centralizes the operation of American Latin Class and helps the general director, branch directors, teachers, students, parents, and visitors work with the same source of truth.
 
-The system must include a public website, enrollment forms, administrative modules, attendance controls, scholarship tracking, teacher planning, branch finance reports, and professional event settlement for B2 dancers.
+The system must include a public website, enrollment forms, pricing and offers, protected role portals, administrative modules, attendance controls, scholarship tracking, teacher planning, branch finance reports, and professional event settlement for B2 dancers.
 
 ## 3. User Roles
 
@@ -23,12 +23,8 @@ The system must include a public website, enrollment forms, administrative modul
 | --- | --- |
 | Visitor | Person who only views academy information and may request enrollment. |
 | Student | Academy member classified as B1 or B2, with or without scholarship. |
-| Parent | Family member who needs information about student progress, attendance, payments, and notices. |
 | Teacher | Instructor who submits monthly class planning and records class work. |
-| Branch Director | Person responsible for branch management, income, expenses, opportunities, and reports. |
-| Co-director | Branch support role with delegated operational permissions. |
-| General Director | Main authority with access to every branch and global rules. |
-| Administrator | System role for configuration, users, roles, branches, and data maintenance. |
+| Director | Main administrative role with access to student management, teacher management, payroll, planning, finance, and B2 events. |
 
 ## 4. Functional Requirements
 
@@ -39,39 +35,36 @@ The system must include a public website, enrollment forms, administrative modul
 - FR-003: The system shall provide an enrollment form for people who want to join the academy.
 - FR-004: The enrollment form shall collect student name, national ID, contact data, preferred branch, preferred level, parent or guardian information, and comments.
 - FR-005: The system shall store enrollment requests as pending records for administrative review.
+- FR-005A: The system shall provide a pricing page with dance styles, monthly prices, and promotional offers.
+- FR-005B: The system shall redirect selected offers to the enrollment request form.
 
 ### Student Management
 
 - FR-006: The system shall register students with branch, level, status, phone, email, and guardian data.
 - FR-007: The system shall classify students as B1 or B2.
-- FR-008: The system shall classify scholarship percentage as 0%, 50%, 75%, or 100%.
+- FR-008: The system shall classify scholarship percentage as 0%, 25%, 50%, 75%, or 100%.
 - FR-009: The system shall show student attendance history.
-- FR-010: The system shall show student payment and scholarship status.
+- FR-010: The system shall show student progress, schedule, upcoming events, attendance percentage, and scholarship status.
 - FR-011: The system shall prevent duplicate student records using national ID, email, or phone.
-
-### Parent Section
-
-- FR-012: The system shall include a parent section with student attendance summary.
-- FR-013: The system shall show relevant notices for parents.
-- FR-014: The system shall allow parents to review enrollment or payment reminders.
+- FR-012: The system shall allow students to upload or update their profile photo.
+- FR-013: The system shall show the logged-in user's name and profile image in the portal header.
 
 ### Teacher Management
 
-- FR-015: The system shall allow teachers to submit their monthly class plan during the first week of the month.
-- FR-016: The class plan shall include branch, teacher, month, level, objective, and activities.
-- FR-017: The system shall allow student attendance registration.
-- FR-018: The system shall allow teacher attendance registration.
-- FR-019: Teacher attendance shall support penalties, memos, or administrative follow-up when needed.
-- FR-019A: The system shall provide a separate attendance kiosk where students enter their national ID to register check-in date and time.
-- FR-019B: Student attendance registered through the kiosk shall be available inside the student management dashboard.
+- FR-014: The system shall allow teachers to submit their monthly class plan.
+- FR-015: The class plan shall include branch, teacher, month, level, objective, activities, and an optional document URL.
+- FR-016: The system shall allow teachers to register student attendance.
+- FR-017: The system shall show teacher attendance, worked hours, and payroll-related summaries.
+- FR-018: Teacher attendance shall support late, present, absent, and excused states.
+- FR-019: The system shall provide a separate teacher attendance station for school-computer check-in.
 
 ### Branch Management
 
 - FR-020: The system shall manage multiple branches.
-- FR-021: Each branch shall have one director and optionally one or more co-directors.
+- FR-021: Each branch shall support branch-scoped reporting and management data.
 - FR-022: Branch directors shall report monthly income, expenses, student count, opportunities, events, and competitions.
-- FR-023: Branch directors shall follow the rules defined by the general director and the main branch.
-- FR-024: The general director shall be able to review all branch information.
+- FR-023: Directors shall be able to review branch information.
+- FR-024: Directors shall be able to review total students by branch and global totals.
 
 ### Finance
 
@@ -94,9 +87,11 @@ The system must include a public website, enrollment forms, administrative modul
 ### Security and Permissions
 
 - FR-037: The system shall support role-based access control.
-- FR-038: Branch directors shall access only their branch unless authorized by the general director.
-- FR-039: The general director shall access all branches.
+- FR-038: Directors shall access protected administrative modules.
+- FR-039: Students and teachers shall only access modules intended for their role.
 - FR-040: Administrative actions shall be auditable.
+- FR-041: Protected pages shall redirect unauthenticated users to login.
+- FR-042: Sign out shall clear the stored session before returning to the login page.
 
 ## 5. Non-Functional Requirements
 
@@ -109,12 +104,15 @@ The system must include a public website, enrollment forms, administrative modul
 - NFR-007: The system shall protect sensitive actions with backend authentication and role-based permissions.
 - NFR-008: The frontend shall not write sensitive records directly to Supabase; it shall call the backend API.
 - NFR-009: The system shall use English names in code, UI labels, and project deliverables.
+- NFR-010: The frontend shall use a consistent visual framework and clear modular layout.
+- NFR-011: The system shall follow MVC and object-oriented design principles.
+- NFR-012: Classes shall keep a single clear responsibility whenever possible.
 
 ## 6. Pending Validation With the Owner
 
-- Exact branch directors and co-directors.
+- Exact branch directors.
 - Exact percentage that each branch sends to the main branch.
-- Exact scholarship rules for 50%, 75%, and 100%.
+- Exact scholarship rules for 25%, 50%, 75%, and 100%.
 - Exact attendance threshold for scholarship loss or module loss.
 - Teacher penalty and memo rules.
 - Professional event commission formula.
