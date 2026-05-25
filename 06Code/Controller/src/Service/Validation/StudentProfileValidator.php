@@ -8,6 +8,13 @@ namespace App\Service\Validation;
  */
 final class StudentProfileValidator
 {
+    private readonly EcuadorianNationalIdValidator $nationalIds;
+
+    public function __construct(?EcuadorianNationalIdValidator $nationalIds = null)
+    {
+        $this->nationalIds = $nationalIds ?? new EcuadorianNationalIdValidator();
+    }
+
     /**
      * @param array<string, mixed> $data
      * @return array<string, string>
@@ -34,7 +41,7 @@ final class StudentProfileValidator
             $errors['national_id'] = 'National ID is required.';
         } elseif (!preg_match('/^\d{10}$/', $nationalId)) {
             $errors['national_id'] = 'National ID must be exactly 10 digits.';
-        } elseif (!$this->isValidEcuadorianId($nationalId)) {
+        } elseif (!$this->nationalIds->isValid($nationalId)) {
             $errors['national_id'] = 'National ID is not a valid Ecuadorian ID.';
         }
 
@@ -68,34 +75,5 @@ final class StudentProfileValidator
         }
 
         return $errors;
-    }
-
-    private function isValidEcuadorianId(string $id): bool
-    {
-        $province = (int) substr($id, 0, 2);
-        if ($province < 1 || $province > 24) {
-            return false;
-        }
-
-        $thirdDigit = (int) $id[2];
-        if ($thirdDigit > 5) {
-            return false;
-        }
-
-        $coefficients = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-        $sum = 0;
-
-        for ($i = 0; $i < 9; $i++) {
-            $product = (int) $id[$i] * $coefficients[$i];
-            if ($product >= 10) {
-                $product -= 9;
-            }
-            $sum += $product;
-        }
-
-        $checkDigit = (int) $id[9];
-        $calculated = (10 - ($sum % 10)) % 10;
-
-        return $calculated === $checkDigit;
     }
 }

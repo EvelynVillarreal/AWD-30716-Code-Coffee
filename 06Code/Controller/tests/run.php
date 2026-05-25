@@ -8,6 +8,7 @@ use App\Service\BranchAccessService;
 use App\Service\DateRangeService;
 use App\Service\JwtTokenService;
 use App\Service\TeacherPayrollService;
+use App\Service\Validation\EcuadorianNationalIdValidator;
 use App\Service\Validation\EnrollmentValidator;
 use App\Service\Validation\StudentProfileValidator;
 use App\Service\Validation\TeacherAccountValidator;
@@ -93,6 +94,9 @@ $validEnrollment = [
     'comments' => 'Prefiere horario nocturno.',
 ];
 $enrollmentValidator = new EnrollmentValidator();
+$nationalIds = new EcuadorianNationalIdValidator();
+$test->assertTrue($nationalIds->isValid('1723456784'), 'Ecuadorian ID validator should accept a valid check digit.');
+$test->assertTrue(!$nationalIds->isValid('1723456789'), 'Ecuadorian ID validator should reject an invalid check digit.');
 $test->assertSame([], $enrollmentValidator->validate($validEnrollment), 'Valid enrollment data should pass validation.');
 $validEnrollment['scholarship_percent'] = 25;
 $test->assertSame([], $enrollmentValidator->validate($validEnrollment), 'A 25 percent scholarship should be valid.');

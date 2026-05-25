@@ -8,6 +8,7 @@ Current validation areas:
 
 - Enrollment requests.
 - Student profiles.
+- Ecuadorian national ID check digits.
 - Teacher accounts.
 - Attendance records.
 - Class plans.
