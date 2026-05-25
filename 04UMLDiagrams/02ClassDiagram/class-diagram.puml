@@ -1,108 +1,134 @@
 @startuml
-title American Latin Class - Class Diagram
+title American Latin Class - ALCSystem v2 Class Diagram
+skinparam classAttributeIconSize 0
 
-class Branch {
-  +id
-  +name
-  +directorName
-  +coDirectorName
-  +matrixSharePercent
+package "Model" {
+  class Branch {
+    +id
+    +name
+    +director_name
+    +co_director_name
+    +matrix_share_percent
+  }
+
+  class User {
+    +id
+    +name
+    +email
+    +role
+    +branch_id
+    +student_id
+    +avatar_url
+    +is_active
+  }
+
+  class Student {
+    +id
+    +branch_id
+    +national_id
+    +full_name
+    +email
+    +phone
+    +level
+    +scholarship_percent
+    +photo_url
+    +status
+  }
+
+  class ClassPlan {
+    +id
+    +branch_id
+    +teacher_name
+    +month
+    +level
+    +objective
+    +activities
+    +document_url
+    +status
+  }
+
+  class AttendanceRecord {
+    +id
+    +branch_id
+    +student_id
+    +person_type
+    +person_name
+    +attendance_date
+    +check_in_at
+    +expected_start_time
+    +duration_hours
+    +pay_rate
+    +status
+    +source
+    +evidence_code
+  }
+
+  class BranchFinanceReport {
+    +id
+    +branch_id
+    +month
+    +income
+    +expenses
+    +matrix_share_percent
+    +matrix_share_amount
+    +net_result
+  }
+
+  class ProfessionalEvent {
+    +id
+    +branch_id
+    +client_name
+    +event_type
+    +event_date
+    +total_amount
+    +status
+  }
+
+  class DancerEventAssignment {
+    +id
+    +professional_event_id
+    +student_id
+    +gross_amount
+    +deduction_amount
+    +deduction_reason
+    +payment_status
+  }
 }
 
-class User {
-  +id
-  +fullName
-  +email
-  +role
-  +branchId
+package "Controller" {
+  class AuthController
+  class StudentController
+  class TeacherController
+  class AttendanceRecordController
+  class ClassPlanController
+  class ProfilePhotoController
 }
 
-class Student {
-  +id
-  +fullName
-  +level
-  +scholarshipPercent
-  +status
-  +guardianName
-}
-
-class Teacher {
-  +id
-  +fullName
-  +branchId
-  +status
-}
-
-class ClassPlan {
-  +id
-  +teacherName
-  +month
-  +level
-  +objective
-  +activities
-  +status
-}
-
-class AttendanceRecord {
-  +id
-  +personType
-  +personName
-  +attendanceDate
-  +status
-  +evidenceCode
-}
-
-class MonthlyPayment {
-  +id
-  +studentId
-  +period
-  +amount
-  +status
-  +receipt
-}
-
-class BranchFinanceReport {
-  +id
-  +branchId
-  +month
-  +income
-  +expenses
-  +matrixShare
-  +netResult
-}
-
-class ProfessionalEvent {
-  +id
-  +clientName
-  +eventType
-  +eventDate
-  +totalAmount
-  +status
-}
-
-class DancerEventAssignment {
-  +id
-  +studentId
-  +professionalEventId
-  +grossAmount
-  +deductionAmount
-  +netAmount()
+package "Service" {
+  class AuthService
+  class BranchAccessService
+  class AttendanceSummaryService
+  class TeacherPayrollService
+  class ProfilePhotoValidator
 }
 
 Branch "1" -- "many" User
 Branch "1" -- "many" Student
-Branch "1" -- "many" Teacher
 Branch "1" -- "many" ClassPlan
 Branch "1" -- "many" AttendanceRecord
 Branch "1" -- "many" BranchFinanceReport
 Branch "1" -- "many" ProfessionalEvent
 
-Student "1" -- "many" MonthlyPayment
+User "0..1" -- "1" Student : linked account
 Student "1" -- "many" AttendanceRecord
-Teacher "1" -- "many" ClassPlan
-Teacher "1" -- "many" AttendanceRecord
 ProfessionalEvent "1" -- "many" DancerEventAssignment
 Student "1" -- "many" DancerEventAssignment
 
-@enduml
+AuthController --> AuthService
+StudentController --> BranchAccessService
+AttendanceRecordController --> TeacherPayrollService
+ProfilePhotoController --> ProfilePhotoValidator
+ProfilePhotoController --> User
+ProfilePhotoController --> Student
 
+@enduml
