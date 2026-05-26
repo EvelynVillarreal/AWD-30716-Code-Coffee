@@ -1,30 +1,36 @@
-﻿[
+[
     {
-        "url":  "https://creative-pothos-6c7a4c.netlify.app/",
+        "url":  "https://american-latin-class-frontend.netlify.app/",
         "status":  200,
         "ok":  true,
         "title":  "American Latin Class"
     },
     {
-        "url":  "https://creative-pothos-6c7a4c.netlify.app/enrollment.html",
+        "url":  "https://american-latin-class-frontend.netlify.app/pricing.html",
         "status":  200,
         "ok":  true,
-        "title":  "Inscripcion | American Latin Class"
+        "title":  "Pricing | American Latin Class"
     },
     {
-        "url":  "https://creative-pothos-6c7a4c.netlify.app/attendance-kiosk.html",
+        "url":  "https://american-latin-class-frontend.netlify.app/enrollment.html",
         "status":  200,
         "ok":  true,
-        "title":  "Attendance check-in | American Latin Class"
+        "title":  "Enrollment Request | American Latin Class"
     },
     {
-        "url":  "https://creative-pothos-6c7a4c.netlify.app/login.html",
+        "url":  "https://american-latin-class-frontend.netlify.app/attendance-kiosk.html",
         "status":  200,
         "ok":  true,
-        "title":  "Portal | American Latin Class"
+        "title":  "Teacher Attendance Station | American Latin Class"
     },
     {
-        "url":  "https://creative-pothos-6c7a4c.netlify.app/dashboard.html",
+        "url":  "https://american-latin-class-frontend.netlify.app/login.html",
+        "status":  200,
+        "ok":  true,
+        "title":  "School Portal | American Latin Class"
+    },
+    {
+        "url":  "https://american-latin-class-frontend.netlify.app/dashboard.html",
         "status":  200,
         "ok":  true,
         "title":  "Dashboard | American Latin Class"

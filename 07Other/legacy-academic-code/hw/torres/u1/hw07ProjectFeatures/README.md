@@ -32,7 +32,7 @@ This keeps the Jira board small enough for the assignment, but still connected t
 The programmed frontend for the selected features is published here:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 ## Public Backend

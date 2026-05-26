@@ -1,4 +1,4 @@
-# ALCSystem v2.0.11
+# ALCSystem v2.0.16
 
 # RESTful URI Design Document
 
@@ -7,7 +7,7 @@
 **Course:** Advanced Web Development
 **Instructor:** Engineer Edison Lascano
 **Project:** American Latin Class, ALCSystem
-**Version:** ALCSystem v2.0.11
+**Version:** ALCSystem v2.0.16
 **Date:** May 25, 2026
 **Team members:** Carlos Alexander Torres Pincay, Evelyn Hayde Villarreal
 
@@ -27,7 +27,7 @@ The document follows the same academic structure used by the reference URI desig
 - Request and response examples.
 - Authentication, authorization, validation, and error conventions.
 
-This version documents what exists in the repository at ALCSystem v2.0.11.
+This version documents what exists in the repository at ALCSystem v2.0.16.
 
 ---
 
@@ -809,7 +809,6 @@ https://american-latin-class-frontend.netlify.app
 | `/index.html` | File alias | Same public home experience as `/`. |
 | `/dashboard.html` | File alias | Static dashboard file. |
 | `/dashboard/*` | Netlify rewrite | Rewrites to `/dashboard.html` with status `200`. |
-| `/dashboard/techers` | Compatibility alias | Typo route accepted by the frontend router, but the canonical route is `/dashboard/teachers`. |
 
 ---
 
@@ -927,7 +926,7 @@ The backend returns JSON error responses.
 
 ## 14. Current Scope and Limitations
 
-This document only includes URIs already implemented in ALCSystem v2.0.11.
+This document only includes URIs already implemented in ALCSystem v2.0.16.
 
 Current limitations:
 

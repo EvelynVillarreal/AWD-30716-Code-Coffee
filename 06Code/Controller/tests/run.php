@@ -13,6 +13,8 @@ use App\Service\Validation\EnrollmentValidator;
 use App\Service\Validation\ProfilePhotoValidator;
 use App\Service\Validation\StudentProfileValidator;
 use App\Service\Validation\TeacherAccountValidator;
+use App\Support\JsonResponder;
+use Slim\Psr7\Response;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/src/bootstrap.php';
@@ -137,6 +139,10 @@ $largePhotoErrors = $profilePhotoValidator->validate([
 $test->assertTrue(isset($largePhotoErrors['photo_url']), 'Profile photo validator should reject decoded images over 900 KB.');
 $photoErrors = $profilePhotoValidator->validate(['photo_url' => 'javascript:alert(1)']);
 $test->assertTrue(isset($photoErrors['photo_url']), 'Profile photo validator should reject unsafe URLs.');
+
+$corsResponse = (new JsonResponder())->cors(new Response(), 'https://american-latin-class-frontend.netlify.app');
+$corsMethods = $corsResponse->getHeaderLine('Access-Control-Allow-Methods');
+$test->assertTrue(str_contains($corsMethods, 'PATCH') && str_contains($corsMethods, 'DELETE'), 'CORS should allow protected update and delete methods.');
 
 $_ENV['APP_KEY'] = str_repeat('a', 64);
 $user = new User();

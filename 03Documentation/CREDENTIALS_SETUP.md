@@ -95,7 +95,7 @@ DB_DATABASE=postgres
 DB_USERNAME=postgres.your_project_ref
 DB_PASSWORD=your_database_password
 DB_SSLMODE=require
-FRONTEND_ORIGINS=https://american-latin-class-frontend.netlify.app,https://creative-pothos-6c7a4c.netlify.app,https://american-latin-class-frontend.onrender.com,http://127.0.0.1:5173,http://localhost:5173
+FRONTEND_ORIGINS=https://american-latin-class-frontend.netlify.app,http://127.0.0.1:5173,http://localhost:5173
 ```
 
 Redeploy the service after updating variables.

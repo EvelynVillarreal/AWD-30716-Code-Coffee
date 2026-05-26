@@ -27,8 +27,6 @@ final class JsonResponder
         $allowedOrigins = array_filter(array_map('trim', explode(',', $_ENV['FRONTEND_ORIGINS'] ?? '')));
         $defaultOrigins = [
             'https://american-latin-class-frontend.netlify.app',
-            'https://creative-pothos-6c7a4c.netlify.app',
-            'https://american-latin-class-frontend.onrender.com',
             'http://127.0.0.1:5173',
             'http://localhost:5173',
         ];
@@ -39,6 +37,6 @@ final class JsonResponder
             ->withHeader('Access-Control-Allow-Origin', $allowedOrigin)
             ->withHeader('Vary', 'Origin')
             ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
     }
 }

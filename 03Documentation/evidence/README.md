@@ -60,7 +60,7 @@ https://american-latin-class.onrender.com/api/health
 
 ## API Response Evidence
 
-- `api-responses/frontend-netlify-check.json`: HTTP 200 check for Netlify home, enrollment, attendance kiosk, login, and dashboard pages.
+- `api-responses/frontend-netlify-check.json`: HTTP 200 check for Netlify home, pricing, enrollment, attendance kiosk, login, and dashboard pages.
 - `api-responses/backend-local-root.json`: backend root JSON response.
 - `api-responses/backend-local-health.json`: backend health JSON response.
 - `api-responses/backend-local-branches.json`: backend branch list from Supabase.

@@ -51,7 +51,7 @@ The frontend does not write directly to Supabase. Public enrollment, comments, l
 Current production deploy:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 Deployment command:

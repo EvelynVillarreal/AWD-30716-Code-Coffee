@@ -5,7 +5,7 @@ This document confirms that the three selected project features are not only wri
 Production frontend URL:
 
 ```text
-https://creative-pothos-6c7a4c.netlify.app
+https://american-latin-class-frontend.netlify.app
 ```
 
 Connected Supabase project:

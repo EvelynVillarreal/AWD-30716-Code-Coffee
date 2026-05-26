@@ -38,7 +38,6 @@ class AppConfig {
       overviews: "overview",
       students: "students",
       teachers: "teachers",
-      techers: "teachers",
       payroll: "payroll",
       planning: "planning",
       finance: "finance",
@@ -665,6 +664,7 @@ class DashboardController {
     this.setDefaultMonth();
     this.renderShell();
     this.currentModule = this.moduleFromCurrentPath()?.id || this.currentModule;
+    this.normalizeCurrentRoute();
     this.syncActiveModuleButton();
     this.bindShell();
     await this.reloadData();
@@ -737,6 +737,7 @@ class DashboardController {
       const module = this.moduleFromCurrentPath();
       if (module) {
         this.activateModule(module.id, false);
+        this.normalizeCurrentRoute();
       }
     });
 
@@ -762,6 +763,16 @@ class DashboardController {
 
   moduleById(moduleId) {
     return this.modules().find((module) => module.id === moduleId) || this.modules()[0] || null;
+  }
+
+  normalizeCurrentRoute() {
+    const module = this.moduleById(this.currentModule);
+    if (!module) return;
+
+    const canonicalPath = `/dashboard/${module.slug}`;
+    if (window.location.pathname !== canonicalPath) {
+      window.history.replaceState({ module: module.id }, "", canonicalPath);
+    }
   }
 
   activateModule(moduleId, pushUrl) {
