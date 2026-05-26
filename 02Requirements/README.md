@@ -1,5 +1,8 @@
 # Project Features
 
+**Current baseline:** ALCSystem v2.0.18
+**Last aligned:** May 26, 2026
+
 This folder contains the planning package for the **American Latin Class** system.
 
 The purpose of this assignment is to organize the requirements before building the Jira work plan. The documents are written from our project perspective and can be used to explain the scope to the teacher and to the academy owner.
@@ -28,6 +31,16 @@ We selected 3 features. Each feature has 3 tasks:
 3. Branch Finance and Professional Dancer Agency
 
 This keeps the Jira board small enough for the assignment, but still connected to the real project scope.
+
+## Current Implemented Scope
+
+- Public home, pricing, offers, and enrollment request pages.
+- Backend API with Slim, Eloquent, Supabase, signed authentication, role middleware, and CORS for the official frontend.
+- Role dashboards for students, teachers, and directors.
+- Teacher-controlled student attendance and separate teacher check-in station.
+- Student profile photo upload and signed-in profile header.
+- Director management for students, teachers, payroll, planning, finance, and B2 professional events.
+- Netlify dashboard rewrites for clean internal routes.
 
 ## Published Frontend
 

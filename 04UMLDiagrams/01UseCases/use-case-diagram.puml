@@ -1,5 +1,5 @@
 @startuml
-title American Latin Class - ALCSystem v2 Use Case Diagram
+title American Latin Class - ALCSystem v2.0.18 Use Case Diagram
 left to right direction
 
 actor Visitor
@@ -11,67 +11,101 @@ actor "School Computer" as Kiosk
 rectangle "Public Website" {
   usecase "View academy home" as UC_HOME
   usecase "View prices and offers" as UC_PRICING
+  usecase "Select enrollment offer" as UC_OFFER
   usecase "Submit enrollment request" as UC_ENROLL
 }
 
-rectangle "School Portal" {
+rectangle "Security and Navigation" {
   usecase "Sign in" as UC_LOGIN
-  usecase "View role dashboard" as UC_DASHBOARD
-  usecase "View profile header" as UC_HEADER
-  usecase "Upload student profile photo" as UC_PHOTO
+  usecase "View signed-in profile header" as UC_HEADER
+  usecase "Navigate role dashboard" as UC_DASHBOARD
+  usecase "Use canonical dashboard routes" as UC_ROUTES
+  usecase "Sign out securely" as UC_SIGNOUT
+}
+
+rectangle "Student Portal" {
   usecase "View student progress" as UC_PROGRESS
   usecase "View class schedule" as UC_SCHEDULE
   usecase "View attendance calendar" as UC_STUDENT_ATTENDANCE
+  usecase "View upcoming events" as UC_STUDENT_EVENTS
+  usecase "Upload profile photo" as UC_PHOTO
+}
+
+rectangle "Teacher Portal" {
   usecase "Submit class planning document" as UC_PLAN
   usecase "Register student attendance" as UC_ATTENDANCE
   usecase "Review worked hours" as UC_WORK_LOG
+  usecase "View payroll summary" as UC_TEACHER_PAYROLL
+}
+
+rectangle "Teacher Attendance Station" {
   usecase "Register teacher check-in" as UC_TEACHER_CHECKIN
+  usecase "Generate attendance evidence code" as UC_EVIDENCE
 }
 
 rectangle "Director Operations" {
   usecase "Manage students and scholarships" as UC_STUDENTS
   usecase "Manage teachers" as UC_TEACHERS
+  usecase "Review student attendance" as UC_REVIEW_STUDENT_ATTENDANCE
+  usecase "Review teacher attendance" as UC_REVIEW_TEACHER_ATTENDANCE
   usecase "Review teacher payroll" as UC_PAYROLL
   usecase "Review planning documents" as UC_REVIEW_PLANS
-  usecase "Review branch finance" as UC_FINANCE
+  usecase "Review branch totals" as UC_BRANCH_TOTALS
+  usecase "Register branch finance" as UC_FINANCE
   usecase "Manage B2 professional events" as UC_EVENTS
+  usecase "Assign B2 dancers to events" as UC_ASSIGN_DANCERS
   usecase "Calculate dancer settlement" as UC_SETTLEMENT
 }
 
 Visitor --> UC_HOME
 Visitor --> UC_PRICING
+Visitor --> UC_OFFER
 Visitor --> UC_ENROLL
 
 Student --> UC_LOGIN
 Student --> UC_DASHBOARD
 Student --> UC_HEADER
-Student --> UC_PHOTO
+Student --> UC_SIGNOUT
 Student --> UC_PROGRESS
 Student --> UC_SCHEDULE
 Student --> UC_STUDENT_ATTENDANCE
+Student --> UC_STUDENT_EVENTS
+Student --> UC_PHOTO
 
 Teacher --> UC_LOGIN
 Teacher --> UC_DASHBOARD
 Teacher --> UC_HEADER
+Teacher --> UC_SIGNOUT
 Teacher --> UC_PLAN
 Teacher --> UC_ATTENDANCE
 Teacher --> UC_WORK_LOG
+Teacher --> UC_TEACHER_PAYROLL
 
 Kiosk --> UC_TEACHER_CHECKIN
 
 Director --> UC_LOGIN
 Director --> UC_DASHBOARD
 Director --> UC_HEADER
+Director --> UC_SIGNOUT
 Director --> UC_STUDENTS
 Director --> UC_TEACHERS
+Director --> UC_REVIEW_STUDENT_ATTENDANCE
+Director --> UC_REVIEW_TEACHER_ATTENDANCE
 Director --> UC_PAYROLL
 Director --> UC_REVIEW_PLANS
+Director --> UC_BRANCH_TOTALS
 Director --> UC_FINANCE
 Director --> UC_EVENTS
+Director --> UC_ASSIGN_DANCERS
 Director --> UC_SETTLEMENT
 
+UC_OFFER .> UC_ENROLL : redirects to
 UC_DASHBOARD .> UC_HEADER : includes
-UC_PRICING .> UC_ENROLL : redirects to
-UC_EVENTS .> UC_SETTLEMENT : uses
+UC_DASHBOARD .> UC_ROUTES : includes
+UC_ATTENDANCE .> UC_EVIDENCE : includes
+UC_TEACHER_CHECKIN .> UC_EVIDENCE : includes
+UC_EVENTS .> UC_ASSIGN_DANCERS : includes
+UC_ASSIGN_DANCERS .> UC_SETTLEMENT : uses
+UC_PAYROLL .> UC_REVIEW_TEACHER_ATTENDANCE : uses
 
 @enduml

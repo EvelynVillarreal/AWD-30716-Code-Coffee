@@ -1,5 +1,8 @@
 # User Stories
 
+**Current baseline:** ALCSystem v2.0.18
+**Last aligned:** May 26, 2026
+
 ## Feature 1: Public Landing and Enrollment
 
 ### US-001 - View Academy Information
@@ -25,6 +28,7 @@ Acceptance criteria:
 - The form requires name, national ID, phone, email, preferred branch, and level.
 - The form stores the request as pending.
 - The form shows a confirmation message.
+- The request is sent to the backend API.
 
 ### US-004 - Review New Enrollment Requests
 As a director, I want to review pending enrollment requests so that I can convert valid requests into active students.
@@ -43,6 +47,7 @@ Acceptance criteria:
 - Students can be B1 or B2.
 - Scholarship can be 0%, 25%, 50%, 75%, or 100%.
 - Student records include branch and status.
+- The director can add, edit, and deactivate student records.
 
 ### US-006 - Upload Student Profile Photo
 As a student, I want to upload my profile photo so that the portal clearly identifies my account.
@@ -59,19 +64,44 @@ Acceptance criteria:
 - Attendance includes date, branch, student, level, and status.
 - Status can be present, absent, late, or excused.
 - The record stores an evidence code.
+- Students cannot register their own class attendance.
 
-### US-008 - Register Teacher Attendance and Planning
-As a director, I want to review teacher attendance and monthly plans so that I can manage payroll and teaching quality.
+### US-008 - Submit Teacher Planning
+As a teacher, I want to submit my monthly class planning document so that directors can review teaching quality.
 
 Acceptance criteria:
 - Teachers can submit monthly class plans.
+- A planning record includes month, branch, level, objective, activities, and optional document URL.
+- Directors can review submitted plans.
+
+### US-009 - Register Teacher Check-In
+As a teacher, I want to register my check-in from the school computer so that my worked hours can be controlled.
+
+Acceptance criteria:
+- The teacher attendance station identifies the teacher by email.
+- The system records date, expected time, actual check-in, status, duration, and evidence code.
+- Late, present, absent, and excused statuses are available for administrative follow-up.
+
+### US-010 - Review Teacher Payroll
+As a director, I want to review teacher attendance and payroll so that I can control pending payments.
+
+Acceptance criteria:
 - Teacher attendance can be recorded.
 - Late or absent records can be highlighted for administrative follow-up.
-- Teacher payroll can be calculated using worked hours.
+- Teacher payroll can be calculated using worked hours at USD 12 per class hour.
+
+### US-011 - Access Secure Role Dashboard
+As an authenticated user, I want the portal to show only my role modules so that I can work without seeing unauthorized actions.
+
+Acceptance criteria:
+- Login uses backend credentials and a signed token.
+- The dashboard shows the user's name, role, and avatar/profile image fallback.
+- Sign out clears the session and protected pages redirect unauthenticated users to login.
+- Dashboard navigation uses canonical URLs.
 
 ## Feature 3: Branch Finance and Professional Dancer Agency
 
-### US-009 - Report Branch Finance
+### US-012 - Report Branch Finance
 As a director, I want to report monthly income and expenses so that branch performance can be reviewed.
 
 Acceptance criteria:
@@ -79,7 +109,7 @@ Acceptance criteria:
 - The system calculates the amount owed to the main branch.
 - The director can compare branches.
 
-### US-010 - Track Professional Events for B2 Dancers
+### US-013 - Track Professional Events for B2 Dancers
 As a director, I want to register professional events for B2 dancers so that the academy can keep a history of participation and income.
 
 Acceptance criteria:
@@ -87,7 +117,7 @@ Acceptance criteria:
 - Dancers can be assigned to events.
 - The system stores event history by dancer.
 
-### US-011 - Calculate Dancer Settlement
+### US-014 - Calculate Dancer Settlement
 As a director, I want to calculate dancer payments automatically so that paid events, penalties, and deductions are handled consistently.
 
 Acceptance criteria:

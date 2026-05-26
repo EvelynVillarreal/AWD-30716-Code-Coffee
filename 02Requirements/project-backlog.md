@@ -1,5 +1,8 @@
 # Project Backlog
 
+**Current baseline:** ALCSystem v2.0.18
+**Last aligned:** May 26, 2026
+
 ## Priority Criteria
 
 - **Must**: needed for the academic assignment or MVP.
@@ -8,27 +11,30 @@
 
 ## Backlog
 
-| ID | Item | Priority | Related Requirement |
-| --- | --- | --- | --- |
-| PB-001 | Build public landing page | Must | FR-001 |
-| PB-002 | Build enrollment form | Must | FR-003 |
-| PB-003 | Save pending enrollment requests | Must | FR-005 |
-| PB-004 | Register students with B1/B2 level | Must | FR-007 |
-| PB-005 | Register scholarship percentage | Must | FR-008 |
-| PB-006 | Register student attendance | Must | FR-017 |
-| PB-006A | Build teacher attendance station | Must | FR-019 |
-| PB-006B | Show monthly attendance in student dashboard | Must | FR-010 |
-| PB-007 | Register teacher attendance | Must | FR-018 |
-| PB-008 | Submit teacher monthly class plans | Must | FR-015 |
-| PB-009 | Add student profile photo upload | Must | FR-012 |
-| PB-010 | Register branch income and expenses | Must | FR-025, FR-026 |
-| PB-011 | Calculate branch result and matrix share | Must | FR-027, FR-028 |
-| PB-012 | Register B2 professional events | Must | FR-032 |
-| PB-013 | Assign dancers to events | Should | FR-034 |
-| PB-014 | Calculate dancer settlement | Should | FR-035 |
-| PB-015 | Create role permission matrix | Should | FR-037 |
-| PB-016 | Add audit log | Should | FR-040 |
-| PB-017 | Route sensitive writes through the backend API | Must | NFR-008 |
-| PB-018 | Add charts for branch comparisons | Could | FR-030 |
-| PB-019 | Add competition tracking | Could | FR-022 |
-| PB-020 | Add online payment integration | Could | Pending validation |
+| ID | Item | Priority | Status | Related Requirement |
+| --- | --- | --- | --- | --- |
+| PB-001 | Build public landing page | Must | Done | FR-001 |
+| PB-002 | Build enrollment form | Must | Done | FR-003 |
+| PB-003 | Save pending enrollment requests through backend | Must | Done | FR-005, FR-005C |
+| PB-004 | Build pricing and offers page | Must | Done | FR-005A, FR-005B |
+| PB-005 | Register students with B1/B2 level | Must | Done | FR-007 |
+| PB-006 | Register scholarship percentage | Must | Done | FR-008 |
+| PB-007 | Register student attendance by teacher | Must | Done | FR-016, FR-019B |
+| PB-008 | Build teacher attendance station | Must | Done | FR-019, FR-019A |
+| PB-009 | Show monthly attendance in student dashboard | Must | Done | FR-009, FR-010 |
+| PB-010 | Submit teacher monthly class plans | Must | Done | FR-014, FR-015 |
+| PB-011 | Add student profile photo upload | Must | Done | FR-012, FR-013 |
+| PB-012 | Manage students and teachers as director | Must | Done | FR-024A, FR-037 |
+| PB-013 | Register branch income and expenses | Must | Done | FR-025, FR-026 |
+| PB-014 | Calculate branch result and matrix share | Must | Done | FR-027, FR-028 |
+| PB-015 | Register B2 professional events | Must | Done | FR-032 |
+| PB-016 | Assign dancers to events | Should | Done | FR-034 |
+| PB-017 | Calculate dancer settlement | Should | Done | FR-035 |
+| PB-018 | Route sensitive writes through the backend API | Must | Done | NFR-008 |
+| PB-019 | Add canonical dashboard routes and Netlify rewrites | Must | Done | FR-045, NFR-014 |
+| PB-020 | Harden login, sign out, and password visibility behavior | Must | Done | FR-041, FR-042, FR-043, FR-044 |
+| PB-021 | Add audit log | Should | Done | FR-040 |
+| PB-022 | Align backend CORS with protected API methods | Should | Done | NFR-013 |
+| PB-023 | Add charts for branch comparisons | Could | Pending | FR-030 |
+| PB-024 | Add competition tracking | Could | Pending | FR-022 |
+| PB-025 | Add online payment integration | Could | Pending validation | Pending validation |
