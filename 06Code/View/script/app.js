@@ -719,6 +719,14 @@ class DashboardController {
   }
 
   bindShell() {
+    document.getElementById("homeButton").addEventListener("click", () => {
+      if (this.sessionStore.get()) {
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
     const logoutModal = new bootstrap.Modal("#logoutModal");
     const logoutConfirm = document.getElementById("logoutConfirm");
 
