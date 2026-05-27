@@ -720,6 +720,10 @@ class DashboardController {
 
   bindShell() {
     document.getElementById("logoutButton").addEventListener("click", () => {
+      if (!confirm("Are you sure you want to log out?")) {
+        return;
+      }
+
       this.sessionStore.clear();
       window.location.replace("login.html");
     });
