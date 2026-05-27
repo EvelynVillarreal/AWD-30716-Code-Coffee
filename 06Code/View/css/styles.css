@@ -828,3 +828,9 @@ label span,
     display: none;
   }
 }
+
+.alc-modal-content {
+  border: 0;
+  border-radius: 12px;
+  box-shadow: var(--alc-shadow);
+}
