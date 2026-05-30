@@ -466,7 +466,7 @@ a {
   width: fit-content;
   border-radius: 8px;
   padding: 8px 12px;
-  background: var(--alc-graphite);
+  background: var(--alc-yellow-dark);
   color: var(--alc-yellow);
   font-weight: 900;
   text-decoration: none;
