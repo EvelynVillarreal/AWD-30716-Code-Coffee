@@ -13,6 +13,77 @@
   --alc-shadow: 0 16px 36px rgba(31, 35, 40, 0.12);
 }
 
+[data-theme="dark"] {
+  --alc-ink: #e1e6eb;
+  --alc-graphite: #181b1f;
+  --alc-panel: #21252a;
+  --alc-line: #383e44;
+  --alc-soft: #131619;
+  --alc-yellow: #ffd84d;
+  --alc-yellow-dark: #e8bd16;
+  --alc-green: #4db87a;
+  --alc-red: #e87066;
+  --alc-blue: #4d8db5;
+  --alc-muted: #8a94a0;
+  --alc-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] body {
+  background: var(--alc-soft);
+  color: var(--alc-ink);
+}
+
+[data-theme="dark"] .alc-navbar {
+  background: rgba(24, 27, 31, 0.98);
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .alc-card,
+[data-theme="dark"] .offer-card {
+  background: var(--alc-panel);
+  border-color: var(--alc-line);
+}
+
+[data-theme="dark"] .btn-outline-light {
+  color: var(--alc-ink);
+  border-color: var(--alc-line);
+}
+
+[data-theme="dark"] .btn-outline-light:hover {
+  background: var(--alc-line);
+  color: var(--alc-ink);
+}
+
+[data-theme="dark"] .text-secondary {
+  color: var(--alc-muted) !important;
+}
+
+[data-theme="dark"] .session-profile-text small {
+  color: var(--alc-muted);
+}
+
+[data-theme="dark"] .auth-panel,
+[data-theme="dark"] .station-panel {
+  background: var(--alc-panel);
+  border-color: var(--alc-line);
+}
+
+[data-theme="dark"] .station-body {
+  background: var(--alc-soft);
+}
+
+[data-theme="dark"] .app-body {
+  background: var(--alc-soft);
+}
+
+[data-theme="dark"] .auth-layout,
+[data-theme="dark"] .station-layout {
+  background:
+    linear-gradient(90deg, rgba(19, 22, 25, 0.94), rgba(19, 22, 25, 0.64)),
+    url("https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?auto=format&fit=crop&w=1600&q=80") center/cover;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -833,4 +904,9 @@ label span,
   border: 0;
   border-radius: 12px;
   box-shadow: var(--alc-shadow);
+}
+
+.theme-toggle {
+  line-height: 1;
+  font-size: 1.1rem;
 }
