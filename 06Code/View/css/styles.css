@@ -40,9 +40,25 @@
 [data-theme="dark"] .card,
 [data-theme="dark"] .panel,
 [data-theme="dark"] .alc-card,
+[data-theme="dark"] .price-card,
 [data-theme="dark"] .offer-card {
   background: var(--alc-panel);
   border-color: var(--alc-line);
+}
+
+[data-theme="dark"] .offer-card.featured {
+  background: #4a4020;
+  border-color: var(--alc-yellow);
+}
+
+[data-theme="dark"] .price-card a {
+  background: var(--alc-yellow);
+  color: var(--alc-ink);
+}
+
+[data-theme="dark"] .price-card a:hover {
+  background: var(--alc-yellow-dark);
+  color: var(--alc-ink);
 }
 
 [data-theme="dark"] .btn-outline-light {
