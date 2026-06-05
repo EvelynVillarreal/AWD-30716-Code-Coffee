@@ -86,6 +86,22 @@ final class FinanceController
         ], 201);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $report = BranchFinanceReport::query()->find((int) $args['financeReportId']);
+
+        if (!$report) {
+            return $this->responder->json($response, ['message' => 'Branch finance report was not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $report->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot view that finance report.'], 403);
+        }
+
+        return $this->responder->json($response, ['data' => $report]);
+    }
+
     private function authenticatedUser(Request $request): AuthenticatedUser
     {
         $user = $request->getAttribute('auth_user');

@@ -80,6 +80,24 @@ final class TeacherController
         ], 201);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $teacher = User::query()
+            ->where('role', 'teacher')
+            ->find((int) $args['teacherId']);
+
+        if (!$teacher) {
+            return $this->responder->json($response, ['message' => 'Teacher was not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $teacher->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot view that teacher.'], 403);
+        }
+
+        return $this->responder->json($response, ['data' => $teacher]);
+    }
+
     public function update(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->authenticatedUser($request);

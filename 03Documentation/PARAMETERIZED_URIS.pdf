@@ -1,0 +1,111 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 2196 >>
+stream
+BT
+/F1 12 Tf
+50 780 Td
+14 TL
+(American Latin Class - Parameterized URI Documentation) Tj
+T*
+() Tj
+T*
+(RESTful standard used:) Tj
+T*
+(- Collections use plural nouns such as /api/students and /api/teachers.) Tj
+T*
+(- Single resources append an ID parameter in braces, such as /api/students/{studentId}.) Tj
+T*
+(- Real requests replace the parameter with a numeric ID, such as /api/students/1.) Tj
+T*
+(- GET is used for read-only lookup.) Tj
+T*
+(- Protected endpoints keep role middleware and branch access validation.) Tj
+T*
+() Tj
+T*
+(Added URIs:) Tj
+T*
+(GET /api/branches/{branchId} -> example /api/branches/1 -> get one branch by ID -> public) Tj
+T*
+(GET /api/students/{studentId} -> example /api/students/1 -> get one student by ID -> director) Tj
+T*
+(GET /api/teachers/{teacherId} -> example /api/teachers/1 -> get one teacher by ID -> director) Tj
+T*
+(GET /api/class-plans/{classPlanId} -> example /api/class-plans/1 -> get one class plan by ID -> teacher/director) Tj
+T*
+(GET /api/attendance-records/{attendanceRecordId} -> example /api/attendance-records/1 -> get one attendance record by ID -> teacher/director) Tj
+T*
+(GET /api/branch-finance-reports/{financeReportId} -> example /api/branch-finance-reports/1 -> get one finance report by ID -> director) Tj
+T*
+(GET /api/professional-events/{eventId} -> example /api/professional-events/1 -> get one professional event by ID -> director) Tj
+T*
+() Tj
+T*
+(Implementation summary:) Tj
+T*
+(1. The route file 06Code/Controller/routes/api.php maps each URI to a show method.) Tj
+T*
+(2. Each controller reads the ID from Slim args, for example args[studentId].) Tj
+T*
+(3. The controller searches the related model by ID.) Tj
+T*
+(4. If no record exists, the API returns HTTP 404.) Tj
+T*
+(5. If the user cannot access the branch or role, the API returns HTTP 403.) Tj
+T*
+(6. Successful responses return the selected record inside a JSON data object.) Tj
+T*
+() Tj
+T*
+(Example request:) Tj
+T*
+(GET /api/students/1) Tj
+T*
+(Authorization: Bearer <director-token>) Tj
+T*
+() Tj
+T*
+(Example JSON response:) Tj
+T*
+({) Tj
+T*
+(  "data": {) Tj
+T*
+(    "id": 1,) Tj
+T*
+(    "full_name": "Example Student",) Tj
+T*
+(    "branch_id": 1) Tj
+T*
+(  }) Tj
+T*
+(}) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2559
+%%EOF

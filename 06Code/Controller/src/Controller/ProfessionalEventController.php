@@ -83,6 +83,24 @@ final class ProfessionalEventController
         ], 201);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $event = ProfessionalEvent::query()
+            ->with('assignments')
+            ->find((int) $args['eventId']);
+
+        if (!$event) {
+            return $this->responder->json($response, ['message' => 'Professional event not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $event->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot view that professional event.'], 403);
+        }
+
+        return $this->responder->json($response, ['data' => $event]);
+    }
+
     public function assignDancer(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->authenticatedUser($request);

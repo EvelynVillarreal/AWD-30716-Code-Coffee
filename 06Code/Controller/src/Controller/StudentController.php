@@ -94,6 +94,22 @@ final class StudentController
         ], 201);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $student = Student::query()->with('branch')->find((int) $args['studentId']);
+
+        if (!$student) {
+            return $this->responder->json($response, ['message' => 'Student was not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $student->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot view that student.'], 403);
+        }
+
+        return $this->responder->json($response, ['data' => $student]);
+    }
+
     public function update(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->authenticatedUser($request);

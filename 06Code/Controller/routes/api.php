@@ -81,6 +81,7 @@ return static function (App $app, JsonResponder $responder): void {
     $app->get('/', [$homeController, 'index']);
     $app->get('/api/health', [$homeController, 'health']);
     $app->get('/api/branches', [$branchController, 'index']);
+    $app->get('/api/branches/{branchId}', [$branchController, 'show']);
     $app->post('/api/enrollments', [$enrollmentController, 'store']);
     $app->post('/api/auth/login', [$authController, 'login']);
     $app->post('/api/kiosk/attendance', [$kioskController, 'store']);
@@ -101,6 +102,17 @@ return static function (App $app, JsonResponder $responder): void {
     $app->post('/api/students', [$studentController, 'store'])
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
+    /*
+     * Paso a paso para crear URIs con parametro:
+     * 1. Usamos el nombre plural del recurso: /api/students.
+     * 2. Agregamos el identificador entre llaves: /api/students/{studentId}.
+     * 3. Slim captura ese valor y lo entrega al controlador dentro de $args['studentId'].
+     * 4. El controlador busca el registro por ID, valida permisos y responde JSON.
+     * Ejemplos reales: GET /api/students/1, GET /api/students/2.
+     */
+    $app->get('/api/students/{studentId}', [$studentController, 'show'])
+        ->add(new RoleMiddleware($responder, $authService, ['director']));
+
     $app->patch('/api/students/{studentId}', [$studentController, 'update'])
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
@@ -111,6 +123,15 @@ return static function (App $app, JsonResponder $responder): void {
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
     $app->post('/api/teachers', [$teacherController, 'store'])
+        ->add(new RoleMiddleware($responder, $authService, ['director']));
+
+    /*
+     * URI parametrizada para profesores:
+     * /api/teachers/{teacherId} permite consultar un profesor concreto.
+     * El parametro {teacherId} mantiene la ruta RESTful y evita rutas como
+     * /api/getTeacherById?id=1, que son menos limpias y mas dificiles de leer.
+     */
+    $app->get('/api/teachers/{teacherId}', [$teacherController, 'show'])
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
     $app->patch('/api/teachers/{teacherId}', [$teacherController, 'update'])
@@ -125,10 +146,28 @@ return static function (App $app, JsonResponder $responder): void {
     $app->post('/api/class-plans', [$classPlanController, 'store'])
         ->add(new RoleMiddleware($responder, $authService, ['teacher', 'director']));
 
+    /*
+     * URI parametrizada para planes de clase:
+     * /api/class-plans/{classPlanId} consulta un plan especifico.
+     * El controlador verifica que el usuario autenticado pueda acceder a la
+     * sucursal del plan antes de devolver la informacion.
+     */
+    $app->get('/api/class-plans/{classPlanId}', [$classPlanController, 'show'])
+        ->add(new RoleMiddleware($responder, $authService, ['teacher', 'director']));
+
     $app->get('/api/attendance-records', [$attendanceController, 'index'])
         ->add(new RoleMiddleware($responder, $authService, ['teacher', 'director']));
 
     $app->post('/api/attendance-records', [$attendanceController, 'store'])
+        ->add(new RoleMiddleware($responder, $authService, ['teacher', 'director']));
+
+    /*
+     * URI parametrizada para asistencias:
+     * /api/attendance-records/{attendanceRecordId} devuelve una asistencia.
+     * Esta forma permite ejemplos como /api/attendance-records/1 y mantiene
+     * la misma coleccion usada por GET /api/attendance-records.
+     */
+    $app->get('/api/attendance-records/{attendanceRecordId}', [$attendanceController, 'show'])
         ->add(new RoleMiddleware($responder, $authService, ['teacher', 'director']));
 
     $app->get('/api/branch-finance-reports', [$financeController, 'index'])
@@ -137,10 +176,28 @@ return static function (App $app, JsonResponder $responder): void {
     $app->post('/api/branch-finance-reports', [$financeController, 'store'])
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
+    /*
+     * URI parametrizada para reportes financieros:
+     * /api/branch-finance-reports/{financeReportId} consulta un reporte.
+     * El ID viaja en la ruta y no en el body porque GET no debe depender de
+     * datos enviados en el cuerpo de la peticion.
+     */
+    $app->get('/api/branch-finance-reports/{financeReportId}', [$financeController, 'show'])
+        ->add(new RoleMiddleware($responder, $authService, ['director']));
+
     $app->get('/api/professional-events', [$eventController, 'index'])
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
     $app->post('/api/professional-events', [$eventController, 'store'])
+        ->add(new RoleMiddleware($responder, $authService, ['director']));
+
+    /*
+     * URI parametrizada para eventos profesionales:
+     * /api/professional-events/{eventId} consulta un evento por ID.
+     * Si el evento tiene bailarines asignados, el controlador lo devuelve con
+     * sus assignments para que la respuesta sea util sin llamadas extra.
+     */
+    $app->get('/api/professional-events/{eventId}', [$eventController, 'show'])
         ->add(new RoleMiddleware($responder, $authService, ['director']));
 
     $app->post('/api/professional-events/{eventId}/assignments', [$eventController, 'assignDancer'])

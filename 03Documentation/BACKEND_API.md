@@ -92,6 +92,7 @@ This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
 | --- | --- | --- |
 | GET | `/api/health` | Check API and database status |
 | GET | `/api/branches` | List branches |
+| GET | `/api/branches/{branchId}` | Get one branch by ID |
 | POST | `/api/enrollments` | Register a new enrollment request |
 | POST | `/api/auth/login` | Login with stored user credentials |
 | POST | `/api/teacher-attendance/check-in` | Register teacher check-in from the school station |
@@ -100,21 +101,27 @@ This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
 | PATCH | `/api/me/photo` | Protected student profile photo update |
 | GET | `/api/students` | Protected director student list |
 | POST | `/api/students` | Protected director student creation |
+| GET | `/api/students/{studentId}` | Protected director student lookup by ID |
 | PATCH | `/api/students/{studentId}` | Protected director student update |
 | DELETE | `/api/students/{studentId}` | Protected director student deactivation |
 | GET | `/api/teachers` | Protected director teacher list |
 | POST | `/api/teachers` | Protected director teacher creation |
+| GET | `/api/teachers/{teacherId}` | Protected director teacher lookup by ID |
 | PATCH | `/api/teachers/{teacherId}` | Protected director teacher update |
 | DELETE | `/api/teachers/{teacherId}` | Protected director teacher deactivation |
 | GET | `/api/class-plans` | Protected teacher/director class plan list |
 | POST | `/api/class-plans` | Protected teacher/director class plan |
+| GET | `/api/class-plans/{classPlanId}` | Protected teacher/director class plan lookup by ID |
 | GET | `/api/attendance-records` | Protected teacher/director attendance list and payroll summary |
 | POST | `/api/attendance-records` | Protected teacher/director attendance |
+| GET | `/api/attendance-records/{attendanceRecordId}` | Protected teacher/director attendance lookup by ID |
 | GET | `/api/professional-events` | Protected director event list |
 | POST | `/api/professional-events` | Protected director event creation |
+| GET | `/api/professional-events/{eventId}` | Protected director event lookup by ID |
 | POST | `/api/professional-events/{eventId}/assignments` | Protected B2 dancer assignment |
 | GET | `/api/branch-finance-reports` | Protected director finance reports |
 | POST | `/api/branch-finance-reports` | Protected director finance report creation |
+| GET | `/api/branch-finance-reports/{financeReportId}` | Protected director finance report lookup by ID |
 | GET | `/api/dancer-settlements/{studentId}` | Protected B2 dancer payment summary |
 
 ## Local Verification

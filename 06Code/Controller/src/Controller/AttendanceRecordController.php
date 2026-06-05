@@ -149,6 +149,26 @@ final class AttendanceRecordController
         ], 201);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $attendance = AttendanceRecord::query()->with('student')->find((int) $args['attendanceRecordId']);
+
+        if (!$attendance) {
+            return $this->responder->json($response, ['message' => 'Attendance record was not found.'], 404);
+        }
+
+        if ($authUser->role() === 'teacher') {
+            if ($attendance->person_type !== 'teacher' || $attendance->person_name !== $authUser->name()) {
+                return $this->responder->json($response, ['message' => 'This teacher cannot view that attendance record.'], 403);
+            }
+        } elseif (!$this->branchAccess->canAccessBranch($authUser, (int) $attendance->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot view that attendance record.'], 403);
+        }
+
+        return $this->responder->json($response, ['data' => $attendance]);
+    }
+
     private function authenticatedUser(Request $request): AuthenticatedUser
     {
         $user = $request->getAttribute('auth_user');

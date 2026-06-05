@@ -92,6 +92,26 @@ final class ClassPlanController
         ], 201);
     }
 
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        $authUser = $this->authenticatedUser($request);
+        $plan = ClassPlan::query()->find((int) $args['classPlanId']);
+
+        if (!$plan) {
+            return $this->responder->json($response, ['message' => 'Class plan was not found.'], 404);
+        }
+
+        if (!$this->branchAccess->canAccessBranch($authUser, (int) $plan->branch_id)) {
+            return $this->responder->json($response, ['message' => 'This user cannot view that class plan.'], 403);
+        }
+
+        if ($authUser->role() === 'teacher' && $plan->teacher_name !== $authUser->name()) {
+            return $this->responder->json($response, ['message' => 'This teacher cannot view another teacher class plan.'], 403);
+        }
+
+        return $this->responder->json($response, ['data' => $plan]);
+    }
+
     private function authenticatedUser(Request $request): AuthenticatedUser
     {
         $user = $request->getAttribute('auth_user');

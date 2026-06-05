@@ -28,4 +28,22 @@ final class BranchController
 
         return $this->responder->json($response, ['data' => $branches]);
     }
+
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $branch = Branch::query()->find((int) $args['branchId']);
+        } catch (Throwable) {
+            return $this->responder->json($response, [
+                'status' => 'review',
+                'message' => 'Branches are not available until the database credentials are configured.',
+            ], 503);
+        }
+
+        if (!$branch) {
+            return $this->responder->json($response, ['message' => 'Branch was not found.'], 404);
+        }
+
+        return $this->responder->json($response, ['data' => $branch]);
+    }
 }
