@@ -1,6 +1,6 @@
-Controller/.env
-Controller/vendor/
-View/
+backend/.env
+backend/vendor/
+.frontend/
 .git
 *.md
 Evidence/
