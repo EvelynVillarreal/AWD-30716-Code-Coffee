@@ -77,7 +77,8 @@ Services contain reusable business and application rules:
 - `TeacherPayrollService`: teacher status and payment summary.
 - `EvidenceCodeGenerator`: attendance evidence codes.
 - `AuditLogger`: best-effort audit records for protected writes.
-- `ValidationService`: backend validation for enrollment, students, teachers, attendance, class plans, finance, events, dancer assignments, and profile photos.
+- `ValidationService`: facade used by controllers; delegates validation rules to focused classes under `Services/Validation`.
+- `Services/Validation/*`: focused validators for students, teachers, attendance, planning, finance, events, profile photos, common fields, and Ecuadorian ID rules.
 
 ### Middleware
 
@@ -135,7 +136,7 @@ The frontend is a static site with vanilla JavaScript classes.
 
 ## Current Architectural Gaps
 
-- `ValidationService` is large and handles many unrelated request types; splitting it by domain would improve maintainability.
+- Controllers still depend on the `ValidationService` facade; this keeps compatibility but means validation is not injected per domain yet.
 - `routes/api.php` manually instantiates every dependency; a small container or factory layer would reduce route-file growth.
 - `GET /api/debug` is available only when `APP_DEBUG=true`; keep production deployments on `APP_DEBUG=false`.
 - There is no committed `composer.lock`, so production installs may drift across dependency versions.

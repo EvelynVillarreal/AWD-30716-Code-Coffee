@@ -90,7 +90,8 @@ Single REST API backend with modular internal services.
 | `TeacherPayrollService` | Calculates teacher late/present status and payroll summaries. | Teacher attendance and attendance controllers |
 | `EvidenceCodeGenerator` | Generates attendance evidence codes. | Attendance, kiosk, teacher attendance controllers |
 | `AuditLogger` | Records protected write actions when `audit_logs` is available. | Student, teacher, class plan, attendance, finance, event controllers |
-| `ValidationService` | Validates request data for the current backend modules. | Most write controllers |
+| `ValidationService` | Facade used by controllers; delegates request checks to focused validators under `Services/Validation`. | Most write controllers |
+| `Services/Validation/*` | Domain validators for students, teachers, attendance, planning, finance, events, profile photos, common fields, and Ecuadorian IDs. | `ValidationService` |
 
 ## Public and Diagnostic URIs
 
