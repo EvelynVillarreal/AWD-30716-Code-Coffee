@@ -15,7 +15,7 @@ C:\xampp\php\php.exe -r "echo bin2hex(random_bytes(32)), PHP_EOL;"
 Copy the output into:
 
 ```text
-06Code/Controller/.env
+06Code/backend/.env
 ```
 
 Example:
@@ -49,15 +49,15 @@ If the database password is unknown, reset it from Supabase **Project Settings >
 ## 3. Apply the Database Schema
 
 1. In Supabase, open **SQL Editor**.
-2. Open `06Code/Controller/database/supabase_schema.sql`.
+2. Open `06Code/backend/database/schema.sql`.
 3. Run the script.
 
 The schema adds:
 
-- `students.comments`
+- initial branches, dance styles, and levels
+- `students.comments` and `students.scholarship_percent`
 - unique indexes for national ID, email, and phone
 - `audit_logs`
-- RLS policies for the backend database role
 
 If a unique index fails because existing data has duplicates, find them with:
 
@@ -96,9 +96,21 @@ DB_USERNAME=postgres.your_project_ref
 DB_PASSWORD=your_database_password
 DB_SSLMODE=require
 FRONTEND_ORIGINS=https://american-latin-class-frontend.netlify.app,http://127.0.0.1:5173,http://localhost:5173
+GOOGLE_CLIENT_ID=your_google_oauth_client_id_if_using_google_login
 ```
 
 Redeploy the service after updating variables.
+
+## 4.1 Configure Frontend Runtime Values
+
+The static frontend reads runtime globals from `06Code/frontend/js/config.js`:
+
+```js
+window.API_BASE_URL = "https://american-latin-class.onrender.com";
+window.GOOGLE_CLIENT_ID = "your_google_oauth_client_id_if_using_google_login";
+```
+
+If `window.API_BASE_URL` stays empty, `AppConfig` currently falls back to `https://alc-api.onrender.com`, which does not match the documented production backend.
 
 ## 5. Optional Jira Token
 

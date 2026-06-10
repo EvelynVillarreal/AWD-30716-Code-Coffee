@@ -27,7 +27,7 @@ Dockerfile: 06Code/Dockerfile
 Plan: Free
 ```
 
-The backend is built from `06Code/Dockerfile`, which installs PHP dependencies and serves the Slim application from `Controller/public`.
+The backend is built from `06Code/Dockerfile`, which installs PHP dependencies and serves the Slim application from `backend/public`.
 
 ## Environment Variables
 
@@ -46,6 +46,7 @@ DB_USERNAME=postgres.your_project_ref
 DB_PASSWORD=your_database_password
 DB_SSLMODE=require
 FRONTEND_ORIGINS=https://american-latin-class-frontend.netlify.app,http://127.0.0.1:5173,http://localhost:5173
+GOOGLE_CLIENT_ID=your_google_oauth_client_id_if_google_login_is_enabled
 ```
 
 Do not commit `.env`, database passwords, API tokens, or Render secrets.
@@ -61,14 +62,29 @@ https://american-latin-class-frontend.netlify.app
 The frontend backend URL is configured in:
 
 ```text
-06Code/View/script/config.js
+06Code/frontend/js/config.js
 ```
 
 Expected value:
 
 ```js
 window.API_BASE_URL = "https://american-latin-class.onrender.com";
+window.GOOGLE_CLIENT_ID = "your_google_oauth_client_id_if_google_login_is_enabled";
 ```
+
+Note: the committed `config.js` leaves `API_BASE_URL` empty, and `app-config.js` currently falls back to `https://alc-api.onrender.com`. Set the production API URL explicitly during deployment or change the fallback in code.
+
+## Frontend Deep Links
+
+The dashboard uses browser routes such as:
+
+```text
+/dashboard/overview
+/dashboard/students
+/dashboard/planning
+```
+
+There is no active `netlify.toml` in `06Code/frontend` at the moment. Configure Netlify rewrites manually or add a committed rewrite file so `/dashboard/*` serves `dashboard.html`.
 
 ## Verification
 

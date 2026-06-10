@@ -1,17 +1,15 @@
 # Supabase Setup
 
-The current project uses Supabase PostgreSQL through the PHP controller API. The browser view does not write directly to Supabase.
+The current project uses Supabase PostgreSQL through the PHP backend API in `06Code/backend`. The browser frontend does not write directly to Supabase.
 
 ## 1. Create The Project
 
 1. Open Supabase.
 2. Create a new project.
 3. Open `SQL Editor`.
-4. Run `06Code/Controller/database/supabase_schema.sql`.
+4. Run `06Code/backend/database/schema.sql`.
 
-If an existing Supabase database has Spanish alias users from earlier manual tests,
-run `06Code/Controller/database/normalize_english_users.sql` after the schema.
-This keeps the academic access accounts English-only:
+The seed data creates these academic access accounts:
 
 ```text
 teacher@americanlatinclass.com / ALC2026*
@@ -30,8 +28,8 @@ The schema creates:
 - `professional_events`
 - `dancer_event_assignments`
 - `audit_logs`
-
-It also enables row-level security and creates policies for the backend database role.
+- `dance_styles`
+- `levels`
 
 The current schema also includes the redesign tables/fields used by the portal:
 
@@ -44,7 +42,7 @@ The current schema also includes the redesign tables/fields used by the portal:
 
 In Supabase, open `Project Settings > Database` and copy the PostgreSQL connection values.
 
-Then configure `06Code/Controller/.env`:
+Then configure `06Code/backend/.env`:
 
 ```env
 DB_CONNECTION=pgsql
@@ -60,6 +58,7 @@ The backend also requires:
 
 ```env
 APP_KEY=your-64-character-hex-key
+GOOGLE_CLIENT_ID=optional-google-client-id
 ```
 
 Generate it with:
@@ -73,7 +72,7 @@ C:\xampp\php\php.exe -r "echo bin2hex(random_bytes(32)), PHP_EOL;"
 Start the controller API:
 
 ```powershell
-cd 06Code\Controller
+cd 06Code\backend
 C:\xampp\php\php.exe -S 127.0.0.1:8080 -t public
 ```
 
@@ -88,3 +87,8 @@ The expected response should report the API as healthy and the database as conne
 ## Security Note
 
 Sensitive writes must go through the controller API. Keep Supabase service credentials out of the browser view.
+
+## Current Gaps
+
+- `schema.sql` does not currently define Supabase row-level security policies. Access control is implemented in the PHP backend.
+- The old `normalize_english_users.sql` file referenced by earlier documentation is not present in the current repository.
