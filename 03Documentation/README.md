@@ -10,6 +10,8 @@ This folder contains technical documentation, course information, deployment ins
 - `CREDENTIALS_SETUP.md`: steps to obtain and configure credentials.
 - `SUPABASE_SETUP.md`: Supabase setup notes.
 - `BACKEND_API.md`: implemented backend API notes.
+- `BACKEND_URI_SERVICE_FLOW.md`: URI-to-controller-to-service flow for the backend presentation.
+- `BACKEND_URI_SERVICE_FLOW.pdf`: PDF version of the URI/service flow document.
 - `URI_DESIGN_DOCUMENT_ALCSYSTEM.md`: RESTful URI design document for the current backend and frontend routes.
 - `ALCSystem_URI_Design_Document.docx`: Word version of the URI design document.
 - `RENDER_DEPLOYMENT.md`: current Render backend deployment notes.
