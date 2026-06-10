@@ -139,4 +139,4 @@ The frontend is a static site with vanilla JavaScript classes.
 - Controllers still depend on the `ValidationService` facade; this keeps compatibility but means validation is not injected per domain yet.
 - `routes/api.php` manually instantiates every dependency; a small container or factory layer would reduce route-file growth.
 - `GET /api/debug` is available only when `APP_DEBUG=true`; keep production deployments on `APP_DEBUG=false`.
-- There is no committed `composer.lock`, so production installs may drift across dependency versions.
+- `composer.lock` is committed, so dependency versions are pinned for local and deployed installs.

@@ -39,8 +39,8 @@ The frontend is also more organized than a quick academic prototype. It uses cla
 | High | Documentation pointed to old paths such as `06Code/Model`, `06Code/View`, and `06Code/Controller`. | New developers or reviewers would look in folders that no longer exist. |
 | Resolved | `frontend/js/app-config.js` used to fall back to `https://alc-api.onrender.com`, while the documented backend is `https://american-latin-class.onrender.com`. | The fallback now points to the documented backend URL. |
 | Resolved | `GET /api/debug` used to be publicly registered. | The route is now registered only when `APP_DEBUG=true`. |
-| High | No `composer.lock` is committed. | Backend dependency versions can drift between machines and deployments. |
-| Medium | `vendor/` is not installed in the current workspace, and `composer` is not in PATH. | Tests cannot run normally until dependencies are installed. |
+| Resolved | No `composer.lock` was committed. | `06Code/backend/composer.lock` now pins backend dependency versions. |
+| Resolved | `vendor/` was not installed in the current workspace, and `composer` is not in PATH. | Dependencies were installed with local `composer.phar --prefer-source`; backend tests now run locally. |
 | Resolved | No active `netlify.toml` existed in the current frontend folder. | `06Code/frontend/netlify.toml` now maps `/dashboard` and `/dashboard/*` to `dashboard.html`. |
 | Resolved | `ValidationService` handled many unrelated validations in one large class. | It now acts as a facade over focused validators in `06Code/backend/src/Services/Validation`. |
 | Medium | `routes/api.php` manually creates every dependency. | Acceptable for the current size, but it will keep growing and become noisy. |
@@ -49,19 +49,15 @@ The frontend is also more organized than a quick academic prototype. It uses cla
 
 ## Recommended Improvements
 
-1. Install Composer dependencies and commit `composer.lock`.
-
-   From `06Code/backend`, run `composer install`, verify the app, then commit the generated lock file.
-
-2. Make production errors safer.
+1. Make production errors safer.
 
    Avoid returning raw database exception messages from public endpoints when `APP_DEBUG=false`.
 
-3. Add focused automated tests.
+2. Add focused automated tests.
 
    Keep the existing service checks, but add request-level tests for login, role middleware, branch scope, enrollment validation, and protected write actions.
 
-4. Align deployment naming.
+3. Align deployment naming.
 
    `render.yaml`, `.env.example`, CORS defaults, frontend config, and documentation should all use the same frontend/backend service URLs.
 
@@ -86,21 +82,20 @@ Local environment findings:
 
 - `C:\xampp\php\php.exe` exists and reports PHP 8.2.12.
 - `php` is not available in the system PATH.
-- `composer` is not available in the system PATH.
-- `06Code/backend/vendor/autoload.php` does not exist.
-- `06Code/backend/composer.lock` does not exist.
+- `composer` is not available in the system PATH, so local `composer.phar` was used.
+- `06Code/backend/vendor/autoload.php` exists locally after dependency installation.
+- `06Code/backend/composer.lock` exists and is ready to commit.
 
 Checks run during this review:
 
-- PHP syntax lint passed for 45 backend PHP files using `C:\xampp\php\php.exe -l`.
+- PHP syntax lint passed for 54 backend PHP files using `C:\xampp\php\php.exe -l`.
 - Node syntax check passed for 11 frontend JavaScript files using `node --check`.
 - `git diff --check` passed.
-- `06Code/backend/tests/run.php` could not run because `vendor/autoload.php` is missing.
-
-Because Composer dependencies are not installed, full backend tests cannot run through `composer run check` in the current workspace until dependencies are installed.
+- `06Code/backend/tests/lint.php` passed.
+- `06Code/backend/tests/run.php` passed with 30 assertions.
 
 ## Overall Assessment
 
 The project is not a lost cause. It has a workable backend/frontend structure and real implemented features. The main issue is that the documentation and deployment assumptions drifted away from the code, which makes the system feel more confusing than it actually is.
 
-The runtime configuration has been stabilized for the frontend API URL, debug route exposure, CORS defaults, Render values, and Netlify dashboard rewrites. Validation has also been split by domain behind the existing `ValidationService` facade. The next highest-value step is to install dependencies, commit the lock file, and broaden automated tests.
+The runtime configuration has been stabilized for the frontend API URL, debug route exposure, CORS defaults, Render values, and Netlify dashboard rewrites. Validation has also been split by domain behind the existing `ValidationService` facade, and backend dependencies are pinned with `composer.lock`. The next highest-value step is to broaden automated tests.
