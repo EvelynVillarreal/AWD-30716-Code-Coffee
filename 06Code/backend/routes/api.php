@@ -56,7 +56,9 @@ return static function (App $app, JsonResponder $responder): void {
 
     $app->get('/', [$homeController, 'index']);
     $app->get('/api/health', [$homeController, 'health']);
-    $app->get('/api/debug', [$homeController, 'debug']);
+    if (($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG') ?: 'false') === 'true') {
+        $app->get('/api/debug', [$homeController, 'debug']);
+    }
     $app->get('/api/branches', [$branchController, 'index']);
     $app->get('/api/styles', [$referenceController, 'styles']);
     $app->get('/api/levels', [$referenceController, 'levels']);

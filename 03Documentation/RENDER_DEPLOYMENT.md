@@ -72,7 +72,7 @@ window.API_BASE_URL = "https://american-latin-class.onrender.com";
 window.GOOGLE_CLIENT_ID = "your_google_oauth_client_id_if_google_login_is_enabled";
 ```
 
-Note: the committed `config.js` leaves `API_BASE_URL` empty, and `app-config.js` currently falls back to `https://alc-api.onrender.com`. Set the production API URL explicitly during deployment or change the fallback in code.
+Note: the committed `config.js` leaves `API_BASE_URL` empty, and `app-config.js` now falls back to `https://american-latin-class.onrender.com`. Set the production API URL explicitly if the backend service URL changes.
 
 ## Frontend Deep Links
 
@@ -84,7 +84,7 @@ The dashboard uses browser routes such as:
 /dashboard/planning
 ```
 
-There is no active `netlify.toml` in `06Code/frontend` at the moment. Configure Netlify rewrites manually or add a committed rewrite file so `/dashboard/*` serves `dashboard.html`.
+The active rewrite file is `06Code/frontend/netlify.toml`. It maps `/dashboard` and `/dashboard/*` to `dashboard.html`.
 
 ## Verification
 

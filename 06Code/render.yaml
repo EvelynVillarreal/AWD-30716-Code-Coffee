@@ -23,7 +23,7 @@ services:
       - key: DB_SSLMODE
         value: require
       - key: FRONTEND_ORIGINS
-        value: https://american-latin-class-frontend.onrender.com
+        value: https://american-latin-class-frontend.netlify.app
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
@@ -55,4 +55,4 @@ staticSites:
         value: no-cache, no-store, must-revalidate
     envVars:
       - key: apiBase
-        value: https://american-latin-class-api.onrender.com
+        value: https://american-latin-class.onrender.com

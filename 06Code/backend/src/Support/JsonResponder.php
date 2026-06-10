@@ -21,7 +21,7 @@ final class JsonResponder
         $raw = $_ENV['FRONTEND_ORIGINS'] ?? getenv('FRONTEND_ORIGINS') ?: '';
         $allowedOrigins = array_filter(array_map('trim', explode(',', $raw)));
         $defaultOrigins = [
-            'https://alc-frontend.onrender.com',
+            'https://american-latin-class-frontend.netlify.app',
             'http://127.0.0.1:5173',
             'http://localhost:5173',
         ];

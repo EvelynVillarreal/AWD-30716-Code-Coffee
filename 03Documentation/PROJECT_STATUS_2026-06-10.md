@@ -37,11 +37,11 @@ The frontend is also more organized than a quick academic prototype. It uses cla
 | Priority | Problem | Why It Matters |
 | --- | --- | --- |
 | High | Documentation pointed to old paths such as `06Code/Model`, `06Code/View`, and `06Code/Controller`. | New developers or reviewers would look in folders that no longer exist. |
-| High | `frontend/js/app-config.js` falls back to `https://alc-api.onrender.com`, while the documented backend is `https://american-latin-class.onrender.com`. | The deployed or locally opened frontend may call the wrong API unless `window.API_BASE_URL` is explicitly set. |
-| High | `GET /api/debug` is publicly registered. | It reveals environment variable presence/lengths and database error information. |
+| Resolved | `frontend/js/app-config.js` used to fall back to `https://alc-api.onrender.com`, while the documented backend is `https://american-latin-class.onrender.com`. | The fallback now points to the documented backend URL. |
+| Resolved | `GET /api/debug` used to be publicly registered. | The route is now registered only when `APP_DEBUG=true`. |
 | High | No `composer.lock` is committed. | Backend dependency versions can drift between machines and deployments. |
 | Medium | `vendor/` is not installed in the current workspace, and `composer` is not in PATH. | Tests cannot run normally until dependencies are installed. |
-| Medium | No active `netlify.toml` exists in the current frontend folder. | Dashboard deep links such as `/dashboard/students` depend on manual hosting configuration. |
+| Resolved | No active `netlify.toml` existed in the current frontend folder. | `06Code/frontend/netlify.toml` now maps `/dashboard` and `/dashboard/*` to `dashboard.html`. |
 | Medium | `ValidationService` handles many unrelated validations in one large class. | It will become harder to maintain as forms and rules grow. |
 | Medium | `routes/api.php` manually creates every dependency. | Acceptable for the current size, but it will keep growing and become noisy. |
 | Medium | Some production error responses expose detailed database errors. | Users should receive generic production messages while logs keep details. |
@@ -49,35 +49,23 @@ The frontend is also more organized than a quick academic prototype. It uses cla
 
 ## Recommended Improvements
 
-1. Fix the frontend API base URL.
-
-   Set `window.API_BASE_URL` in `06Code/frontend/js/config.js` for production, or change the default in `AppConfig` to `https://american-latin-class.onrender.com`.
-
-2. Remove or protect `/api/debug`.
-
-   Keep it only for local development, or require a director token and `APP_DEBUG=true`.
-
-3. Install Composer dependencies and commit `composer.lock`.
+1. Install Composer dependencies and commit `composer.lock`.
 
    From `06Code/backend`, run `composer install`, verify the app, then commit the generated lock file.
 
-4. Add a frontend rewrite file.
-
-   Add an active Netlify rewrite so `/dashboard/*` serves `dashboard.html`.
-
-5. Split validation by domain.
+2. Split validation by domain.
 
    Move validation from one `ValidationService` into smaller classes or grouped methods by module: enrollment, users, attendance, finance, events, profile photo.
 
-6. Make production errors safer.
+3. Make production errors safer.
 
    Avoid returning raw database exception messages from public endpoints when `APP_DEBUG=false`.
 
-7. Add focused automated tests.
+4. Add focused automated tests.
 
    Keep the existing service checks, but add request-level tests for login, role middleware, branch scope, enrollment validation, and protected write actions.
 
-8. Align deployment naming.
+5. Align deployment naming.
 
    `render.yaml`, `.env.example`, CORS defaults, frontend config, and documentation should all use the same frontend/backend service URLs.
 
@@ -119,4 +107,4 @@ Because Composer dependencies are not installed, full backend tests cannot run t
 
 The project is not a lost cause. It has a workable backend/frontend structure and real implemented features. The main issue is that the documentation and deployment assumptions drifted away from the code, which makes the system feel more confusing than it actually is.
 
-The highest-value next step is to stabilize the runtime configuration: correct the frontend API URL, protect debug output, install dependencies, commit the lock file, and add the missing static-host rewrite. After that, the codebase will be much easier to explain, test, and continue improving.
+The runtime configuration has been stabilized for the frontend API URL, debug route exposure, CORS defaults, Render values, and Netlify dashboard rewrites. The next highest-value step is to install dependencies, commit the lock file, split validation by domain, and broaden automated tests.

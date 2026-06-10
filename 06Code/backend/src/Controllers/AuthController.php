@@ -14,7 +14,7 @@ use App\Support\JsonResponder;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use RuntimeException;
+use Throwable;
 
 final class AuthController
 {
@@ -50,8 +50,8 @@ final class AuthController
 
         try {
             $user = $this->auth->attempt($email, $password, $role);
-        } catch (\Throwable $e) {
-            return $this->responder->json($response, ['message' => 'Database error: ' . $e->getMessage()], 503);
+        } catch (Throwable $e) {
+            return $this->responder->json($response, ['message' => $this->serverErrorMessage($e, 'Login service is temporarily unavailable.')], 503);
         }
 
         if (!$user) {
@@ -121,8 +121,8 @@ final class AuthController
                 'token' => $this->auth->issueToken($user),
                 'user' => $this->auth->publicUser($user),
             ]);
-        } catch (\Throwable $e) {
-            return $this->responder->json($response, ['message' => 'Server error: ' . $e->getMessage()], 500);
+        } catch (Throwable $e) {
+            return $this->responder->json($response, ['message' => $this->serverErrorMessage($e)], 500);
         }
     }
 
@@ -238,8 +238,8 @@ final class AuthController
                 'token' => $this->auth->issueToken($user),
                 'user' => $this->auth->publicUser($user),
             ]);
-        } catch (\Throwable $e) {
-            return $this->responder->json($response, ['message' => 'Server error: ' . $e->getMessage()], 500);
+        } catch (Throwable $e) {
+            return $this->responder->json($response, ['message' => $this->serverErrorMessage($e)], 500);
         }
     }
 
@@ -305,5 +305,12 @@ final class AuthController
         }
 
         return $payload;
+    }
+
+    private function serverErrorMessage(Throwable $exception, string $productionMessage = 'Server error. Please try again later.'): string
+    {
+        $debug = ($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG') ?: 'false') === 'true';
+
+        return $debug ? 'Server error: ' . $exception->getMessage() : $productionMessage;
     }
 }

@@ -1,6 +1,6 @@
 class AppConfig {
   constructor() {
-    this.apiBase = window.API_BASE_URL || "https://alc-api.onrender.com";
+    this.apiBase = window.API_BASE_URL || "https://american-latin-class.onrender.com";
     this.sessionKey = "alc-session";
 
     this.roleLabels = {

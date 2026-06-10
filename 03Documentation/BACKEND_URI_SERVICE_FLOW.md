@@ -98,7 +98,7 @@ Single REST API backend with modular internal services.
 | --- | --- | --- | --- | --- |
 | `GET /` | `HomeController::index` | None | None | Backend metadata and endpoint summary. |
 | `GET /api/health` | `HomeController::health` | None | Database connection only | API and database health status. |
-| `GET /api/debug` | `HomeController::debug` | None | Database connection only | Diagnostic environment/database status. This should be protected or disabled in production. |
+| `GET /api/debug` | `HomeController::debug` | None | Database connection only | Development diagnostic environment/database status. Registered only when `APP_DEBUG=true`. |
 | `GET /api/branches` | `BranchController::index` | None | `Branch` / `branches` | Public branch list with fallback data. |
 | `GET /api/styles` | `ReferenceDataController::styles` | None | `DanceStyle` / `dance_styles` | Public dance style list with fallback data. |
 | `GET /api/levels` | `ReferenceDataController::levels` | None | `Level` / `levels` | Public student level list with fallback data. |

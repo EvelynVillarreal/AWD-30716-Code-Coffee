@@ -137,7 +137,5 @@ The frontend is a static site with vanilla JavaScript classes.
 
 - `ValidationService` is large and handles many unrelated request types; splitting it by domain would improve maintainability.
 - `routes/api.php` manually instantiates every dependency; a small container or factory layer would reduce route-file growth.
-- `frontend/js/app-config.js` defaults to `https://alc-api.onrender.com`, which does not match the documented backend URL `https://american-latin-class.onrender.com`.
-- `GET /api/debug` is publicly registered; it should be protected or disabled in production.
-- The repository has no active `netlify.toml`, so dashboard deep-link behavior depends on manual hosting configuration.
+- `GET /api/debug` is available only when `APP_DEBUG=true`; keep production deployments on `APP_DEBUG=false`.
 - There is no committed `composer.lock`, so production installs may drift across dependency versions.

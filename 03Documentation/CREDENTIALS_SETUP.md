@@ -110,7 +110,7 @@ window.API_BASE_URL = "https://american-latin-class.onrender.com";
 window.GOOGLE_CLIENT_ID = "your_google_oauth_client_id_if_using_google_login";
 ```
 
-If `window.API_BASE_URL` stays empty, `AppConfig` currently falls back to `https://alc-api.onrender.com`, which does not match the documented production backend.
+If `window.API_BASE_URL` stays empty, `AppConfig` now falls back to the documented production backend, `https://american-latin-class.onrender.com`.
 
 ## 5. Optional Jira Token
 

@@ -77,10 +77,12 @@ The project is organized as a static frontend plus PHP API backend. The earlier 
 
 ### 4.1 Backend URI Count
 
-The backend currently has **34 implemented route entries**:
+The backend registers **33 route entries in production**:
 
 - **1 non-API root route:** `GET /`
-- **33 API routes:** routes under `/api`
+- **32 API routes:** routes under `/api`
+
+When `APP_DEBUG=true`, the backend also registers `GET /api/debug` as a development diagnostic route.
 
 ### 4.2 Frontend URI Count
 
@@ -185,7 +187,7 @@ POST /api/auth/login
 | --- | --- | --- | --- | --- | --- |
 | 1 | GET | `/` | No | Public | Returns backend project metadata and endpoint summary. |
 | 2 | GET | `/api/health` | No | Public | Checks API and database connection status. |
-| 3 | GET | `/api/debug` | No | Diagnostic | Returns environment/database diagnostic status. Should be protected or disabled in production. |
+| 3 | GET | `/api/debug` | No | Development diagnostic | Returns environment/database diagnostic status only when `APP_DEBUG=true`. |
 | 4 | GET | `/api/branches` | No | Public | Lists academy branches. |
 | 5 | GET | `/api/styles` | No | Public | Lists dance styles. |
 | 6 | GET | `/api/levels` | No | Public | Lists student levels. |
@@ -262,7 +264,7 @@ Checks if the API is available and the database connection can be verified.
 
 Returns diagnostic information about environment variable presence and database connection errors.
 
-This route is implemented but should be considered a development/diagnostic route. It should be protected or disabled in production because it reveals environment configuration status.
+This route is registered only when `APP_DEBUG=true`. It should not be available in production because it reveals environment configuration status.
 
 ---
 
@@ -981,14 +983,13 @@ Current limitations:
 
 - Some business modules are implemented as list/create workflows instead of complete CRUD resources.
 - `/api/kiosk/attendance` remains implemented for legacy student kiosk attendance, but the v2 user flow no longer exposes student self-attendance as a frontend tab.
-- `/api/debug` remains publicly registered and should be protected or removed in production.
+- `/api/debug` is a development-only route and should remain unavailable when `APP_DEBUG=false`.
 - The dashboard is a static frontend route system supported by Netlify rewrites, not server-side page routing.
-- The repository currently does not include an active `netlify.toml`, so the dashboard rewrite must be configured in the hosting provider or added to source control.
 
 ---
 
 ## 15. Conclusion
 
-ALCSystem currently includes a functional backend API with 34 implemented route entries and a frontend with 16 canonical route entries. The API supports public enrollment, password and Google authentication, role-based access, student and teacher management, student profile photos, attendance control, teacher payroll summaries, class planning, branch finance reports, and B2 professional event management.
+ALCSystem currently includes a functional backend API with 33 production route entries, plus one development-only diagnostic route when `APP_DEBUG=true`, and a frontend with 16 canonical route entries. The API supports public enrollment, password and Google authentication, role-based access, student and teacher management, student profile photos, attendance control, teacher payroll summaries, class planning, branch finance reports, and B2 professional event management.
 
 The URI design is consistent with the current implemented business scope and documents only the routes that exist in the project at this version.

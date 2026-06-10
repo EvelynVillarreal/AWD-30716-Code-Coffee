@@ -72,13 +72,13 @@ https://american-latin-class.onrender.com/api/health
 
 ## Implemented Endpoints
 
-The implemented route table is `06Code/backend/routes/api.php`. It currently registers **34 route entries**: one root route and 33 `/api` routes.
+The implemented route table is `06Code/backend/routes/api.php`. In production it registers **33 route entries**: one root route and 32 `/api` routes. When `APP_DEBUG=true`, it also registers the diagnostic route `GET /api/debug`.
 
 | Method | Endpoint | Auth | Purpose |
 | --- | --- | --- | --- |
 | GET | `/` | Public | Backend metadata and endpoint summary. |
 | GET | `/api/health` | Public | API/database health check. |
-| GET | `/api/debug` | Public diagnostic | Environment and database diagnostic status. Should be protected or disabled in production. |
+| GET | `/api/debug` | Development diagnostic | Environment and database diagnostic status. Only registered when `APP_DEBUG=true`. |
 | GET | `/api/branches` | Public | List academy branches. |
 | GET | `/api/styles` | Public | List dance styles. |
 | GET | `/api/levels` | Public | List student levels. |
@@ -188,7 +188,7 @@ Current environment note from the June 10, 2026 review: this workstation has XAM
 
 ## Known API Risks
 
-- `/api/debug` is public and reports environment variable presence/lengths. It should not remain publicly available in production.
+- `/api/debug` is now registered only when `APP_DEBUG=true`; keep `APP_DEBUG=false` in production.
 - `AuthController::login` returns raw database error details on some connection failures; production responses should be more generic.
 - Google token verification uses Google's `tokeninfo` endpoint directly inside the controller; moving it to a service would make testing and error handling cleaner.
 - The route file instantiates all dependencies manually. This is acceptable for a small academic project but will grow harder to maintain.

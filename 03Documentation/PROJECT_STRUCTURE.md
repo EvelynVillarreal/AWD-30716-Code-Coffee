@@ -87,5 +87,5 @@ This repository keeps the academic delivery folders, but the active program is n
 
 - `vendor/`, `.env`, `.env.local`, Composer PHAR files, and local tool caches are ignored by Git.
 - There is no committed `composer.lock` at the moment, so backend dependency versions are not fully pinned.
-- There is no active `netlify.toml` in `06Code/frontend`; dashboard deep-link rewrites must be configured in the hosting provider or added to the repo.
+- `06Code/frontend/netlify.toml` contains dashboard deep-link rewrites for Netlify.
 - Older `Model`, `View`, and `Controller` paths in PDFs, generated documents, or legacy folders should be read as historical references.
