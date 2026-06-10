@@ -1,7 +1,7 @@
 # Project Features
 
 **Current baseline:** ALCSystem v2.0.18
-**Last aligned:** May 26, 2026
+**Last aligned:** June 10, 2026
 
 This folder contains the planning package for the **American Latin Class** system.
 
@@ -19,7 +19,7 @@ The purpose of this assignment is to organize the requirements before building t
 - `diagrams/class-diagram.puml`: class diagram in PlantUML format.
 - `diagrams/use-case-diagram.puml`: use case diagram in PlantUML format.
 - `implemented-features.md`: evidence that the three Jira features were also programmed.
-- The active implementation now lives in `../06Code/View` and `../06Code/Controller`.
+- The active implementation now lives in `../06Code/frontend` and `../06Code/backend`.
 - Historical copied frontend evidence is archived under `../07Other/legacy-academic-code`.
 
 ## Jira Scope Required by the Assignment

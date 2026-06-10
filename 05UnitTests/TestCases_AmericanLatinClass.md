@@ -59,7 +59,7 @@ As a visitor, I want to submit an enrollment request so the academy can review m
 | CP-ALC-07 | Valid enrollment submission | 1. Open `enrollment.html`. 2. Complete all required fields. 3. Submit the form. | The backend creates a pending student enrollment request. | Functional |
 | CP-ALC-08 | Empty enrollment form | 1. Open the enrollment form. 2. Submit without required data. | Required field validation blocks the request or returns validation errors. | Functional |
 | CP-ALC-09 | Invalid email | 1. Enter an invalid email value. 2. Submit. | The API returns an email validation error. | Functional |
-| CP-ALC-10 | Invalid national ID length | 1. Enter a national ID shorter than 6 digits or longer than 20 digits. 2. Submit. | The API rejects the national ID length. | Functional |
+| CP-ALC-10 | Invalid national ID length | 1. Enter a national ID shorter or longer than 10 digits. 2. Submit. | The API rejects the national ID length. | Functional |
 | CP-ALC-11 | Duplicate enrollment data | 1. Submit an enrollment using an existing national ID, email, or phone. | The API rejects the duplicate request with a clear message. | Functional |
 | CP-ALC-12 | Invalid branch ID | 1. Send an enrollment request with a branch ID that does not exist. | The API returns `422` and does not create the student. | Functional |
 
@@ -115,8 +115,8 @@ As a teacher or student, I want attendance to be registered and reviewed correct
 | CP-ALC-31 | Manual student attendance | 1. Log in as teacher or director. 2. Submit student attendance. | The API creates an attendance record with source `manual`. | Functional |
 | CP-ALC-32 | Manual teacher attendance | 1. Submit attendance with person type `teacher`. | The API accepts teacher attendance records. | Functional |
 | CP-ALC-33 | Invalid attendance status | 1. Submit status outside present, absent, late, or excused. | The API returns a validation error. | Functional |
-| CP-ALC-34 | Kiosk valid check-in | 1. Open `attendance-kiosk.html`. 2. Enter an active student's national ID. | The API creates a kiosk attendance record and returns an evidence code. | Functional |
-| CP-ALC-35 | Kiosk duplicate same day | 1. Register the same student twice on the same day. | The second request returns the existing attendance record instead of creating a duplicate. | Functional |
+| CP-ALC-34 | Teacher kiosk valid check-in | 1. Open `attendance-kiosk.html`. 2. Enter a teacher email, branch, class start time, class hours, and dance style. | The API creates a teacher kiosk attendance record and returns an evidence code. | Functional |
+| CP-ALC-35 | Legacy student kiosk duplicate same day | 1. Send two `POST /api/kiosk/attendance` requests for the same active student national ID on the same day. | The second request returns the existing attendance record instead of creating a duplicate. | Functional |
 | CP-ALC-36 | Student monthly attendance view | 1. Log in as student. 2. Open monthly attendance module. | Attendance records and summary counters are displayed. | Functional |
 
 \newpage
@@ -166,4 +166,4 @@ As an administrator or reviewer, I want protected operations to be auditable and
 
 The project satisfies the requirement of having at least nine features. This report documents nine feature modules and fifty-four test cases. Most cases are currently functional, while a small number remain pending because they belong to future enhancements or owner-specific business rules that still need validation.
 
-The active architecture follows MVC through `06Code/Model`, `06Code/View`, and `06Code/Controller`, with object-oriented services and validators supporting clean separation of responsibilities.
+The active architecture uses `06Code/backend` and `06Code/frontend`. MVC-style separation is implemented inside the backend through controllers, models, services, middleware, and support helpers, while the static frontend is organized into JavaScript classes.

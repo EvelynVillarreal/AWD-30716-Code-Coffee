@@ -1,7 +1,7 @@
 # Implemented Features Evidence
 
 **Current baseline:** ALCSystem v2.0.18
-**Last aligned:** May 26, 2026
+**Last aligned:** June 10, 2026
 
 This document confirms that the three selected project features are not only written as requirements. They are also implemented in the active MVC project folders.
 
@@ -33,14 +33,14 @@ https://american-latin-class.onrender.com/api/health
 
 Implemented in:
 
-- `../06Code/View/index.html`
-- `../06Code/View/pricing.html`
-- `../06Code/View/enrollment.html`
-- `../06Code/View/script/app.js`
-- `../06Code/View/css/styles.css`
-- `../06Code/Controller/public/index.php`
-- `../06Code/Controller/src/Controller/EnrollmentController.php`
-- `../06Code/Model/Student.php`
+- `../06Code/frontend/index.html`
+- `../06Code/frontend/pricing.html`
+- `../06Code/frontend/enrollment.html`
+- `../06Code/frontend/js/public-pages.js`
+- `../06Code/frontend/css/styles.css`
+- `../06Code/backend/public/index.php`
+- `../06Code/backend/src/Controllers/EnrollmentController.php`
+- `../06Code/backend/src/Models/Student.php`
 
 Implemented behavior:
 
@@ -55,15 +55,16 @@ Implemented behavior:
 
 Implemented in:
 
-- `../06Code/View/login.html`
-- `../06Code/View/dashboard.html`
-- `../06Code/View/script/app.js`
-- `../06Code/Controller/public/index.php`
-- `../06Code/Controller/src/Controller/AuthController.php`
-- `../06Code/Controller/src/Controller/StudentController.php`
-- `../06Code/Model/Student.php`
-- `../06Code/Model/AttendanceRecord.php`
-- `../06Code/Model/ClassPlan.php`
+- `../06Code/frontend/login.html`
+- `../06Code/frontend/dashboard.html`
+- `../06Code/frontend/js/dashboard.js`
+- `../06Code/frontend/js/public-pages.js`
+- `../06Code/backend/public/index.php`
+- `../06Code/backend/src/Controllers/AuthController.php`
+- `../06Code/backend/src/Controllers/StudentController.php`
+- `../06Code/backend/src/Models/Student.php`
+- `../06Code/backend/src/Models/AttendanceRecord.php`
+- `../06Code/backend/src/Models/ClassPlan.php`
 
 Implemented behavior:
 
@@ -86,15 +87,15 @@ Implemented behavior:
 
 Implemented in:
 
-- `../06Code/View/login.html`
-- `../06Code/View/dashboard.html`
-- `../06Code/View/script/app.js`
-- `../06Code/Controller/public/index.php`
-- `../06Code/Controller/src/Controller/FinanceController.php`
-- `../06Code/Controller/src/Controller/ProfessionalEventController.php`
-- `../06Code/Model/BranchFinanceReport.php`
-- `../06Code/Model/ProfessionalEvent.php`
-- `../06Code/Model/DancerEventAssignment.php`
+- `../06Code/frontend/login.html`
+- `../06Code/frontend/dashboard.html`
+- `../06Code/frontend/js/dashboard.js`
+- `../06Code/backend/public/index.php`
+- `../06Code/backend/src/Controllers/FinanceController.php`
+- `../06Code/backend/src/Controllers/ProfessionalEventController.php`
+- `../06Code/backend/src/Models/BranchFinanceReport.php`
+- `../06Code/backend/src/Models/ProfessionalEvent.php`
+- `../06Code/backend/src/Models/DancerEventAssignment.php`
 
 Implemented behavior:
 

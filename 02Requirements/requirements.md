@@ -1,7 +1,7 @@
 # American Latin Class Requirements
 
 **Current baseline:** ALCSystem v2.0.18
-**Last aligned:** May 26, 2026
+**Last aligned:** June 10, 2026
 
 ## 1. Project Context
 
@@ -21,7 +21,7 @@ The system currently supports public academy presentation, pricing, enrollment r
 | Frontend | Static Netlify site at `https://american-latin-class-frontend.netlify.app`. |
 | Backend | PHP Slim API on Render at `https://american-latin-class.onrender.com`. |
 | Database | Supabase PostgreSQL. |
-| Architecture | MVC folders under `06Code/Model`, `06Code/View`, and `06Code/Controller`. |
+| Architecture | Static frontend in `06Code/frontend` and Slim/Eloquent backend in `06Code/backend`, with MVC-style separation inside backend namespaces. |
 | Main branch | GitHub `main`, connected to the deployment services. |
 
 ## 2. Product Vision
