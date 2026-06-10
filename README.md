@@ -1,25 +1,36 @@
 # AWD-30716-Code-Coffee
 
-Repository for the **American Latin Class** project.
+Repository for the **American Latin Class** web system.
 
-Current system version: **ALCSystem v2**.
+Current documented baseline: **ALCSystem v2.0.18**, realigned on **June 10, 2026**.
 
 ## Project Map
 
 - `01Definition`: initial project definition.
 - `02Requirements`: requirements, user stories, backlog, and tracking.
-- `03Documentation`: technical documentation, credential guides, deployment notes, and evidence.
-- `04UMLDiagrams`: use case and class diagrams.
-- `05UnitTests`: JSON responses and manual verification evidence.
-- `06Code`: active source code organized directly as an MVC project.
-- `07Other`: additional files, deployment packages, and legacy academic code.
+- `03Documentation`: technical guides, deployment notes, API documentation, evidence, and current status review.
+- `04UMLDiagrams`: use case and class diagrams from the academic delivery.
+- `05UnitTests`: manual test cases and stored API/frontend evidence.
+- `06Code`: active source code.
+- `07Other`: archived deployments, legacy homework/workshop code, and older academic material.
 
-## Main Program
+## Active Program
 
-- Model layer: `06Code/Model`
-- View layer: `06Code/View`
-- Controller layer: `06Code/Controller`
+The current program no longer uses top-level `Model`, `View`, and `Controller` folders. The active code is:
+
+- Backend API: `06Code/backend`
+- Frontend static site: `06Code/frontend`
+- Database schema: `06Code/backend/database/schema.sql`
+- Docker/Render deployment assets: `06Code/Dockerfile`, `06Code/docker-entrypoint.sh`, and `06Code/render.yaml`
 - Technical evidence: `03Documentation/evidence` and `05UnitTests`
+
+The backend still follows MVC-style responsibility separation internally:
+
+- Models: `06Code/backend/src/Models`
+- Controllers: `06Code/backend/src/Controllers`
+- Services: `06Code/backend/src/Services`
+- Middleware: `06Code/backend/src/Middleware`
+- Support/infrastructure: `06Code/backend/src/Support`
 
 ## Current Deployments
 
@@ -29,8 +40,10 @@ Current system version: **ALCSystem v2**.
 
 ## Quick Guides
 
-- MVC architecture: `03Documentation/MVC_ARCHITECTURE.md`
+- Current project status and improvement review: `03Documentation/PROJECT_STATUS_2026-06-10.md`
+- Project structure: `03Documentation/PROJECT_STRUCTURE.md`
+- MVC-style architecture: `03Documentation/MVC_ARCHITECTURE.md`
+- Backend API: `03Documentation/BACKEND_API.md`
 - Credentials and environment variables: `03Documentation/CREDENTIALS_SETUP.md`
+- Supabase setup: `03Documentation/SUPABASE_SETUP.md`
 - Render deployment: `03Documentation/RENDER_DEPLOYMENT.md`
-- Recommended repository structure: `03Documentation/PROJECT_STRUCTURE.md`
-- 2026-05-24 redesign notes: `03Documentation/CHANGES_2026-05-24.md`
