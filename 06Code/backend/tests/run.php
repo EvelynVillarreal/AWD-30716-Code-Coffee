@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Middleware\RoleMiddleware;
 use App\Models\User;
 use App\Services\AttendanceSummaryService;
 use App\Services\AuthenticatedUser;
@@ -10,6 +11,10 @@ use App\Services\JwtTokenService;
 use App\Services\TeacherPayrollService;
 use App\Services\ValidationService;
 use App\Support\JsonResponder;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Psr7\Factory\ServerRequestFactory;
 use Slim\Psr7\Response;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -109,6 +114,44 @@ $test->assertSame([], $validator->validateTeacherAccount([
     'branch_id' => 1, 'password' => 'ALC2026*',
 ], true), 'Teacher account data should accept valid typed input.');
 
+$classPlanErrors = $validator->validateClassPlan([
+    'branch_id' => 1, 'teacher_name' => 'Andrea Molina', 'month' => '2026-13',
+    'level' => 'B2', 'objective' => 'Improve turns', 'activities' => 'Technique drills',
+    'document_url' => 'ftp://example.com/plan.pdf',
+]);
+$test->assertTrue(isset($classPlanErrors['month']), 'Class plan validator should reject invalid calendar months.');
+$test->assertTrue(isset($classPlanErrors['document_url']), 'Class plan validator should reject non-HTTP document URLs.');
+
+$teacherKioskErrors = $validator->validateAttendanceTeacherKiosk([
+    'email' => 'teacher@americanlatinclass.com', 'branch_id' => 1,
+    'expected_start_time' => '18:00', 'duration_hours' => 1,
+]);
+$test->assertTrue(isset($teacherKioskErrors['style']), 'Teacher kiosk validator should require a dance style.');
+
+$studentKioskErrors = $validator->validateAttendanceKiosk(['national_id' => '123456']);
+$test->assertTrue(isset($studentKioskErrors['national_id']), 'Student kiosk validator should require a 10 digit national ID.');
+
+$financeErrors = $validator->validateFinanceReport([
+    'branch_id' => 1, 'month' => '2026-13', 'income' => 'abc',
+    'expenses' => 100, 'matrix_share_percent' => 101,
+]);
+$test->assertTrue(isset($financeErrors['month']), 'Finance validator should reject invalid months.');
+$test->assertTrue(isset($financeErrors['income']), 'Finance validator should reject non-numeric income.');
+$test->assertTrue(isset($financeErrors['matrix_share_percent']), 'Finance validator should reject matrix share over 100.');
+
+$eventErrors = $validator->validateProfessionalEvent([
+    'branch_id' => 1, 'client_name' => 'Client', 'event_type' => 'Show',
+    'event_date' => '2026-02-30', 'total_amount' => 100, 'status' => 'unknown',
+]);
+$test->assertTrue(isset($eventErrors['event_date']), 'Professional event validator should reject impossible calendar dates.');
+$test->assertTrue(isset($eventErrors['status']), 'Professional event validator should reject unsupported statuses.');
+
+$assignmentErrors = $validator->validateDancerAssignment([
+    'student_id' => 10, 'gross_amount' => 50, 'deduction_amount' => 75,
+    'payment_status' => 'pending',
+]);
+$test->assertTrue(isset($assignmentErrors['deduction_amount']), 'Dancer assignment validator should reject deductions over gross amount.');
+
 $test->assertSame([], $validator->validateProfilePhoto([
     'photo_url' => 'data:image/png;base64,' . base64_encode('fake-image'),
 ]), 'Profile photo validator should accept PNG data URIs.');
@@ -140,6 +183,38 @@ $token = $tokens->issue($user);
 $payload = $tokens->verify($token);
 $test->assertSame('director', $payload['role'] ?? null, 'JWT should keep the user role.');
 $test->assertSame(10, $payload['sub'] ?? null, 'JWT should keep the subject id.');
+
+$requestFactory = new ServerRequestFactory();
+$protectedHandler = new class implements RequestHandlerInterface {
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return new Response(204);
+    }
+};
+$roleMiddleware = new RoleMiddleware(new JsonResponder(), new App\Services\AuthService($tokens), ['director']);
+
+$missingTokenResponse = $roleMiddleware($requestFactory->createServerRequest('GET', '/api/students'), $protectedHandler);
+$test->assertSame(401, $missingTokenResponse->getStatusCode(), 'Role middleware should reject missing Bearer tokens.');
+
+$teacherUser = new User();
+$teacherUser->id = 11;
+$teacherUser->email = 'teacher@americanlatinclass.com';
+$teacherUser->name = 'Teacher';
+$teacherUser->role = 'teacher';
+$teacherUser->branch_id = 1;
+$teacherUser->student_id = null;
+$teacherToken = $tokens->issue($teacherUser);
+$wrongRoleRequest = $requestFactory
+    ->createServerRequest('GET', '/api/students')
+    ->withHeader('Authorization', 'Bearer ' . $teacherToken);
+$wrongRoleResponse = $roleMiddleware($wrongRoleRequest, $protectedHandler);
+$test->assertSame(403, $wrongRoleResponse->getStatusCode(), 'Role middleware should reject valid tokens with the wrong role.');
+
+$directorRequest = $requestFactory
+    ->createServerRequest('GET', '/api/students')
+    ->withHeader('Authorization', 'Bearer ' . $token);
+$directorResponse = $roleMiddleware($directorRequest, $protectedHandler);
+$test->assertSame(204, $directorResponse->getStatusCode(), 'Role middleware should pass valid director tokens.');
 
 $_ENV['APP_KEY'] = '';
 $threw = false;

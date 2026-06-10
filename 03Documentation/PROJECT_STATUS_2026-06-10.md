@@ -44,20 +44,12 @@ The frontend is also more organized than a quick academic prototype. It uses cla
 | Resolved | No active `netlify.toml` existed in the current frontend folder. | `06Code/frontend/netlify.toml` now maps `/dashboard` and `/dashboard/*` to `dashboard.html`. |
 | Resolved | `ValidationService` handled many unrelated validations in one large class. | It now acts as a facade over focused validators in `06Code/backend/src/Services/Validation`. |
 | Medium | `routes/api.php` manually creates every dependency. | Acceptable for the current size, but it will keep growing and become noisy. |
-| Medium | Some production error responses expose detailed database errors. | Users should receive generic production messages while logs keep details. |
+| Resolved | Some production error responses exposed detailed database errors. | Authentication errors now keep production messages generic unless `APP_DEBUG=true`. |
 | Low | Some docs/PDFs remain historical and may still contain old folder names. | This is acceptable as evidence, but active Markdown should remain the source of truth. |
 
 ## Recommended Improvements
 
-1. Make production errors safer.
-
-   Avoid returning raw database exception messages from public endpoints when `APP_DEBUG=false`.
-
-2. Add focused automated tests.
-
-   Keep the existing service checks, but add request-level tests for login, role middleware, branch scope, enrollment validation, and protected write actions.
-
-3. Align deployment naming.
+1. Align deployment naming.
 
    `render.yaml`, `.env.example`, CORS defaults, frontend config, and documentation should all use the same frontend/backend service URLs.
 
@@ -92,10 +84,10 @@ Checks run during this review:
 - Node syntax check passed for 11 frontend JavaScript files using `node --check`.
 - `git diff --check` passed.
 - `06Code/backend/tests/lint.php` passed.
-- `06Code/backend/tests/run.php` passed with 30 assertions.
+- `06Code/backend/tests/run.php` passed with 43 assertions, including additional validation and role middleware checks.
 
 ## Overall Assessment
 
 The project is not a lost cause. It has a workable backend/frontend structure and real implemented features. The main issue is that the documentation and deployment assumptions drifted away from the code, which makes the system feel more confusing than it actually is.
 
-The runtime configuration has been stabilized for the frontend API URL, debug route exposure, CORS defaults, Render values, and Netlify dashboard rewrites. Validation has also been split by domain behind the existing `ValidationService` facade, and backend dependencies are pinned with `composer.lock`. The next highest-value step is to broaden automated tests.
+The runtime configuration has been stabilized for the frontend API URL, debug route exposure, CORS defaults, Render values, and Netlify dashboard rewrites. Validation has also been split by domain behind the existing `ValidationService` facade, backend dependencies are pinned with `composer.lock`, and focused validation/role middleware tests were added. The next highest-value step is to keep deployment naming aligned as service URLs evolve.
