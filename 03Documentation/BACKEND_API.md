@@ -1,50 +1,38 @@
-# Controller API
+# Backend API
 
-This guide documents the controller API for **American Latin Class** using:
+This guide documents the current **American Latin Class** backend implemented in:
 
-- **Slim 4** as the backend framework.
-- **Eloquent ORM** as the ORM layer.
-- **Supabase PostgreSQL** as the target database.
-- **MVC-style organization** with top-level `Model`, `View`, and `Controller` folders.
+```text
+06Code/backend
+```
 
-The goal is to show that the project can move from static forms to a real API with models, routes, validation, authentication, role checks, and database entities.
+## Stack
 
-## Main Features
-
-- Public enrollment endpoint.
-- Real login endpoint for teacher, student, and director accounts.
-- Signed token authorization for internal routes.
-- Teacher attendance station endpoint for school-computer check-in.
-- Monthly attendance endpoint for students.
-- Director-managed student and teacher records.
-- Teacher class planning endpoint with optional document URL.
-- Student and teacher attendance endpoint with teacher payroll summary.
-- Professional B2 event endpoint.
-- B2 dancer event assignment endpoint.
-- Automatic dancer settlement calculation for paid events, penalties, and deductions.
+- PHP 8.2
+- Slim 4
+- Eloquent ORM (`illuminate/database`)
+- Supabase PostgreSQL
+- JWT-style signed tokens created by `JwtTokenService`
+- Role middleware for `student`, `teacher`, and `director`
 
 ## Setup
 
-1. Enable PostgreSQL support in XAMPP PHP:
+1. Enable PostgreSQL support in the PHP runtime:
 
 ```ini
 extension=pdo_pgsql
 extension=pgsql
 ```
 
-2. Install dependencies:
+2. Install dependencies from `06Code/backend`:
 
 ```powershell
 composer install
 ```
 
-If Composer is not installed globally, download `composer.phar` from Composer's official website and run:
+If Composer is not installed globally, install Composer first or use a local `composer.phar` with XAMPP PHP.
 
-```powershell
-C:\xampp\php\php.exe composer.phar install
-```
-
-3. Copy the environment file:
+3. Copy the environment template:
 
 ```powershell
 Copy-Item .env.example .env
@@ -56,13 +44,11 @@ Copy-Item .env.example .env
 C:\xampp\php\php.exe -r "echo bin2hex(random_bytes(32)), PHP_EOL;"
 ```
 
-Copy the generated value into `APP_KEY` in `.env`.
+Copy the generated value into `APP_KEY`.
 
-5. Add the Supabase PostgreSQL credentials in `.env`.
+5. Configure Supabase PostgreSQL credentials in `.env`.
 
-The local environment is already configured with a limited backend database role and the Supabase IPv4 pooler because this computer does not resolve the direct Supabase database host reliably.
-
-6. Run `database/supabase_schema.sql` in Supabase SQL Editor.
+6. Run `database/schema.sql` in Supabase SQL Editor.
 
 7. Start the API:
 
@@ -72,7 +58,7 @@ C:\xampp\php\php.exe -S 127.0.0.1:8080 -t public
 
 ## Public Backend URL
 
-Render production backend:
+Production backend:
 
 ```text
 https://american-latin-class.onrender.com
@@ -84,64 +70,125 @@ Health check:
 https://american-latin-class.onrender.com/api/health
 ```
 
-This URL is deployed from GitHub with Render using `06Code/Dockerfile`.
+## Implemented Endpoints
 
-## Endpoints
+The implemented route table is `06Code/backend/routes/api.php`. It currently registers **34 route entries**: one root route and 33 `/api` routes.
 
-| Method | Endpoint | Purpose |
-| --- | --- | --- |
-| GET | `/api/health` | Check API and database status |
-| GET | `/api/branches` | List branches |
-| GET | `/api/branches/{branchId}` | Get one branch by ID |
-| POST | `/api/enrollments` | Register a new enrollment request |
-| POST | `/api/auth/login` | Login with stored user credentials |
-| POST | `/api/teacher-attendance/check-in` | Register teacher check-in from the school station |
-| GET | `/api/me` | Get current authenticated user profile |
-| GET | `/api/me/attendance` | Get student monthly attendance |
-| PATCH | `/api/me/photo` | Protected student profile photo update |
-| GET | `/api/students` | Protected director student list |
-| POST | `/api/students` | Protected director student creation |
-| GET | `/api/students/{studentId}` | Protected director student lookup by ID |
-| PATCH | `/api/students/{studentId}` | Protected director student update |
-| DELETE | `/api/students/{studentId}` | Protected director student deactivation |
-| GET | `/api/teachers` | Protected director teacher list |
-| POST | `/api/teachers` | Protected director teacher creation |
-| GET | `/api/teachers/{teacherId}` | Protected director teacher lookup by ID |
-| PATCH | `/api/teachers/{teacherId}` | Protected director teacher update |
-| DELETE | `/api/teachers/{teacherId}` | Protected director teacher deactivation |
-| GET | `/api/class-plans` | Protected teacher/director class plan list |
-| POST | `/api/class-plans` | Protected teacher/director class plan |
-| GET | `/api/class-plans/{classPlanId}` | Protected teacher/director class plan lookup by ID |
-| GET | `/api/attendance-records` | Protected teacher/director attendance list and payroll summary |
-| POST | `/api/attendance-records` | Protected teacher/director attendance |
-| GET | `/api/attendance-records/{attendanceRecordId}` | Protected teacher/director attendance lookup by ID |
-| GET | `/api/professional-events` | Protected director event list |
-| POST | `/api/professional-events` | Protected director event creation |
-| GET | `/api/professional-events/{eventId}` | Protected director event lookup by ID |
-| POST | `/api/professional-events/{eventId}/assignments` | Protected B2 dancer assignment |
-| GET | `/api/branch-finance-reports` | Protected director finance reports |
-| POST | `/api/branch-finance-reports` | Protected director finance report creation |
-| GET | `/api/branch-finance-reports/{financeReportId}` | Protected director finance report lookup by ID |
-| GET | `/api/dancer-settlements/{studentId}` | Protected B2 dancer payment summary |
+| Method | Endpoint | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/` | Public | Backend metadata and endpoint summary. |
+| GET | `/api/health` | Public | API/database health check. |
+| GET | `/api/debug` | Public diagnostic | Environment and database diagnostic status. Should be protected or disabled in production. |
+| GET | `/api/branches` | Public | List academy branches. |
+| GET | `/api/styles` | Public | List dance styles. |
+| GET | `/api/levels` | Public | List student levels. |
+| POST | `/api/enrollments` | Public | Create a pending enrollment request. |
+| POST | `/api/auth/login` | Public | Login with email, password, and role. |
+| POST | `/api/auth/google` | Public | Login or detect registration need using Google ID token. |
+| POST | `/api/auth/google/register` | Public | Create a student user from Google token only. Present in backend, not the main frontend flow. |
+| POST | `/api/auth/google/enroll` | Public | Complete Google-backed enrollment and create active student/user. |
+| POST | `/api/kiosk/attendance` | Public station | Register legacy student kiosk attendance by national ID. |
+| POST | `/api/teacher-attendance/check-in` | Public station | Register teacher check-in and evidence code. |
+| GET | `/api/me` | Token: student, teacher, director | Current user profile; students also receive student and attendance summary data. |
+| GET | `/api/me/attendance` | Token: student | Current student's monthly attendance. |
+| PATCH | `/api/me/photo` | Token: student | Update current student's profile photo. |
+| GET | `/api/students` | Token: director | List students. |
+| POST | `/api/students` | Token: director | Create student. |
+| PATCH | `/api/students/{studentId}` | Token: director | Update student. |
+| DELETE | `/api/students/{studentId}` | Token: director | Deactivate student. |
+| GET | `/api/teachers` | Token: director | List teachers. |
+| POST | `/api/teachers` | Token: director | Create teacher account. |
+| PATCH | `/api/teachers/{teacherId}` | Token: director | Update teacher account. |
+| DELETE | `/api/teachers/{teacherId}` | Token: director | Deactivate teacher account. |
+| GET | `/api/class-plans` | Token: teacher, director | List class plans. |
+| POST | `/api/class-plans` | Token: teacher, director | Submit class plan. |
+| GET | `/api/attendance-records` | Token: teacher, director | List attendance records and teacher payroll summary. |
+| POST | `/api/attendance-records` | Token: teacher, director | Create manual attendance record. |
+| GET | `/api/branch-finance-reports` | Token: director | List branch finance reports. |
+| POST | `/api/branch-finance-reports` | Token: director | Create branch finance report and calculated totals. |
+| GET | `/api/professional-events` | Token: director | List professional B2 events. |
+| POST | `/api/professional-events` | Token: director | Create professional event. |
+| POST | `/api/professional-events/{eventId}/assignments` | Token: director | Assign B2 dancer to event. |
+| GET | `/api/dancer-settlements/{studentId}` | Token: director | Calculate dancer settlement summary. |
 
-## Local Verification
+## Authentication
 
-Verified for the current MVC backend with XAMPP PHP 8.2:
+`POST /api/auth/login` requires:
 
-- `pdo_pgsql` and `pgsql` are enabled in `C:\xampp\php\php.ini`.
-- Composer dependencies are installed in `vendor/`.
-- `GET /api/health` returns `database: connected`.
-- `GET /api/branches` returns Supabase branches.
-- Render public backend is the current production API target.
-- `GET /api/students` without token returns `401`.
-- Login was tested with student and director accounts.
-- Student monthly attendance was tested through `GET /api/me/attendance`.
-- Teacher check-in is handled through `POST /api/teacher-attendance/check-in`.
-- A protected backend flow was tested: login, student attendance, director student list, teacher records, class plans, attendance records, and finance reports.
-- Test records were removed from Supabase after verification.
-
-Current local API URL:
-
-```text
-http://127.0.0.1:8080/api/health
+```json
+{
+  "email": "director@americanlatinclass.com",
+  "password": "ALC2026*",
+  "role": "director"
+}
 ```
+
+The backend returns:
+
+```json
+{
+  "token": "signed-token",
+  "user": {
+    "id": 1,
+    "email": "director@americanlatinclass.com",
+    "role": "director",
+    "name": "Juan Pablo Hidalgo",
+    "branch_id": 1
+  }
+}
+```
+
+Protected requests must include:
+
+```http
+Authorization: Bearer <token>
+```
+
+## Google Sign-In Flow
+
+The frontend uses `PublicPagesController` for Google sign-in:
+
+1. `POST /api/auth/google` validates a Google ID token.
+2. If the email belongs to an active user, the backend returns a session token.
+3. If the email belongs to an active student but no user exists, the backend creates a student user.
+4. If the email is unknown, the frontend redirects to `enrollment.html?google=1...`.
+5. `POST /api/auth/google/enroll` creates an active student and user after the remaining enrollment fields are completed.
+
+`GOOGLE_CLIENT_ID` must be configured in the backend environment and exposed to the frontend through `window.GOOGLE_CLIENT_ID`.
+
+## Database Tables
+
+The current `schema.sql` creates:
+
+- `branches`
+- `students`
+- `users`
+- `class_plans`
+- `attendance_records`
+- `branch_finance_reports`
+- `professional_events`
+- `dancer_event_assignments`
+- `audit_logs`
+- `dance_styles`
+- `levels`
+
+It also inserts initial branches, levels, styles, and test users.
+
+## Local Checks
+
+From `06Code/backend`, after dependencies are installed:
+
+```powershell
+composer run lint
+composer run test
+composer run check
+```
+
+Current environment note from the June 10, 2026 review: this workstation has XAMPP PHP at `C:\xampp\php\php.exe`, but `php` and `composer` are not in PATH, and `vendor/` is not installed in the backend folder.
+
+## Known API Risks
+
+- `/api/debug` is public and reports environment variable presence/lengths. It should not remain publicly available in production.
+- `AuthController::login` returns raw database error details on some connection failures; production responses should be more generic.
+- Google token verification uses Google's `tokeninfo` endpoint directly inside the controller; moving it to a service would make testing and error handling cleaner.
+- The route file instantiates all dependencies manually. This is acceptable for a small academic project but will grow harder to maintain.

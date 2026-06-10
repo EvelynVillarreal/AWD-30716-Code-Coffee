@@ -58,14 +58,15 @@ The platform includes public pages for external visitors and protected portals f
 
 ## 3. Architecture Context
 
-The project is organized with an MVC-oriented structure:
+The project is organized as a static frontend plus PHP API backend. The earlier top-level `Model`, `View`, and `Controller` folders are no longer the current physical layout.
 
 | Layer | Location | Responsibility |
 | --- | --- | --- |
-| Model | `06Code/Model` | Database entities managed with Eloquent ORM. |
-| View | `06Code/View` | Static frontend pages deployed with Netlify. |
-| Controller | `06Code/Controller/src/Controller` | Slim 4 controllers that expose backend API routes. |
-| Validation | `06Code/Controller/src/Service/Validation` | Input validation services used by controllers. |
+| Backend | `06Code/backend` | Slim 4 API, Eloquent models, route table, controllers, services, middleware, support helpers, and tests. |
+| Models | `06Code/backend/src/Models` | Database entities managed with Eloquent ORM. |
+| Controllers | `06Code/backend/src/Controllers` | Slim 4 controllers that expose backend API routes. |
+| Services and validation | `06Code/backend/src/Services` | Business rules, validation, auth, branch access, payroll, dates, and audit helpers. |
+| Frontend | `06Code/frontend` | Static HTML/CSS/JS pages deployed with Netlify or another static host. |
 | Database | Supabase PostgreSQL | Production database. |
 | Backend deployment | Render | PHP backend API service. |
 | Frontend deployment | Netlify | Static frontend hosting and dashboard rewrites. |
@@ -76,10 +77,10 @@ The project is organized with an MVC-oriented structure:
 
 ### 4.1 Backend URI Count
 
-The backend currently has **28 implemented route entries**:
+The backend currently has **34 implemented route entries**:
 
 - **1 non-API root route:** `GET /`
-- **27 API routes:** routes under `/api`
+- **33 API routes:** routes under `/api`
 
 ### 4.2 Frontend URI Count
 
@@ -143,6 +144,8 @@ Some endpoints are command-like because they represent authentication or a speci
 | Endpoint | Reason |
 | --- | --- |
 | `POST /api/auth/login` | Login is an authentication action, not a normal CRUD resource. |
+| `POST /api/auth/google` | Google sign-in validates an external identity token. |
+| `POST /api/auth/google/enroll` | Google enrollment creates an account after identity verification and extra enrollment data. |
 | `POST /api/teacher-attendance/check-in` | Teacher check-in is an event action from the academy computer. |
 | `POST /api/professional-events/{eventId}/assignments` | Assigning a dancer is a nested business action under an event. |
 
@@ -182,32 +185,38 @@ POST /api/auth/login
 | --- | --- | --- | --- | --- | --- |
 | 1 | GET | `/` | No | Public | Returns backend project metadata and endpoint summary. |
 | 2 | GET | `/api/health` | No | Public | Checks API and database connection status. |
-| 3 | GET | `/api/branches` | No | Public | Lists academy branches. |
-| 4 | POST | `/api/enrollments` | No | Public | Creates a public enrollment request. |
-| 5 | POST | `/api/auth/login` | No | Public | Authenticates a user and returns a token. |
-| 6 | POST | `/api/kiosk/attendance` | No | Public station | Registers legacy student kiosk attendance by national ID. |
-| 7 | POST | `/api/teacher-attendance/check-in` | No | Public station | Registers teacher check-in from academy computer. |
-| 8 | GET | `/api/me` | Yes | student, teacher, director | Returns the authenticated user profile. |
-| 9 | GET | `/api/me/attendance` | Yes | student | Returns student monthly attendance. |
-| 10 | PATCH | `/api/me/photo` | Yes | student | Updates the current student profile photo. |
-| 11 | GET | `/api/students` | Yes | director | Lists students with optional filters. |
-| 12 | POST | `/api/students` | Yes | director | Creates a student record. |
-| 13 | PATCH | `/api/students/{studentId}` | Yes | director | Updates a student record. |
-| 14 | DELETE | `/api/students/{studentId}` | Yes | director | Deactivates a student record. |
-| 15 | GET | `/api/teachers` | Yes | director | Lists teacher accounts. |
-| 16 | POST | `/api/teachers` | Yes | director | Creates a teacher account. |
-| 17 | PATCH | `/api/teachers/{teacherId}` | Yes | director | Updates a teacher account. |
-| 18 | DELETE | `/api/teachers/{teacherId}` | Yes | director | Deactivates a teacher account. |
-| 19 | GET | `/api/class-plans` | Yes | teacher, director | Lists class planning records. |
-| 20 | POST | `/api/class-plans` | Yes | teacher, director | Submits a class planning record. |
-| 21 | GET | `/api/attendance-records` | Yes | teacher, director | Lists attendance records and teacher payroll summary. |
-| 22 | POST | `/api/attendance-records` | Yes | teacher, director | Creates a manual attendance record. |
-| 23 | GET | `/api/branch-finance-reports` | Yes | director | Lists branch finance reports. |
-| 24 | POST | `/api/branch-finance-reports` | Yes | director | Creates a branch finance report. |
-| 25 | GET | `/api/professional-events` | Yes | director | Lists professional B2 events. |
-| 26 | POST | `/api/professional-events` | Yes | director | Creates a professional event. |
-| 27 | POST | `/api/professional-events/{eventId}/assignments` | Yes | director | Assigns a B2 dancer to an event. |
-| 28 | GET | `/api/dancer-settlements/{studentId}` | Yes | director | Calculates B2 dancer settlement summary. |
+| 3 | GET | `/api/debug` | No | Diagnostic | Returns environment/database diagnostic status. Should be protected or disabled in production. |
+| 4 | GET | `/api/branches` | No | Public | Lists academy branches. |
+| 5 | GET | `/api/styles` | No | Public | Lists dance styles. |
+| 6 | GET | `/api/levels` | No | Public | Lists student levels. |
+| 7 | POST | `/api/enrollments` | No | Public | Creates a public pending enrollment request. |
+| 8 | POST | `/api/auth/login` | No | Public | Authenticates a user with email, password, and role. |
+| 9 | POST | `/api/auth/google` | No | Public | Authenticates or starts Google-backed enrollment with a Google ID token. |
+| 10 | POST | `/api/auth/google/register` | No | Public | Creates a student user from a Google token only. Present in backend, not the main frontend flow. |
+| 11 | POST | `/api/auth/google/enroll` | No | Public | Completes Google-backed enrollment and creates an active student/user. |
+| 12 | POST | `/api/kiosk/attendance` | No | Public station | Registers legacy student kiosk attendance by national ID. |
+| 13 | POST | `/api/teacher-attendance/check-in` | No | Public station | Registers teacher check-in from academy computer. |
+| 14 | GET | `/api/me` | Yes | student, teacher, director | Returns the authenticated user profile. |
+| 15 | GET | `/api/me/attendance` | Yes | student | Returns student monthly attendance. |
+| 16 | PATCH | `/api/me/photo` | Yes | student | Updates the current student profile photo. |
+| 17 | GET | `/api/students` | Yes | director | Lists students with optional filters. |
+| 18 | POST | `/api/students` | Yes | director | Creates a student record. |
+| 19 | PATCH | `/api/students/{studentId}` | Yes | director | Updates a student record. |
+| 20 | DELETE | `/api/students/{studentId}` | Yes | director | Deactivates a student record. |
+| 21 | GET | `/api/teachers` | Yes | director | Lists teacher accounts. |
+| 22 | POST | `/api/teachers` | Yes | director | Creates a teacher account. |
+| 23 | PATCH | `/api/teachers/{teacherId}` | Yes | director | Updates a teacher account. |
+| 24 | DELETE | `/api/teachers/{teacherId}` | Yes | director | Deactivates a teacher account. |
+| 25 | GET | `/api/class-plans` | Yes | teacher, director | Lists class planning records. |
+| 26 | POST | `/api/class-plans` | Yes | teacher, director | Submits a class planning record. |
+| 27 | GET | `/api/attendance-records` | Yes | teacher, director | Lists attendance records and teacher payroll summary. |
+| 28 | POST | `/api/attendance-records` | Yes | teacher, director | Creates a manual attendance record. |
+| 29 | GET | `/api/branch-finance-reports` | Yes | director | Lists branch finance reports. |
+| 30 | POST | `/api/branch-finance-reports` | Yes | director | Creates a branch finance report. |
+| 31 | GET | `/api/professional-events` | Yes | director | Lists professional B2 events. |
+| 32 | POST | `/api/professional-events` | Yes | director | Creates a professional event. |
+| 33 | POST | `/api/professional-events/{eventId}/assignments` | Yes | director | Assigns a B2 dancer to an event. |
+| 34 | GET | `/api/dancer-settlements/{studentId}` | Yes | director | Calculates B2 dancer settlement summary. |
 
 ---
 
@@ -225,9 +234,13 @@ Returns backend metadata, framework information, and available endpoint groups.
 {
   "project": "American Latin Class Backend API",
   "framework": "Slim 4",
-  "architecture": "MVC controllers with Eloquent models",
+  "orm": "Eloquent ORM",
   "database": "Supabase PostgreSQL",
-  "health": "/api/health"
+  "health": "/api/health",
+  "endpoints": {
+    "public": ["/api/health", "/api/branches", "/api/enrollments", "/api/auth/login", "/api/auth/google"],
+    "protected": ["/api/me", "/api/students", "/api/teachers", "/api/class-plans"]
+  }
 }
 ```
 
@@ -244,6 +257,12 @@ Checks if the API is available and the database connection can be verified.
   "project": "American Latin Class"
 }
 ```
+
+#### GET `/api/debug`
+
+Returns diagnostic information about environment variable presence and database connection errors.
+
+This route is implemented but should be considered a development/diagnostic route. It should be protected or disabled in production because it reveals environment configuration status.
 
 ---
 
@@ -265,6 +284,14 @@ Returns the list of academy branches.
   ]
 }
 ```
+
+#### GET `/api/styles`
+
+Returns the list of dance styles used by public forms and teacher check-in.
+
+#### GET `/api/levels`
+
+Returns the list of student levels used by public enrollment and dashboard forms.
 
 ---
 
@@ -352,6 +379,28 @@ Authenticates a student, teacher, or director account.
 | --- | --- |
 | 401 | Invalid credentials. |
 | 422 | Email or password was not provided correctly. |
+
+#### POST `/api/auth/google`
+
+Validates a Google ID token against `GOOGLE_CLIENT_ID`.
+
+If the Google email belongs to an active user, the backend returns a normal token/user session. If the email belongs to an active student without a user account, the backend creates the student user automatically. If the email is unknown, the backend returns `user_exists: false` so the frontend can redirect the user to complete enrollment.
+
+**Request body**
+
+```json
+{
+  "id_token": "google-id-token"
+}
+```
+
+#### POST `/api/auth/google/enroll`
+
+Completes enrollment after Google identity verification. The request includes the Google token plus the remaining student enrollment fields. The backend creates an active student and a linked student user, then returns a token/user session.
+
+#### POST `/api/auth/google/register`
+
+Creates a student user from a Google token only. This route exists in the backend, but the main frontend flow uses `/api/auth/google/enroll` when the Google account is new.
 
 ---
 
@@ -932,12 +981,14 @@ Current limitations:
 
 - Some business modules are implemented as list/create workflows instead of complete CRUD resources.
 - `/api/kiosk/attendance` remains implemented for legacy student kiosk attendance, but the v2 user flow no longer exposes student self-attendance as a frontend tab.
+- `/api/debug` remains publicly registered and should be protected or removed in production.
 - The dashboard is a static frontend route system supported by Netlify rewrites, not server-side page routing.
+- The repository currently does not include an active `netlify.toml`, so the dashboard rewrite must be configured in the hosting provider or added to source control.
 
 ---
 
 ## 15. Conclusion
 
-ALCSystem currently includes a functional backend API with 28 implemented route entries and a frontend with 16 canonical route entries. The API supports public enrollment, authentication, role-based access, student and teacher management, student profile photos, attendance control, teacher payroll summaries, class planning, branch finance reports, and B2 professional event management.
+ALCSystem currently includes a functional backend API with 34 implemented route entries and a frontend with 16 canonical route entries. The API supports public enrollment, password and Google authentication, role-based access, student and teacher management, student profile photos, attendance control, teacher payroll summaries, class planning, branch finance reports, and B2 professional event management.
 
 The URI design is consistent with the current implemented business scope and documents only the routes that exist in the project at this version.
