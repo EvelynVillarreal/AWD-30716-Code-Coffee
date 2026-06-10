@@ -24,6 +24,7 @@ final class FinanceController
     ) {
     }
 
+    /** Lists finance reports visible to the director's branch scope. */
     public function index(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -34,6 +35,7 @@ final class FinanceController
         return $this->responder->json($response, ['data' => $reports]);
     }
 
+    /** Creates a finance report and derives matrix share plus net result. */
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);

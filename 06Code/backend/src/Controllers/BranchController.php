@@ -15,6 +15,7 @@ final class BranchController
     {
     }
 
+    /** Returns branches from Supabase, or stable fallback branches when the DB is offline. */
     public function index(Request $request, Response $response): Response
     {
         try {

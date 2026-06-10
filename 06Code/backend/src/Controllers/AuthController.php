@@ -28,6 +28,7 @@ final class AuthController
     ) {
     }
 
+    /** Handles password login and returns the signed session consumed by the frontend. */
     public function login(Request $request, Response $response): Response
     {
         try {
@@ -70,6 +71,7 @@ final class AuthController
         ]);
     }
 
+    /** Handles Google sign-in and tells the frontend when Google enrollment is needed. */
     public function googleLogin(Request $request, Response $response): Response
     {
         try {
@@ -126,6 +128,7 @@ final class AuthController
         }
     }
 
+    /** Creates a basic student user from Google identity; kept for backend compatibility. */
     public function googleRegister(Request $request, Response $response): Response
     {
         $data = (array) $request->getParsedBody();
@@ -161,6 +164,7 @@ final class AuthController
         ]);
     }
 
+    /** Completes enrollment after Google identity verification and creates student/user records. */
     public function googleEnroll(Request $request, Response $response): Response
     {
         try {
@@ -243,6 +247,7 @@ final class AuthController
         }
     }
 
+    /** Returns the current user; student accounts also receive attendance context. */
     public function me(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -272,6 +277,7 @@ final class AuthController
         return $this->responder->json($response, $payload);
     }
 
+    /** Verifies a Google ID token against the configured client ID. */
     private function verifyGoogleToken(string $idToken): ?array
     {
         $googleClientId = trim((string) ($_ENV['GOOGLE_CLIENT_ID'] ?? ''));
@@ -307,6 +313,7 @@ final class AuthController
         return $payload;
     }
 
+    /** Keeps production errors generic while allowing full messages during local debug. */
     private function serverErrorMessage(Throwable $exception, string $productionMessage = 'Server error. Please try again later.'): string
     {
         $debug = ($_ENV['APP_DEBUG'] ?? getenv('APP_DEBUG') ?: 'false') === 'true';

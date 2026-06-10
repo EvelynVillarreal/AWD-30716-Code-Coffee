@@ -25,6 +25,7 @@ final class TeacherAttendanceController
     ) {
     }
 
+    /** Registers teacher check-in from the academy station and calculates late/present status. */
     public function store(Request $request, Response $response): Response
     {
         $data = (array) $request->getParsedBody();

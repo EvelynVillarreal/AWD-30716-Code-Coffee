@@ -27,6 +27,7 @@ final class ProfessionalEventController
     ) {
     }
 
+    /** Lists professional events visible to the director's branch scope. */
     public function index(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -37,6 +38,7 @@ final class ProfessionalEventController
         return $this->responder->json($response, ['data' => $events]);
     }
 
+    /** Creates a professional B2 event after branch and finance validation. */
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -71,6 +73,7 @@ final class ProfessionalEventController
         return $this->responder->json($response, ['message' => 'Professional event registered.', 'data' => $event], 201);
     }
 
+    /** Assigns an eligible B2 dancer to an event and records payment metadata. */
     public function assignDancer(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -110,6 +113,7 @@ final class ProfessionalEventController
         return $this->responder->json($response, ['message' => 'B2 dancer event assignment registered.', 'data' => $assignment], 201);
     }
 
+    /** Builds the payment settlement summary for one B2 dancer. */
     public function settlement(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -136,6 +140,7 @@ final class ProfessionalEventController
         ]]);
     }
 
+    /** Loads an event only when it belongs to a branch the director can access. */
     private function scopedEvent(int $eventId, AuthenticatedUser $authUser): ?ProfessionalEvent
     {
         $query = ProfessionalEvent::query();

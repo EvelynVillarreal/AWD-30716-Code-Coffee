@@ -13,6 +13,7 @@ final class AuthService
     ) {
     }
 
+    /** Finds an active user by email/role and verifies the stored password hash. */
     public function attempt(string $email, string $password, ?string $role = null): ?User
     {
         $query = User::query()
@@ -32,11 +33,13 @@ final class AuthService
         return $user;
     }
 
+    /** Delegates token creation so controllers do not know signing details. */
     public function issueToken(User $user): string
     {
         return $this->tokens->issue($user);
     }
 
+    /** Extracts the Bearer token and converts a valid payload into the app user object. */
     public function userFromRequest(Request $request): ?AuthenticatedUser
     {
         $authorization = $request->getHeaderLine('Authorization');
@@ -48,6 +51,7 @@ final class AuthService
         return $payload === null ? null : $this->fromPayload($payload);
     }
 
+    /** Builds the frontend-safe user payload and hides internal password data. */
     public function publicUser(User $user): array
     {
         $studentPhoto = $user->student_id ? ($user->student?->photo_url ?? null) : null;
@@ -63,6 +67,7 @@ final class AuthService
         ];
     }
 
+    /** Supports both current PHP hashes and older academic PBKDF2 seed hashes. */
     private function passwordMatches(string $password, string $storedHash): bool
     {
         if (str_starts_with($storedHash, 'pbkdf2$')) {

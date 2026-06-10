@@ -8,6 +8,7 @@ use Throwable;
 
 final class AuditLogger
 {
+    /** Records protected writes without blocking the user flow if audit storage is unavailable. */
     public function record(AuthenticatedUser $actor, string $action, string $entityType, ?int $entityId = null, array $metadata = []): void
     {
         try {

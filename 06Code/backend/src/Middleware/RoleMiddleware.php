@@ -19,6 +19,7 @@ final class RoleMiddleware
     ) {
     }
 
+    /** Verifies token authentication and role authorization before protected controllers run. */
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
         $authUser = $this->auth->userFromRequest($request);

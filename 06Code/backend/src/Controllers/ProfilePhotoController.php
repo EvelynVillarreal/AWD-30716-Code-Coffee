@@ -20,6 +20,7 @@ final class ProfilePhotoController
     ) {
     }
 
+    /** Updates both student photo storage and the linked user avatar shown in the dashboard. */
     public function update(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);

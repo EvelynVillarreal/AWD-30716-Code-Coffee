@@ -24,6 +24,7 @@ final class ClassPlanController
     ) {
     }
 
+    /** Lists class plans according to teacher identity or director branch scope. */
     public function index(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -47,6 +48,7 @@ final class ClassPlanController
         return $this->responder->json($response, ['data' => $query->get()]);
     }
 
+    /** Stores a submitted class plan and records an audit event for director review. */
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);

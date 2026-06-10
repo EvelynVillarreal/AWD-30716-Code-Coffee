@@ -24,6 +24,7 @@ final class TeacherController
     ) {
     }
 
+    /** Lists teacher accounts visible to the director's branch scope. */
     public function index(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -32,6 +33,7 @@ final class TeacherController
         return $this->responder->json($response, ['data' => $query->get()]);
     }
 
+    /** Creates a teacher account with a hashed password and branch restriction. */
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -70,6 +72,7 @@ final class TeacherController
         return $this->responder->json($response, ['message' => 'Teacher created.', 'data' => $teacher], 201);
     }
 
+    /** Updates teacher identity, branch, active state, and optional password. */
     public function update(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -114,6 +117,7 @@ final class TeacherController
         return $this->responder->json($response, ['message' => 'Teacher updated.', 'data' => $teacher]);
     }
 
+    /** Deactivates a teacher account without deleting historical records. */
     public function destroy(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -134,6 +138,7 @@ final class TeacherController
         return $this->responder->json($response, ['message' => 'Teacher deactivated.', 'data' => $teacher]);
     }
 
+    /** Normalizes director form input before teacher validation and persistence. */
     private function normalizedData(array $data): array
     {
         return [

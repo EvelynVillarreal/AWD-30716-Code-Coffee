@@ -11,6 +11,7 @@ final class TeacherPayrollService
     private const DEFAULT_RATE_PER_HOUR = 12.0;
     private const LATE_GRACE_MINUTES = 10;
 
+    /** Compares actual check-in time against the expected start plus grace minutes. */
     public function attendanceStatus(string $attendanceDate, string $expectedStartTime, ?DateTimeImmutable $checkIn = null): string
     {
         $timezone = new DateTimeZone($_ENV['APP_TIMEZONE'] ?? 'America/Bogota');
@@ -21,6 +22,7 @@ final class TeacherPayrollService
         return $actualCheckIn > $lateThreshold ? 'late' : 'present';
     }
 
+    /** Summarizes payable teacher records; only present and late entries generate pay. */
     public function summarize(iterable $records): array
     {
         $summary = ['records' => 0, 'present' => 0, 'late' => 0, 'absent' => 0, 'scheduled_hours' => 0.0, 'payable_hours' => 0.0, 'gross_amount' => 0.0];

@@ -7,6 +7,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 final class DatabaseConnection
 {
+    /** Boots Eloquent with environment-provided PostgreSQL/Supabase settings. */
     public function boot(): void
     {
         $capsule = new Capsule();

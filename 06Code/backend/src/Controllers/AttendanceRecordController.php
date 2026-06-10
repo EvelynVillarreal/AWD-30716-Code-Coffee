@@ -32,6 +32,7 @@ final class AttendanceRecordController
     ) {
     }
 
+    /** Lists monthly attendance and computes teacher payroll for the same result set. */
     public function index(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -73,6 +74,7 @@ final class AttendanceRecordController
         ]);
     }
 
+    /** Creates manual attendance after resolving student data and branch write permission. */
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);

@@ -30,6 +30,7 @@ final class StudentController
     ) {
     }
 
+    /** Lists students visible to the director after applying branch scope. */
     public function index(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -55,6 +56,7 @@ final class StudentController
         return $this->responder->json($response, ['data' => $students]);
     }
 
+    /** Creates a student in the branch that the authenticated director can write to. */
     public function store(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -88,6 +90,7 @@ final class StudentController
         return $this->responder->json($response, ['message' => 'Student created.', 'data' => $student->load('branch')], 201);
     }
 
+    /** Updates student data while preventing directors from moving records outside scope. */
     public function update(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -127,6 +130,7 @@ final class StudentController
         return $this->responder->json($response, ['message' => 'Student updated.', 'data' => $student->load('branch')]);
     }
 
+    /** Soft-deactivates a student instead of deleting historical attendance relationships. */
     public function destroy(Request $request, Response $response, array $args): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -149,6 +153,7 @@ final class StudentController
         return $this->responder->json($response, ['message' => 'Student deactivated.', 'data' => $student]);
     }
 
+    /** Returns the logged-in student's attendance records and summary for one month. */
     public function attendance(Request $request, Response $response): Response
     {
         $authUser = $this->getAuthUser($request);
@@ -176,6 +181,7 @@ final class StudentController
         ]);
     }
 
+    /** Normalizes director form input before validation and database writes. */
     private function normalizedData(array $data): array
     {
         return [
@@ -193,6 +199,7 @@ final class StudentController
         ];
     }
 
+    /** Checks duplicate identity fields while allowing the current record during updates. */
     private function duplicateMessage(array $data, ?int $exceptStudentId = null): ?string
     {
         $nationalQuery = Student::query()->where('national_id', $data['national_id']);

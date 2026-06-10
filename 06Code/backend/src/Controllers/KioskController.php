@@ -21,6 +21,7 @@ final class KioskController
     ) {
     }
 
+    /** Registers a legacy student kiosk attendance entry with duplicate-day protection. */
     public function store(Request $request, Response $response): Response
     {
         $data = (array) $request->getParsedBody();

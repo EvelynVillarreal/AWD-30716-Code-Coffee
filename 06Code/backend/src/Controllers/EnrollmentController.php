@@ -18,6 +18,7 @@ final class EnrollmentController
     ) {
     }
 
+    /** Creates a pending public enrollment request after duplicate identity checks. */
     public function store(Request $request, Response $response): Response
     {
         $data = $this->sanitize((array) $request->getParsedBody());
@@ -53,6 +54,7 @@ final class EnrollmentController
         return $this->responder->json($response, ['message' => 'Enrollment request registered.', 'data' => $student], 201);
     }
 
+    /** Sanitizes public form fields before validation and duplicate checks. */
     private function sanitize(array $data): array
     {
         return [
@@ -69,6 +71,7 @@ final class EnrollmentController
         ];
     }
 
+    /** Returns a user-facing duplicate message for national ID, email, or phone. */
     private function duplicateMessage(array $data): ?string
     {
         if (Student::query()->where('national_id', $data['national_id'])->exists()) {

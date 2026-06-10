@@ -16,6 +16,7 @@ final class HomeController
     {
     }
 
+    /** Returns basic backend metadata for reviewers and health check discovery. */
     public function index(Request $request, Response $response): Response
     {
         return $this->responder->json($response, [
@@ -31,6 +32,7 @@ final class HomeController
         ]);
     }
 
+    /** Verifies that the API is running and that the database can answer a trivial query. */
     public function health(Request $request, Response $response): Response
     {
         try {
@@ -41,6 +43,7 @@ final class HomeController
         }
     }
 
+    /** Reports diagnostic configuration status; this route is registered only in debug mode. */
     public function debug(Request $request, Response $response): Response
     {
         $envKeys = ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_SSLMODE', 'FRONTEND_ORIGINS', 'APP_KEY', 'GOOGLE_CLIENT_ID'];

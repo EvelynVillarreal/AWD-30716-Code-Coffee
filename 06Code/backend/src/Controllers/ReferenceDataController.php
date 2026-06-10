@@ -17,6 +17,7 @@ final class ReferenceDataController
     {
     }
 
+    /** Returns dance styles for public forms, with fallback values for offline demos. */
     public function styles(Request $request, Response $response): Response
     {
         try {
@@ -39,6 +40,7 @@ final class ReferenceDataController
         return $this->responder->json($response, ['data' => $styles]);
     }
 
+    /** Returns student levels for public and dashboard forms. */
     public function levels(Request $request, Response $response): Response
     {
         try {
@@ -55,6 +57,7 @@ final class ReferenceDataController
         return $this->responder->json($response, ['data' => $levels]);
     }
 
+    /** Keeps a branch-reference endpoint available if the router exposes it later. */
     public function branches(Request $request, Response $response): Response
     {
         try {
