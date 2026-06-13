@@ -23,11 +23,14 @@ Repository: EvelynVillarreal/AWD-30716-Code-Coffee
 Branch: main
 Root directory: 06Code
 Runtime: Docker
-Dockerfile: 06Code/Dockerfile
+Dockerfile path: ./Dockerfile
+Docker build context: .
 Plan: Free
 ```
 
 The backend is built from `06Code/Dockerfile`, which installs PHP dependencies and serves the Slim application from `backend/public`.
+
+The optional Render Blueprint draft is `06Code/render.yaml`. It uses `runtime: docker` for the API service and `runtime: static` for the static frontend service.
 
 ## Environment Variables
 
@@ -85,6 +88,27 @@ The dashboard uses browser routes such as:
 ```
 
 The active rewrite file is `06Code/frontend/netlify.toml`. It maps `/dashboard` and `/dashboard/*` to `dashboard.html`.
+
+If the frontend is deployed on Render Static Sites instead of Netlify, the same rewrites are documented in `06Code/render.yaml`.
+
+## Manual Docker Compose Deploy
+
+For a VPS-style manual deployment, use:
+
+```bash
+cd 06Code
+./deploy.sh
+```
+
+`deploy.sh` builds with Docker Compose and verifies `http://127.0.0.1:8080/api/health`. It does not reset the database during a normal deploy.
+
+Only for a demo seed reset:
+
+```bash
+RESET_DB=1 ./deploy.sh
+```
+
+That option runs `cleanup_db.sh`, drops the local `public` schema, and reapplies `backend/database/schema.sql`.
 
 ## Verification
 

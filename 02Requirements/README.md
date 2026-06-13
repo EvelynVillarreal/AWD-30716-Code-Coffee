@@ -1,7 +1,7 @@
 # Project Features
 
-**Current baseline:** ALCSystem v2.0.18
-**Last aligned:** June 10, 2026
+**Current baseline:** ALCSystem v2.0.19
+**Last aligned:** June 13, 2026
 
 This folder contains the planning package for the **American Latin Class** system.
 
@@ -16,8 +16,8 @@ The purpose of this assignment is to organize the requirements before building t
 - `meeting-minutes.md`: meeting minutes based on the conversation with Juan Pablo Hidalgo.
 - `jira/jira-import.csv`: 3 features and 9 tasks ready to create in Jira.
 - `jira/created-jira-issues.md`: Jira issue keys created in the online board.
-- `diagrams/class-diagram.puml`: class diagram in PlantUML format.
-- `diagrams/use-case-diagram.puml`: use case diagram in PlantUML format.
+- `../04UMLDiagrams/02ClassDiagram/class-diagram.puml`: class diagram in PlantUML format.
+- `../04UMLDiagrams/01UseCases/use-case-diagram.puml`: use case diagram in PlantUML format.
 - `implemented-features.md`: evidence that the three Jira features were also programmed.
 - The active implementation now lives in `../06Code/frontend` and `../06Code/backend`.
 - Historical copied frontend evidence is archived under `../07Other/legacy-academic-code`.

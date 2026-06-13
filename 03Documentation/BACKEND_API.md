@@ -72,7 +72,7 @@ https://american-latin-class.onrender.com/api/health
 
 ## Implemented Endpoints
 
-The implemented route table is `06Code/backend/routes/api.php`. In production it registers **33 route entries**: one root route and 32 `/api` routes. When `APP_DEBUG=true`, it also registers the diagnostic route `GET /api/debug`.
+The implemented route table is `06Code/backend/routes/api.php`. In production it registers **33 route entries**: one root route and 32 `/api` routes. When `APP_DEBUG=true`, it also registers the diagnostic route `GET /api/debug`. The table below lists the production routes and the conditional debug route so reviewers can see the complete URI contract.
 
 | Method | Endpoint | Auth | Purpose |
 | --- | --- | --- | --- |
@@ -152,7 +152,7 @@ The frontend uses `PublicPagesController` for Google sign-in:
 2. If the email belongs to an active user, the backend returns a session token.
 3. If the email belongs to an active student but no user exists, the backend creates a student user.
 4. If the email is unknown, the frontend redirects to `enrollment.html?google=1...`.
-5. `POST /api/auth/google/enroll` creates an active student and user after the remaining enrollment fields are completed.
+5. `POST /api/auth/google/enroll` creates an active student and user after the remaining enrollment fields are completed. The backend uses the verified Google token email as the account email.
 
 `GOOGLE_CLIENT_ID` must be configured in the backend environment and exposed to the frontend through `window.GOOGLE_CLIENT_ID`.
 
@@ -184,11 +184,10 @@ composer run test
 composer run check
 ```
 
-Current environment note from the June 10, 2026 review: this workstation has XAMPP PHP at `C:\xampp\php\php.exe`, but `php` and `composer` are not in PATH, and `vendor/` is not installed in the backend folder.
+Current environment note from the June 13, 2026 review: this workstation has XAMPP PHP at `C:\xampp\php\php.exe`. `php` and `composer` are not in PATH, but `06Code/backend/vendor/autoload.php` exists locally and tests can be run with XAMPP PHP.
 
 ## Known API Risks
 
 - `/api/debug` is now registered only when `APP_DEBUG=true`; keep `APP_DEBUG=false` in production.
-- `AuthController::login` returns raw database error details on some connection failures; production responses should be more generic.
 - Google token verification uses Google's `tokeninfo` endpoint directly inside the controller; moving it to a service would make testing and error handling cleaner.
 - The route file instantiates all dependencies manually. This is acceptable for a small academic project but will grow harder to maintain.

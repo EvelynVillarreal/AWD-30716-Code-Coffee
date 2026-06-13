@@ -1,8 +1,9 @@
 @startuml
-title American Latin Class - ALCSystem v2 Class Diagram
+title American Latin Class - ALCSystem v2.0.19 Class Diagram
 skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
 
-package "Model" {
+package "Model (Eloquent ORM)" {
   class Branch {
     +id
     +name
@@ -93,23 +94,80 @@ package "Model" {
     +deduction_reason
     +payment_status
   }
+
+  class AuditLog {
+    +id
+    +actor_user_id
+    +actor_email
+    +actor_role
+    +branch_id
+    +action
+    +entity_type
+    +entity_id
+    +metadata
+  }
+
+  class DanceStyle {
+    +id
+    +name
+  }
+
+  class Level {
+    +id
+    +name
+  }
 }
 
-package "Controller" {
+package "Controller (Slim HTTP)" {
+  class HomeController
+  class BranchController
+  class ReferenceDataController
+  class EnrollmentController
   class AuthController
+  class KioskController
+  class TeacherAttendanceController
   class StudentController
   class TeacherController
-  class AttendanceRecordController
   class ClassPlanController
+  class AttendanceRecordController
+  class FinanceController
+  class ProfessionalEventController
   class ProfilePhotoController
+}
+
+package "Middleware" {
+  class RoleMiddleware
 }
 
 package "Service" {
   class AuthService
+  class JwtTokenService
+  class AuthenticatedUser
   class BranchAccessService
+  class DateRangeService
+  class MonthlyDateRange
   class AttendanceSummaryService
   class TeacherPayrollService
+  class EvidenceCodeGenerator
+  class AuditLogger
+  class ValidationService
+}
+
+package "Validation Services" {
+  class FieldValidator
+  class EcuadorianIdValidator
+  class StudentValidator
+  class TeacherAccountValidator
+  class AttendanceValidator
+  class PlanningValidator
+  class FinanceValidator
+  class EventValidator
   class ProfilePhotoValidator
+}
+
+package "Support" {
+  class JsonResponder
+  class DatabaseConnection
 }
 
 Branch "1" -- "many" User
@@ -118,17 +176,88 @@ Branch "1" -- "many" ClassPlan
 Branch "1" -- "many" AttendanceRecord
 Branch "1" -- "many" BranchFinanceReport
 Branch "1" -- "many" ProfessionalEvent
+Branch "1" -- "many" AuditLog
 
 User "0..1" -- "1" Student : linked account
 Student "1" -- "many" AttendanceRecord
-ProfessionalEvent "1" -- "many" DancerEventAssignment
 Student "1" -- "many" DancerEventAssignment
+ProfessionalEvent "1" -- "many" DancerEventAssignment
 
+HomeController --> JsonResponder
+HomeController --> DatabaseConnection
+BranchController --> Branch
+ReferenceDataController --> DanceStyle
+ReferenceDataController --> Level
+ReferenceDataController --> Branch
+EnrollmentController --> ValidationService
+EnrollmentController --> Student
+EnrollmentController --> Branch
 AuthController --> AuthService
+AuthController --> DateRangeService
+AuthController --> AttendanceSummaryService
+AuthController --> ValidationService
+AuthController --> User
+AuthController --> Student
+KioskController --> ValidationService
+KioskController --> EvidenceCodeGenerator
+KioskController --> AttendanceRecord
+TeacherAttendanceController --> ValidationService
+TeacherAttendanceController --> EvidenceCodeGenerator
+TeacherAttendanceController --> TeacherPayrollService
+TeacherAttendanceController --> AttendanceRecord
 StudentController --> BranchAccessService
+StudentController --> DateRangeService
+StudentController --> AttendanceSummaryService
+StudentController --> ValidationService
+StudentController --> AuditLogger
+StudentController --> Student
+TeacherController --> BranchAccessService
+TeacherController --> ValidationService
+TeacherController --> AuditLogger
+TeacherController --> User
+ClassPlanController --> BranchAccessService
+ClassPlanController --> ValidationService
+ClassPlanController --> AuditLogger
+ClassPlanController --> ClassPlan
+AttendanceRecordController --> BranchAccessService
+AttendanceRecordController --> DateRangeService
+AttendanceRecordController --> ValidationService
+AttendanceRecordController --> EvidenceCodeGenerator
 AttendanceRecordController --> TeacherPayrollService
-ProfilePhotoController --> ProfilePhotoValidator
+AttendanceRecordController --> AttendanceRecord
+FinanceController --> BranchAccessService
+FinanceController --> ValidationService
+FinanceController --> AuditLogger
+FinanceController --> BranchFinanceReport
+ProfessionalEventController --> BranchAccessService
+ProfessionalEventController --> ValidationService
+ProfessionalEventController --> AuditLogger
+ProfessionalEventController --> ProfessionalEvent
+ProfessionalEventController --> DancerEventAssignment
+ProfilePhotoController --> ValidationService
 ProfilePhotoController --> User
 ProfilePhotoController --> Student
+
+RoleMiddleware --> AuthService
+RoleMiddleware --> AuthenticatedUser
+
+AuthService --> JwtTokenService
+AuthService --> User
+DateRangeService --> MonthlyDateRange
+AuditLogger --> AuditLog
+ValidationService --> StudentValidator
+ValidationService --> TeacherAccountValidator
+ValidationService --> AttendanceValidator
+ValidationService --> PlanningValidator
+ValidationService --> FinanceValidator
+ValidationService --> EventValidator
+ValidationService --> ProfilePhotoValidator
+StudentValidator --> FieldValidator
+TeacherAccountValidator --> FieldValidator
+AttendanceValidator --> FieldValidator
+PlanningValidator --> FieldValidator
+FinanceValidator --> FieldValidator
+EventValidator --> FieldValidator
+FieldValidator --> EcuadorianIdValidator
 
 @enduml

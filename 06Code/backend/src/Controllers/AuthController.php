@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\AttendanceSummaryService;
 use App\Services\AuthService;
 use App\Services\DateRangeService;
+use App\Services\ValidationService;
 use App\Support\JsonResponder;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -24,7 +25,8 @@ final class AuthController
         private readonly JsonResponder $responder,
         private readonly AuthService $auth,
         private readonly DateRangeService $dateRanges,
-        private readonly AttendanceSummaryService $attendanceSummary
+        private readonly AttendanceSummaryService $attendanceSummary,
+        private readonly ValidationService $validator
     ) {
     }
 
@@ -180,35 +182,26 @@ final class AuthController
                 return $this->responder->json($response, ['message' => 'Invalid Google token.'], 401);
             }
 
-            $email = strtolower(trim((string) ($data['email'] ?? $googlePayload['email'] ?? '')));
-            if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                return $this->responder->json($response, ['message' => 'A valid email is required.'], 422);
+            $studentData = $this->googleEnrollmentStudentData($data, $googlePayload);
+            $errors = $this->validator->validateEnrollment($studentData);
+            if ($errors !== []) {
+                return $this->responder->json($response, ['errors' => $errors], 422);
             }
 
-            if (User::query()->where('email', $email)->first()) {
+            if (User::query()->where('email', $studentData['email'])->first()) {
                 return $this->responder->json($response, ['message' => 'An account with this email already exists.'], 409);
             }
 
-            $fullName = trim((string) ($data['full_name'] ?? $googlePayload['name'] ?? ''));
-            $phone = preg_replace('/[^\d+]+/', '', (string) ($data['phone'] ?? ''));
-            $nationalId = preg_replace('/\D+/', '', (string) ($data['national_id'] ?? ''));
-            $branchId = isset($data['branch_id']) ? (int) $data['branch_id'] : null;
-            $level = in_array(($data['level'] ?? ''), ['B1', 'B2'], true) ? strtoupper($data['level']) : 'B1';
-            $guardianName = trim((string) ($data['guardian_name'] ?? ''));
-            $guardianPhone = preg_replace('/[^\d+]+/', '', (string) ($data['guardian_phone'] ?? ''));
-            $comments = trim((string) ($data['comments'] ?? ''));
-
-            if ($fullName === '' || $phone === '' || $nationalId === '' || $branchId === null) {
-                return $this->responder->json($response, ['message' => 'Name, phone, national ID, and branch are required.'], 422);
-            }
-
-            if (!Branch::query()->find($branchId)) {
+            if (!Branch::query()->find((int) $studentData['branch_id'])) {
                 return $this->responder->json($response, ['message' => 'Selected branch does not exist.'], 422);
             }
 
-            foreach (['national_id', 'email', 'phone'] as $field) {
+            foreach ([
+                'national_id' => $studentData['national_id'],
+                'email' => $studentData['email'],
+                'phone' => $studentData['phone'],
+            ] as $field => $value) {
                 $query = Student::query();
-                $value = $field === 'email' ? $email : $$field;
                 if ($field === 'email') {
                     $query->whereRaw('lower(email) = ?', [$value]);
                 } else {
@@ -220,17 +213,24 @@ final class AuthController
             }
 
             $student = Student::query()->create([
-                'branch_id' => $branchId, 'national_id' => $nationalId, 'full_name' => $fullName,
-                'email' => $email, 'phone' => $phone, 'level' => $level, 'scholarship_percent' => 0,
-                'guardian_name' => $guardianName, 'guardian_phone' => $guardianPhone,
-                'comments' => $comments, 'status' => 'active',
+                'branch_id' => (int) $studentData['branch_id'],
+                'national_id' => $studentData['national_id'],
+                'full_name' => $studentData['full_name'],
+                'email' => $studentData['email'],
+                'phone' => $studentData['phone'],
+                'level' => $studentData['level'],
+                'scholarship_percent' => 0,
+                'guardian_name' => $studentData['guardian_name'],
+                'guardian_phone' => $studentData['guardian_phone'],
+                'comments' => $studentData['comments'],
+                'status' => 'active',
             ]);
 
             $user = new User();
-            $user->email = $email;
-            $user->name = $fullName;
+            $user->email = $studentData['email'];
+            $user->name = $studentData['full_name'];
             $user->role = 'student';
-            $user->branch_id = $branchId;
+            $user->branch_id = (int) $studentData['branch_id'];
             $user->student_id = $student->id;
             $user->password_hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT);
             $user->is_active = true;
@@ -245,6 +245,25 @@ final class AuthController
         } catch (Throwable $e) {
             return $this->responder->json($response, ['message' => $this->serverErrorMessage($e)], 500);
         }
+    }
+
+    /** Builds student data for Google enrollment using the verified token email as source of truth. */
+    private function googleEnrollmentStudentData(array $data, array $googlePayload): array
+    {
+        $level = strtoupper((string) ($data['level'] ?? 'B1'));
+
+        return [
+            'branch_id' => (int) ($data['branch_id'] ?? 0),
+            'national_id' => preg_replace('/\D+/', '', (string) ($data['national_id'] ?? '')),
+            'full_name' => trim((string) ($data['full_name'] ?? $googlePayload['name'] ?? '')),
+            'email' => strtolower(trim((string) ($googlePayload['email'] ?? ''))),
+            'phone' => preg_replace('/[^\d+]+/', '', (string) ($data['phone'] ?? '')),
+            'level' => in_array($level, ['B1', 'B2'], true) ? $level : 'B1',
+            'scholarship_percent' => 0,
+            'guardian_name' => trim((string) ($data['guardian_name'] ?? '')),
+            'guardian_phone' => preg_replace('/[^\d+]+/', '', (string) ($data['guardian_phone'] ?? '')),
+            'comments' => trim((string) ($data['comments'] ?? '')),
+        ];
     }
 
     /** Returns the current user; student accounts also receive attendance context. */

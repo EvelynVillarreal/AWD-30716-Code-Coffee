@@ -1,7 +1,7 @@
 # American Latin Class - Elicited Requirements And Current Functional Context
 
-**Current baseline:** ALCSystem v2.0.18
-**Last aligned:** May 26, 2026
+**Current baseline:** ALCSystem v2.0.19
+**Last aligned:** June 13, 2026
 
 Base context: the initial multi-branch web system proposal for American Latin Class.
 
@@ -111,11 +111,13 @@ The current implementation covers the selected academic MVP:
 
 ## Architecture Direction
 
-The code is organized with an MVC structure under `06Code`:
+The active code is organized as a static frontend plus a PHP API backend:
 
-- `Model`: Eloquent domain models.
-- `View`: HTML, CSS, and JavaScript pages.
-- `Controller`: Slim API, route definitions, middleware, services, and support classes.
+- `06Code/frontend`: HTML, CSS, and JavaScript pages for public flows and role dashboards.
+- `06Code/backend/src/Models`: Eloquent domain models.
+- `06Code/backend/src/Controllers`: Slim controllers for backend API requests.
+- `06Code/backend/src/Services`: authentication, validation, branch access, payroll, date ranges, audit, and evidence-code rules.
+- `06Code/backend/routes/api.php`: the single route table that maps documented URIs to controller methods and middleware.
 
 ## Current Deployment Direction
 

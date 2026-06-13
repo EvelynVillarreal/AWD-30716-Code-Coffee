@@ -1,7 +1,7 @@
 # Implemented Features Evidence
 
-**Current baseline:** ALCSystem v2.0.18
-**Last aligned:** June 10, 2026
+**Current baseline:** ALCSystem v2.0.19
+**Last aligned:** June 13, 2026
 
 This document confirms that the three selected project features are not only written as requirements. They are also implemented in the active MVC project folders.
 
@@ -49,7 +49,8 @@ Implemented behavior:
 - Separate enrollment page and form for new students.
 - Branch, B1/B2 level, scholarship percentage, and guardian data capture.
 - Enrollment is sent to the PHP backend instead of writing directly to Supabase from the browser.
-- Backend endpoint: `POST /api/enrollments`.
+- Google-backed enrollment is supported for verified Google accounts that still need academy enrollment.
+- Backend endpoints: `POST /api/enrollments`, `POST /api/auth/google`, and `POST /api/auth/google/enroll`.
 
 ## Feature 2: Student, Scholarship, and Attendance Control
 
@@ -70,6 +71,7 @@ Implemented behavior:
 
 - Single login page for teachers, students, and directors.
 - Login is validated by the backend using stored users, hashed passwords, signed tokens, and role checks.
+- Google sign-in is available when `GOOGLE_CLIENT_ID` is configured.
 - Role-based dashboard modules after login.
 - Signed-in user name, role, and avatar/profile image fallback in the dashboard header.
 - Canonical dashboard routes for overview, students, teachers, payroll, planning, finance, events, schedule, attendance, and teacher work log.

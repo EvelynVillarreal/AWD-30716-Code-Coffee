@@ -2,7 +2,7 @@
 
 Project: **American Latin Class**
 
-This document lists the parameterized URIs currently implemented in `06Code/backend/routes/api.php`.
+This document lists the parameterized URIs currently implemented in `06Code/backend/routes/api.php`. The full backend and frontend route catalog is maintained in `URI_DESIGN_DOCUMENT_ALCSYSTEM.md`.
 
 ## URI Standard Used
 

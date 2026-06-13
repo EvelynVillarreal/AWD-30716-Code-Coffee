@@ -40,7 +40,7 @@ return static function (App $app, JsonResponder $responder): void {
     $validator = new ValidationService();
 
     $homeController = new HomeController($responder);
-    $authController = new AuthController($responder, $authService, $dateRanges, $attendanceSummary);
+    $authController = new AuthController($responder, $authService, $dateRanges, $attendanceSummary, $validator);
     $branchController = new BranchController($responder);
     $enrollmentController = new EnrollmentController($responder, $validator);
     $kioskController = new KioskController($responder, $validator, $evidenceCodes);

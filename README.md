@@ -2,7 +2,7 @@
 
 Repository for the **American Latin Class** web system.
 
-Current documented baseline: **ALCSystem v2.0.18**, realigned on **June 10, 2026**.
+Current documented baseline: **ALCSystem v2.0.19**, realigned on **June 13, 2026**.
 
 ## Project Map
 
@@ -40,7 +40,7 @@ The backend still follows MVC-style responsibility separation internally:
 
 ## Quick Guides
 
-- Current project status and improvement review: `03Documentation/PROJECT_STATUS_2026-06-10.md`
+- Current project status and improvement review: `03Documentation/PROJECT_STATUS_2026-06-13.md`
 - Project structure: `03Documentation/PROJECT_STRUCTURE.md`
 - MVC-style architecture: `03Documentation/MVC_ARCHITECTURE.md`
 - Backend API: `03Documentation/BACKEND_API.md`

@@ -1,4 +1,4 @@
-# ALCSystem v2.0.16
+# ALCSystem v2.0.19
 
 # RESTful URI Design Document
 
@@ -7,8 +7,8 @@
 **Course:** Advanced Web Development
 **Instructor:** Engineer Edison Lascano
 **Project:** American Latin Class, ALCSystem
-**Version:** ALCSystem v2.0.16
-**Date:** May 25, 2026
+**Version:** ALCSystem v2.0.19
+**Date:** June 13, 2026
 **Team members:** Carlos Alexander Torres Pincay, Evelyn Hayde Villarreal
 
 ---
@@ -27,7 +27,7 @@ The document follows the same academic structure used by the reference URI desig
 - Request and response examples.
 - Authentication, authorization, validation, and error conventions.
 
-This version documents what exists in the repository at ALCSystem v2.0.16.
+This version documents what exists in the repository at ALCSystem v2.0.19.
 
 ---
 
@@ -147,6 +147,7 @@ Some endpoints are command-like because they represent authentication or a speci
 | --- | --- |
 | `POST /api/auth/login` | Login is an authentication action, not a normal CRUD resource. |
 | `POST /api/auth/google` | Google sign-in validates an external identity token. |
+| `POST /api/auth/google/register` | Google registration creates a student user from a verified Google token for backend compatibility. |
 | `POST /api/auth/google/enroll` | Google enrollment creates an account after identity verification and extra enrollment data. |
 | `POST /api/teacher-attendance/check-in` | Teacher check-in is an event action from the academy computer. |
 | `POST /api/professional-events/{eventId}/assignments` | Assigning a dancer is a nested business action under an event. |
@@ -182,6 +183,8 @@ POST /api/auth/login
 ## 8. Backend API Endpoint Catalog
 
 ### 8.1 Full Endpoint Table
+
+This table includes the 33 production route entries plus the conditional `GET /api/debug` diagnostic route. Production has 33 route entries when `APP_DEBUG=false`; the table has 34 rows so the development-only URI is not hidden.
 
 | # | Method | URI | Auth | Roles | Purpose |
 | --- | --- | --- | --- | --- | --- |
@@ -240,8 +243,34 @@ Returns backend metadata, framework information, and available endpoint groups.
   "database": "Supabase PostgreSQL",
   "health": "/api/health",
   "endpoints": {
-    "public": ["/api/health", "/api/branches", "/api/enrollments", "/api/auth/login", "/api/auth/google"],
-    "protected": ["/api/me", "/api/students", "/api/teachers", "/api/class-plans"]
+    "public": [
+      "/api/health",
+      "/api/branches",
+      "/api/styles",
+      "/api/levels",
+      "/api/enrollments",
+      "/api/auth/login",
+      "/api/auth/google",
+      "/api/auth/google/register",
+      "/api/auth/google/enroll",
+      "/api/kiosk/attendance",
+      "/api/teacher-attendance/check-in"
+    ],
+    "protected": [
+      "/api/me",
+      "/api/me/attendance",
+      "/api/me/photo",
+      "/api/students",
+      "/api/students/{studentId}",
+      "/api/teachers",
+      "/api/teachers/{teacherId}",
+      "/api/class-plans",
+      "/api/attendance-records",
+      "/api/branch-finance-reports",
+      "/api/professional-events",
+      "/api/professional-events/{eventId}/assignments",
+      "/api/dancer-settlements/{studentId}"
+    ]
   }
 }
 ```
@@ -398,7 +427,7 @@ If the Google email belongs to an active user, the backend returns a normal toke
 
 #### POST `/api/auth/google/enroll`
 
-Completes enrollment after Google identity verification. The request includes the Google token plus the remaining student enrollment fields. The backend creates an active student and a linked student user, then returns a token/user session.
+Completes enrollment after Google identity verification. The request includes the Google token plus the remaining student enrollment fields. The backend uses the verified Google token email as the account email, creates an active student and a linked student user, then returns a token/user session.
 
 #### POST `/api/auth/google/register`
 
@@ -843,14 +872,14 @@ https://american-latin-class-frontend.netlify.app
 | 5 | `/attendance-kiosk.html` | Academy computer | Teacher check-in station. |
 | 6 | `/dashboard` | Protected | Dashboard entry route. |
 | 7 | `/dashboard/overview` | Protected | Role-based overview. |
-| 8 | `/dashboard/students` | Protected | Student management or student profile module, depending on role. |
-| 9 | `/dashboard/teachers` | Protected | Teacher management or teacher work module, depending on role. |
-| 10 | `/dashboard/payroll` | Protected | Teacher payroll summary. |
-| 11 | `/dashboard/planning` | Protected | Class planning module. |
-| 12 | `/dashboard/finance` | Protected | Branch finance module. |
-| 13 | `/dashboard/events` | Protected | B2 professional events module. |
+| 8 | `/dashboard/students` | Protected | Director student management or teacher student-attendance module, depending on role. |
+| 9 | `/dashboard/teachers` | Protected | Director teacher management module. |
+| 10 | `/dashboard/payroll` | Protected | Director teacher payroll summary. |
+| 11 | `/dashboard/planning` | Protected | Teacher class planning or director planning review. |
+| 12 | `/dashboard/finance` | Protected | Director branch finance module. |
+| 13 | `/dashboard/events` | Protected | Director B2 professional events module or student upcoming-events view, depending on role. |
 | 14 | `/dashboard/schedule` | Protected | Student schedule module. |
-| 15 | `/dashboard/attendance` | Protected | Student attendance calendar or attendance records. |
+| 15 | `/dashboard/attendance` | Protected | Student attendance calendar. |
 | 16 | `/dashboard/work-log` | Protected | Teacher work log module. |
 
 ### 10.3 Frontend File Aliases and Rewrites
@@ -977,7 +1006,7 @@ The backend returns JSON error responses.
 
 ## 14. Current Scope and Limitations
 
-This document only includes URIs already implemented in ALCSystem v2.0.16.
+This document only includes URIs already implemented in ALCSystem v2.0.19.
 
 Current limitations:
 

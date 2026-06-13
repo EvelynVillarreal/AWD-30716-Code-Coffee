@@ -30,7 +30,7 @@ The repository used to describe the app as `Model`, `View`, and `Controller` fol
 | `frontend/js` | Frontend classes for config, API calls, session, public pages, dashboard, validation, and formatting. |
 | `Dockerfile` | Backend Docker image used by Render when the root directory is `06Code`. |
 | `docker-entrypoint.sh` | Runtime `.env` creation and PHP server startup inside the container. |
-| `render.yaml` | Render blueprint draft for backend and static frontend services. |
+| `render.yaml` | Render blueprint draft using a Docker API service and a static frontend service. |
 
 ## Backend Scripts
 
@@ -45,6 +45,20 @@ composer run start
 ```
 
 If `php` and `composer` are not in the system PATH, use XAMPP PHP explicitly and install Composer first.
+
+## Manual Docker Compose Deployment
+
+From `06Code`, a VPS-style deploy can run:
+
+```bash
+./deploy.sh
+```
+
+The script builds Docker Compose services and verifies `/api/health`. It skips database cleanup by default. For a demo-only reset to the committed seed data, run:
+
+```bash
+RESET_DB=1 ./deploy.sh
+```
 
 ## Local Development
 

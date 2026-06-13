@@ -4,7 +4,7 @@ Use case diagrams for the American Latin Class project.
 
 ## Current Diagram
 
-- `use-case-diagram.puml`: ALCSystem v2.0.18 use cases for the public website, security/navigation, student portal, teacher portal, director operations, and teacher attendance station.
+- `use-case-diagram.puml`: ALCSystem v2.0.19 use cases for the public website, Google-backed enrollment, security/navigation, student portal, teacher portal, director operations, and teacher attendance station.
 
 The diagram documents the implemented role-based flow, clean dashboard routing, profile photo capability, teacher-controlled student attendance, school-computer teacher check-in, branch finance, and B2 professional event settlement.
 

@@ -1,7 +1,7 @@
 # American Latin Class Requirements
 
-**Current baseline:** ALCSystem v2.0.18
-**Last aligned:** June 10, 2026
+**Current baseline:** ALCSystem v2.0.19
+**Last aligned:** June 13, 2026
 
 ## 1. Project Context
 
@@ -51,6 +51,7 @@ The system must include a public website, enrollment forms, pricing and offers, 
 - FR-005A: The system shall provide a pricing page with dance styles, monthly prices starting at USD 35, and promotional offers.
 - FR-005B: The system shall redirect selected offers to the enrollment request form.
 - FR-005C: The public frontend shall call the backend API for enrollment requests and shall not write enrollment data directly to Supabase.
+- FR-005D: The system shall support Google-backed enrollment completion when a verified Google email is not yet registered.
 
 ### Student Management
 
@@ -114,6 +115,7 @@ The system must include a public website, enrollment forms, pricing and offers, 
 - FR-044: Login inputs shall clear sensitive values after failed login, successful login, sign out, or browser history restore.
 - FR-045: Dashboard navigation shall use canonical routes such as `/dashboard/overview`, `/dashboard/students`, `/dashboard/teachers`, `/dashboard/payroll`, `/dashboard/planning`, `/dashboard/finance`, `/dashboard/events`, `/dashboard/schedule`, `/dashboard/attendance`, and `/dashboard/work-log`.
 - FR-046: The backend shall return JSON responses for API errors so the frontend does not expose raw HTML deployment errors as JSON parsing failures.
+- FR-047: The system shall support Google sign-in for configured existing users when `GOOGLE_CLIENT_ID` is available.
 
 ## 5. Non-Functional Requirements
 

@@ -4,7 +4,8 @@ This folder contains technical documentation, course information, deployment ins
 
 ## Main Guides
 
-- `PROJECT_STATUS_2026-06-10.md`: current project health review, risks, and improvement recommendations.
+- `PROJECT_STATUS_2026-06-13.md`: current project health review, URI/diagram alignment, deploy notes, and verification target.
+- `PROJECT_STATUS_2026-06-10.md`: previous project health review, risks, and improvement recommendations.
 - `PROJECT_STRUCTURE.md`: clean repository map and canonical source locations.
 - `MVC_ARCHITECTURE.md`: current MVC architecture.
 - `CREDENTIALS_SETUP.md`: steps to obtain and configure credentials.
@@ -13,6 +14,7 @@ This folder contains technical documentation, course information, deployment ins
 - `BACKEND_URI_SERVICE_FLOW.md`: URI-to-controller-to-service flow for the backend presentation.
 - `BACKEND_URI_SERVICE_FLOW.pdf`: PDF version of the URI/service flow document.
 - `URI_DESIGN_DOCUMENT_ALCSYSTEM.md`: RESTful URI design document for the current backend and frontend routes.
+- `PARAMETERIZED_URIS.md`: focused list of implemented backend URIs with path parameters.
 - `ALCSystem_URI_Design_Document.docx`: Word version of the URI design document.
 - `RENDER_DEPLOYMENT.md`: current Render backend deployment notes.
 - `CHANGES_2026-05-24.md`: redesign and functional change log.

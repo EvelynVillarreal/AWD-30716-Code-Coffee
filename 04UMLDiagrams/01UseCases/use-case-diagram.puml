@@ -1,5 +1,5 @@
 @startuml
-title American Latin Class - ALCSystem v2.0.18 Use Case Diagram
+title American Latin Class - ALCSystem v2.0.19 Use Case Diagram
 left to right direction
 
 actor Visitor
@@ -13,10 +13,12 @@ rectangle "Public Website" {
   usecase "View prices and offers" as UC_PRICING
   usecase "Select enrollment offer" as UC_OFFER
   usecase "Submit enrollment request" as UC_ENROLL
+  usecase "Complete Google-backed enrollment" as UC_GOOGLE_ENROLL
 }
 
 rectangle "Security and Navigation" {
   usecase "Sign in" as UC_LOGIN
+  usecase "Sign in with Google" as UC_GOOGLE_LOGIN
   usecase "View signed-in profile header" as UC_HEADER
   usecase "Navigate role dashboard" as UC_DASHBOARD
   usecase "Use canonical dashboard routes" as UC_ROUTES
@@ -61,8 +63,10 @@ Visitor --> UC_HOME
 Visitor --> UC_PRICING
 Visitor --> UC_OFFER
 Visitor --> UC_ENROLL
+Visitor --> UC_GOOGLE_ENROLL
 
 Student --> UC_LOGIN
+Student --> UC_GOOGLE_LOGIN
 Student --> UC_DASHBOARD
 Student --> UC_HEADER
 Student --> UC_SIGNOUT
@@ -73,6 +77,7 @@ Student --> UC_STUDENT_EVENTS
 Student --> UC_PHOTO
 
 Teacher --> UC_LOGIN
+Teacher --> UC_GOOGLE_LOGIN
 Teacher --> UC_DASHBOARD
 Teacher --> UC_HEADER
 Teacher --> UC_SIGNOUT
@@ -84,6 +89,7 @@ Teacher --> UC_TEACHER_PAYROLL
 Kiosk --> UC_TEACHER_CHECKIN
 
 Director --> UC_LOGIN
+Director --> UC_GOOGLE_LOGIN
 Director --> UC_DASHBOARD
 Director --> UC_HEADER
 Director --> UC_SIGNOUT
@@ -100,6 +106,7 @@ Director --> UC_ASSIGN_DANCERS
 Director --> UC_SETTLEMENT
 
 UC_OFFER .> UC_ENROLL : redirects to
+UC_GOOGLE_LOGIN .> UC_GOOGLE_ENROLL : may require
 UC_DASHBOARD .> UC_HEADER : includes
 UC_DASHBOARD .> UC_ROUTES : includes
 UC_ATTENDANCE .> UC_EVIDENCE : includes

@@ -1,7 +1,7 @@
 # Project Backlog
 
-**Current baseline:** ALCSystem v2.0.18
-**Last aligned:** May 26, 2026
+**Current baseline:** ALCSystem v2.0.19
+**Last aligned:** June 13, 2026
 
 ## Priority Criteria
 
@@ -38,3 +38,4 @@
 | PB-023 | Add charts for branch comparisons | Could | Pending | FR-030 |
 | PB-024 | Add competition tracking | Could | Pending | FR-022 |
 | PB-025 | Add online payment integration | Could | Pending validation | Pending validation |
+| PB-026 | Support Google sign-in and Google-backed enrollment | Should | Done | FR-005D, FR-047 |

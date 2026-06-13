@@ -96,6 +96,30 @@ $validEnrollment = [
 ];
 $test->assertSame([], $validator->validateEnrollment($validEnrollment), 'Valid enrollment data should pass validation.');
 
+$authControllerForMapping = new App\Controllers\AuthController(
+    new JsonResponder(),
+    new App\Services\AuthService(new JwtTokenService()),
+    new DateRangeService(),
+    new AttendanceSummaryService(),
+    $validator
+);
+$googleEnrollmentMapper = new ReflectionMethod($authControllerForMapping, 'googleEnrollmentStudentData');
+$googleEnrollmentMapper->setAccessible(true);
+$googleStudentData = $googleEnrollmentMapper->invoke($authControllerForMapping, [
+    'branch_id' => 1,
+    'national_id' => '172-345-6784',
+    'full_name' => '',
+    'email' => 'spoofed@example.com',
+    'phone' => '(099) 000-0000',
+    'level' => 'B2',
+], [
+    'email' => 'verified.student@example.com',
+    'name' => 'Verified Student',
+]);
+$test->assertSame('verified.student@example.com', $googleStudentData['email'], 'Google enrollment should use the verified token email.');
+$test->assertSame('1723456784', $googleStudentData['national_id'], 'Google enrollment should sanitize national ID before duplicate checks.');
+$test->assertSame('0990000000', $googleStudentData['phone'], 'Google enrollment should sanitize phone before duplicate checks.');
+
 $invalidEnrollment = $validEnrollment;
 $invalidEnrollment['email'] = 'not-an-email';
 $invalidEnrollment['scholarship_percent'] = 40;

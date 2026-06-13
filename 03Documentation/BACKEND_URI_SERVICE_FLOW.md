@@ -2,7 +2,7 @@
 
 Project: **American Latin Class / ALCSystem**
 
-Date: **June 10, 2026**
+Date: **June 13, 2026**
 
 ## Purpose
 
@@ -112,7 +112,7 @@ Single REST API backend with modular internal services.
 | `POST /api/auth/login` | `AuthController::login` | `AuthService`, `JwtTokenService` through `AuthService` | `User` / `users` | Returns signed token and user data. |
 | `POST /api/auth/google` | `AuthController::googleLogin` | `AuthService`, `JwtTokenService` through `AuthService` | `User`, `Student` / `users`, `students` | Logs in with Google or tells frontend that enrollment is needed. |
 | `POST /api/auth/google/register` | `AuthController::googleRegister` | `AuthService`, `JwtTokenService` through `AuthService` | `User` / `users` | Creates a student user from Google token only. |
-| `POST /api/auth/google/enroll` | `AuthController::googleEnroll` | `AuthService`, `JwtTokenService` through `AuthService` | `Branch`, `Student`, `User` / `branches`, `students`, `users` | Creates active student and linked user after Google verification. |
+| `POST /api/auth/google/enroll` | `AuthController::googleEnroll` | `ValidationService`, `AuthService`, `JwtTokenService` through `AuthService` | `Branch`, `Student`, `User` / `branches`, `students`, `users` | Creates active student and linked user after Google verification using the verified token email. |
 
 ## Attendance Station URIs
 

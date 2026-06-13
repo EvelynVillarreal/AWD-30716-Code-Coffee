@@ -1,7 +1,7 @@
 # User Stories
 
-**Current baseline:** ALCSystem v2.0.18
-**Last aligned:** May 26, 2026
+**Current baseline:** ALCSystem v2.0.19
+**Last aligned:** June 13, 2026
 
 ## Feature 1: Public Landing and Enrollment
 
@@ -29,6 +29,7 @@ Acceptance criteria:
 - The form stores the request as pending.
 - The form shows a confirmation message.
 - The request is sent to the backend API.
+- Google-backed enrollment uses the verified Google email as the account email.
 
 ### US-004 - Review New Enrollment Requests
 As a director, I want to review pending enrollment requests so that I can convert valid requests into active students.
@@ -95,6 +96,7 @@ As an authenticated user, I want the portal to show only my role modules so that
 
 Acceptance criteria:
 - Login uses backend credentials and a signed token.
+- Google sign-in is available when Google OAuth is configured.
 - The dashboard shows the user's name, role, and avatar/profile image fallback.
 - Sign out clears the session and protected pages redirect unauthenticated users to login.
 - Dashboard navigation uses canonical URLs.
