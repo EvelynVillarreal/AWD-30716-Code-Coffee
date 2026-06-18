@@ -1,7 +1,0 @@
-backend/.env
-backend/vendor/
-.frontend/
-.git
-*.md
-Evidence/
-render.yaml
