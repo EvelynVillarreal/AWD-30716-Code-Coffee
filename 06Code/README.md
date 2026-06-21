@@ -2,26 +2,26 @@
 
 **Project:** AWD-30716 — Code & Coffee  
 **Architecture:** Microservices (Frontend + CRUD Service + Business Rules Service)  
-**Language:** TypeScript (strict mode, `/codigoIngles`)
+**Language:** TypeScript
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│   Browser (Next.js Frontend — Port 3000)            │
+│   Browser (Next.js Frontend — Port 3017)            │
 │   Dark-mode artisan UI, React Server Components     │
 └──────────────────────┬──────────────────────────────┘
                        │ HTTP (Axios)
 ┌──────────────────────▼──────────────────────────────┐
-│   Business Rules Service (Express — Port 3002)      │
+│   Business Rules Service (Express — Port 5017)      │
 │   Auth (JWT), Order Logic, Stock Validation,        │
 │   Shipping Calc, Reports, Status Transitions        │
 └──────────────────────┬──────────────────────────────┘
                        │ HTTP (Axios)
 ┌──────────────────────▼──────────────────────────────┐
-│   CRUD Service (Express + Prisma — Port 3001)       │
+│   CRUD Service (Express + Prisma — Port 4017)       │
 │   Pure data access layer for all 8 entities         │
 └──────────────────────┬──────────────────────────────┘
                        │ Prisma ORM
@@ -33,7 +33,7 @@
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 06Code/
@@ -58,7 +58,7 @@
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+
@@ -88,7 +88,7 @@ npm run dev                # Runs on http://localhost:3000
 
 ---
 
-## 📋 Entities (from UML Class Diagram)
+## Entities (from UML Class Diagram)
 
 | Entity | Description |
 |--------|-------------|
@@ -103,7 +103,7 @@ npm run dev                # Runs on http://localhost:3000
 
 ---
 
-## 🔌 API Reference
+## API Reference
 
 ### CRUD Service (`http://localhost:3001`)
 
@@ -127,18 +127,18 @@ npm run dev                # Runs on http://localhost:3000
 | GET | `/health` | — | Health check |
 | POST | `/api/auth/register` | — | Register new user |
 | POST | `/api/auth/login` | — | Login, get JWT |
-| GET | `/api/auth/profile` | 🔐 User | Get current user |
+| GET | `/api/auth/profile` | User | Get current user |
 | GET | `/api/products` | — | Browse products |
-| POST | `/api/products` | 🔐 Admin | Create product |
+| POST | `/api/products` | Admin | Create product |
 | POST | `/api/orders` | — | Place order |
-| GET | `/api/orders/my-orders` | 🔐 User | My order history |
-| PATCH | `/api/orders/:id/status` | 🔐 Admin | Change order status |
-| PATCH | `/api/orders/:id/approve-customized` | 🔐 Admin | Approve custom order |
-| GET | `/api/reports/sales` | 🔐 Admin | Sales report |
+| GET | `/api/orders/my-orders` | User | My order history |
+| PATCH | `/api/orders/:id/status` | Admin | Change order status |
+| PATCH | `/api/orders/:id/approve-customized` | Admin | Approve custom order |
+| GET | `/api/reports/sales` | Admin | Sales report |
 
 ---
 
-## 🎨 Design System
+## Design System
 
 Coffee-inspired dark theme with warm browns, cream, and honey tones.  
 CSS variables in `frontend/src/styles/globals.css`.
@@ -148,7 +148,7 @@ CSS variables in `frontend/src/styles/globals.css`.
 
 ---
 
-## ✅ Clean Code Principles Applied
+## Clean Code Principles Applied
 
 - **SRP**: Each class/function has exactly one responsibility
 - **DRY**: Shared errors, middleware, and types are reused across modules
@@ -159,7 +159,7 @@ CSS variables in `frontend/src/styles/globals.css`.
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
