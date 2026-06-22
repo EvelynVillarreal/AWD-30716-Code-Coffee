@@ -3,13 +3,13 @@
 **Project:** AWD-30716 · Code & Coffee  
 **Version:** 2.0  
 **Date:** 2026-06-22  
-**Status:** ✅ Production (AWS Elastic Beanstalk)
+**Status:** Production (AWS Elastic Beanstalk)
 
 ---
 
 ## 1. Architecture & Base URLs
 
-### 🖥️ Local Development
+### Local Development
 
 | Service | Base URL | Purpose |
 |---------|----------|---------| 
@@ -17,14 +17,14 @@
 | **Business Service** | `http://localhost:5017` | Business logic — auth, rules, orchestration |
 | **Frontend** | `http://localhost:3017` | Web UI — Next.js App Router pages |
 
-### ☁️ Production (AWS — us-east-1)
+### Production (AWS — us-east-1)
 
 | Service | URL | Status |
 |---------|-----|--------|
-| **CRUD Service** | `http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com` | ✅ Green |
-| **Business Service** | `http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com` | ✅ Green |
-| **Frontend** | `http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com` | ✅ Ready |
-| **Database** | Supabase PostgreSQL — `aws-1-us-west-2.pooler.supabase.com:6543` | ✅ Connected |
+| **CRUD Service** | `http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com` | Green |
+| **Business Service** | `http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com` | Green |
+| **Frontend** | `http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com` | Ready |
+| **Database** | Supabase PostgreSQL — `aws-1-us-west-2.pooler.supabase.com:6543` | Connected |
 
 > [!IMPORTANT]
 > The **Frontend** only communicates with the **Business Service**.  
@@ -49,11 +49,11 @@
 
 | Method | Semantic | Idempotent |
 |--------|----------|-----------|
-| `GET` | Read — no side effects | ✅ Yes |
-| `POST` | Create — new resource | ❌ No |
-| `PUT` | Full update — replace resource | ✅ Yes |
-| `PATCH` | Partial update — single field | ✅ Yes |
-| `DELETE` | Remove resource | ✅ Yes |
+| `GET` | Read — no side effects | Yes |
+| `POST` | Create — new resource | No |
+| `PUT` | Full update — replace resource | Yes |
+| `PATCH` | Partial update — single field | Yes |
+| `DELETE` | Remove resource | Yes |
 
 ---
 
@@ -583,10 +583,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | 45 | `GET` | `/api/products/categories` | — | — | List all product categories |
 | 46 | `GET` | `/api/products` | — | `?categoryId={int}` | Browse all products |
 | 47 | `GET` | `/api/products/:id` | — | — | Get single product details |
-| 48 | `POST` | `/api/products` | 🔐 Admin | — | Create a new product |
-| 49 | `PUT` | `/api/products/:id` | 🔐 Admin | — | Update product data |
-| 50 | `PATCH` | `/api/products/:id/stock` | 🔐 Admin | — | Update stock level |
-| 51 | `DELETE` | `/api/products/:id` | 🔐 Admin | — | Delete product |
+| 48 | `POST` | `/api/products` | Admin | — | Create a new product |
+| 49 | `PUT` | `/api/products/:id` | Admin | — | Update product data |
+| 50 | `PATCH` | `/api/products/:id/stock` | Admin | — | Update stock level |
+| 51 | `DELETE` | `/api/products/:id` | Admin | — | Delete product |
 
 **`GET /api/products?categoryId=1` — Response `200`**
 ```json
@@ -630,11 +630,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | # | Method | URI | Auth | Description |
 |---|--------|-----|------|-------------|
 | 52 | `POST` | `/api/orders` | — | **Place order** (validates stock, calculates total, decrements stock) |
-| 53 | `GET` | `/api/orders/my-orders` | 🔐 User | Get orders of the authenticated customer |
+| 53 | `GET` | `/api/orders/my-orders` | User | Get orders of the authenticated customer |
 | 54 | `GET` | `/api/orders/reference/:reference` | — | Track order by reference number |
-| 55 | `GET` | `/api/orders` | 🔐 Admin | List all orders |
-| 56 | `PATCH` | `/api/orders/:id/status` | 🔐 Admin | **Change order status** (state machine enforced) |
-| 57 | `PATCH` | `/api/orders/:id/approve-customized` | 🔐 Admin | **Approve a pending customized order** |
+| 55 | `GET` | `/api/orders` | Admin | List all orders |
+| 56 | `PATCH` | `/api/orders/:id/status` | Admin | **Change order status** (state machine enforced) |
+| 57 | `PATCH` | `/api/orders/:id/approve-customized` | Admin | **Approve a pending customized order** |
 
 **`POST /api/orders` — Request Body** *(Guest order — no token needed)*
 ```json
@@ -742,7 +742,7 @@ pending ──→ processing ──→ shipped ──→ delivered
 
 | # | Method | URI | Auth | Query Params | Description |
 |---|--------|-----|------|-------------|-------------|
-| 58 | `GET` | `/api/reports/sales` | 🔐 Admin | `?startDate=&endDate=` | Sales report with revenue & order stats |
+| 58 | `GET` | `/api/reports/sales` | Admin | `?startDate=&endDate=` | Sales report with revenue & order stats |
 
 **Example:** `GET /api/reports/sales?startDate=2026-01-01&endDate=2026-06-30`
 
@@ -852,8 +852,8 @@ All API responses from both services follow this consistent shape:
 | Symbol | Level | Condition |
 |--------|-------|-----------| 
 | — | Public | No token required |
-| 🔐 User | Authenticated | Valid JWT, any role |
-| 🔐 Admin | Admin only | Valid JWT with `role: admin` |
+| User | Authenticated | Valid JWT, any role |
+| Admin | Admin only | Valid JWT with `role: admin` |
 
 ### Admin Test Credentials (Development only)
 
