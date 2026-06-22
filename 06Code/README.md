@@ -69,21 +69,21 @@
 cd 06Code/crud-service
 npm install
 npx prisma migrate dev     # Creates SQLite DB
-npm run dev                # Runs on http://localhost:3001
+npm run dev                # Runs on http://localhost:4017
 ```
 
 ### 2. Business Rules Service
 ```bash
 cd 06Code/business-service
 npm install
-npm run dev                # Runs on http://localhost:3002
+npm run dev                # Runs on http://localhost:5017
 ```
 
 ### 3. Frontend
 ```bash
 cd 06Code/frontend
 npm install
-npm run dev                # Runs on http://localhost:3000
+npm run dev                # Runs on http://localhost:3017
 ```
 
 ---
@@ -105,7 +105,7 @@ npm run dev                # Runs on http://localhost:3000
 
 ## API Reference
 
-### CRUD Service (`http://localhost:3001`)
+### CRUD Service (`http://localhost:4017`)
 
 | Method | Route | Description |
 |--------|-------|-------------|
@@ -120,7 +120,7 @@ npm run dev                # Runs on http://localhost:3000
 | GET/POST | `/api/shipping-configs` | List / create shipping rules |
 | GET | `/api/shipping-configs/lookup` | Get cost by province pair |
 
-### Business Service (`http://localhost:3002`)
+### Business Service (`http://localhost:5017`)
 
 | Method | Route | Auth | Description |
 |--------|-------|------|-------------|
