@@ -1,20 +1,30 @@
 # Artisan Shop — URI Design Document
 
 **Project:** AWD-30716 · Code & Coffee  
-**Version:** 1.0  
-**Date:** 2026-06-20  
+**Version:** 2.0  
+**Date:** 2026-06-22  
+**Status:** ✅ Production (AWS Elastic Beanstalk)
 
 ---
 
 ## 1. Architecture & Base URLs
 
-The system exposes two independent REST APIs and one web frontend.
+### 🖥️ Local Development
 
 | Service | Base URL | Purpose |
-|---------|----------|---------|
+|---------|----------|---------| 
 | **CRUD Service** | `http://localhost:4017` | Raw data access — all database operations |
 | **Business Service** | `http://localhost:5017` | Business logic — auth, rules, orchestration |
 | **Frontend** | `http://localhost:3017` | Web UI — Next.js App Router pages |
+
+### ☁️ Production (AWS — us-east-1)
+
+| Service | URL | Status |
+|---------|-----|--------|
+| **CRUD Service** | `http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com` | ✅ Green |
+| **Business Service** | `http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com` | ✅ Green |
+| **Frontend** | `http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com` | ✅ Ready |
+| **Database** | Supabase PostgreSQL — `aws-1-us-west-2.pooler.supabase.com:6543` | ✅ Connected |
 
 > [!IMPORTANT]
 > The **Frontend** only communicates with the **Business Service**.  
@@ -26,7 +36,7 @@ The system exposes two independent REST APIs and one web frontend.
 ## 2. URI Design Conventions
 
 | Convention | Rule | Example |
-|-----------|------|---------|
+|-----------|------|---------| 
 | **Resource names** | Lowercase, plural, kebab-case | `/api/order-details` |
 | **Path parameters** | `:paramName` camelCase | `/:id`, `/:userId` |
 | **Query parameters** | camelCase | `?categoryId=2`, `?startDate=` |
@@ -47,9 +57,12 @@ The system exposes two independent REST APIs and one web frontend.
 
 ---
 
-## 3. CRUD Service — `http://localhost:3001`
+## 3. CRUD Service
 
 > **Internal use only.** Called exclusively by the Business Service.
+
+**Local:** `http://localhost:4017`  
+**Production:** `http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com`
 
 ### 3.0 System
 
@@ -59,7 +72,7 @@ The system exposes two independent REST APIs and one web frontend.
 
 **Response `200`**
 ```json
-{ "status": "ok", "service": "crud-service", "port": "3001" }
+{ "status": "ok", "service": "crud-service", "port": "8080" }
 ```
 
 ---
@@ -78,31 +91,40 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/users` — Request Body**
 ```json
 {
-  "name": "string",
-  "email": "string",
-  "passwordHash": "string",
-  "phone": "string | null",
-  "address": "string | null",
-  "province": "string | null",
-  "role": "customer | admin"
+  "name": "María García",
+  "email": "maria.garcia@email.com",
+  "passwordHash": "$2b$10$X9vQ1kLmNpR3sT5uVwXyZeAbCdEfGhIjKlMnOpQrStUvWxYz01234",
+  "phone": "0987654321",
+  "address": "Av. Amazonas N12-34",
+  "province": "Pichincha",
+  "role": "customer"
 }
 ```
 
-**`PUT /api/users/:id` — Request Body** *(all fields optional)*
+**`POST /api/users` — Response `201`**
 ```json
 {
-  "name": "string",
-  "passwordHash": "string",
-  "phone": "string",
-  "address": "string",
-  "province": "string",
-  "role": "string"
+  "success": true,
+  "data": {
+    "id": 5,
+    "name": "María García",
+    "email": "maria.garcia@email.com",
+    "phone": "0987654321",
+    "address": "Av. Amazonas N12-34",
+    "province": "Pichincha",
+    "role": "customer"
+  }
 }
 ```
 
-**Standard Success Response**
+**`PUT /api/users/:id` — Request Body**
 ```json
-{ "success": true, "data": { /* User object */ } }
+{
+  "name": "María García López",
+  "phone": "0991234567",
+  "address": "Calle Sucre 45-B",
+  "province": "Guayas"
+}
 ```
 
 **Status Codes**
@@ -128,7 +150,28 @@ The system exposes two independent REST APIs and one web frontend.
 
 **`POST /api/categories` — Request Body**
 ```json
-{ "name": "string" }
+{ "name": "Tejidos Artesanales" }
+```
+
+**`POST /api/categories` — Response `201`**
+```json
+{
+  "success": true,
+  "data": { "id": 4, "name": "Tejidos Artesanales" }
+}
+```
+
+**`GET /api/categories` — Response `200`**
+```json
+{
+  "success": true,
+  "data": [
+    { "id": 1, "name": "Cerámica" },
+    { "id": 2, "name": "Joyería" },
+    { "id": 3, "name": "Textiles" },
+    { "id": 4, "name": "Tejidos Artesanales" }
+  ]
+}
 ```
 
 **Status Codes**
@@ -156,19 +199,56 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/products` — Request Body**
 ```json
 {
-  "name": "string",
-  "description": "string | null",
-  "price": "number",
-  "stock": "number",
-  "status": "active | inactive",
-  "allowsCustomization": "boolean",
-  "categoryId": "number"
+  "name": "Vasija de Barro Pintada",
+  "description": "Vasija artesanal de barro cocido con diseños precolombinos pintados a mano.",
+  "price": 45.00,
+  "stock": 12,
+  "status": "active",
+  "allowsCustomization": true,
+  "categoryId": 1
+}
+```
+
+**`POST /api/products` — Response `201`**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 8,
+    "name": "Vasija de Barro Pintada",
+    "description": "Vasija artesanal de barro cocido con diseños precolombinos pintados a mano.",
+    "price": 45.00,
+    "stock": 12,
+    "status": "active",
+    "allowsCustomization": true,
+    "categoryId": 1
+  }
 }
 ```
 
 **`PATCH /api/products/:id/stock` — Request Body**
 ```json
-{ "stock": "number" }
+{ "stock": 8 }
+```
+
+**`GET /api/products/:id` — Response `200`**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 8,
+    "name": "Vasija de Barro Pintada",
+    "price": 45.00,
+    "stock": 8,
+    "status": "active",
+    "allowsCustomization": true,
+    "category": { "id": 1, "name": "Cerámica" },
+    "photos": [
+      { "id": 3, "url": "https://example.com/vasija-1.jpg", "order": 0 },
+      { "id": 4, "url": "https://example.com/vasija-2.jpg", "order": 1 }
+    ]
+  }
+}
 ```
 
 **Status Codes**
@@ -192,9 +272,17 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/product-photos` — Request Body**
 ```json
 {
-  "productId": "number",
-  "url": "string",
-  "order": "number"
+  "productId": 8,
+  "url": "https://example.com/vasija-frontal.jpg",
+  "order": 0
+}
+```
+
+**`POST /api/product-photos` — Response `201`**
+```json
+{
+  "success": true,
+  "data": { "id": 5, "productId": 8, "url": "https://example.com/vasija-frontal.jpg", "order": 0 }
 }
 ```
 
@@ -215,23 +303,45 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/orders` — Request Body**
 ```json
 {
-  "referenceNumber": "string",
-  "userId": "number | null",
-  "contactName": "string",
-  "email": "string",
-  "phone": "string",
-  "address": "string",
-  "province": "string",
-  "shippingCost": "number",
-  "total": "number",
-  "status": "pending | processing | shipped | delivered | cancelled",
-  "isCustomized": "boolean"
+  "referenceNumber": "ORD-LM3K2X-AFBC",
+  "userId": 5,
+  "contactName": "María García",
+  "email": "maria.garcia@email.com",
+  "phone": "0987654321",
+  "address": "Av. Amazonas N12-34",
+  "province": "Pichincha",
+  "shippingCost": 5.00,
+  "total": 95.00,
+  "status": "pending",
+  "isCustomized": false
+}
+```
+
+**`POST /api/orders` — Response `201`**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "referenceNumber": "ORD-LM3K2X-AFBC",
+    "userId": 5,
+    "contactName": "María García",
+    "email": "maria.garcia@email.com",
+    "phone": "0987654321",
+    "address": "Av. Amazonas N12-34",
+    "province": "Pichincha",
+    "shippingCost": 5.00,
+    "total": 95.00,
+    "status": "pending",
+    "isCustomized": false,
+    "createdAt": "2026-06-22T10:30:00.000Z"
+  }
 }
 ```
 
 **`PATCH /api/orders/:id/status` — Request Body**
 ```json
-{ "status": "string" }
+{ "status": "processing" }
 ```
 
 ---
@@ -248,11 +358,11 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/order-details` — Request Body**
 ```json
 {
-  "orderId": "number",
-  "productId": "number",
-  "quantity": "number",
-  "unitPrice": "number",
-  "customizationDetails": "string | null"
+  "orderId": 7,
+  "productId": 8,
+  "quantity": 2,
+  "unitPrice": 45.00,
+  "customizationDetails": null
 }
 ```
 
@@ -261,11 +371,45 @@ The system exposes two independent REST APIs and one web frontend.
 {
   "items": [
     {
-      "orderId": "number",
-      "productId": "number",
-      "quantity": "number",
-      "unitPrice": "number",
-      "customizationDetails": "string | null"
+      "orderId": 7,
+      "productId": 8,
+      "quantity": 2,
+      "unitPrice": 45.00,
+      "customizationDetails": null
+    },
+    {
+      "orderId": 7,
+      "productId": 3,
+      "quantity": 1,
+      "unitPrice": 5.00,
+      "customizationDetails": "Grabado con iniciales: MG"
+    }
+  ]
+}
+```
+
+**`GET /api/order-details/order/:orderId` — Response `200`**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 12,
+      "orderId": 7,
+      "productId": 8,
+      "quantity": 2,
+      "unitPrice": 45.00,
+      "customizationDetails": null,
+      "product": { "id": 8, "name": "Vasija de Barro Pintada", "price": 45.00 }
+    },
+    {
+      "id": 13,
+      "orderId": 7,
+      "productId": 3,
+      "quantity": 1,
+      "unitPrice": 5.00,
+      "customizationDetails": "Grabado con iniciales: MG",
+      "product": { "id": 3, "name": "Pulsera de Plata", "price": 5.00 }
     }
   ]
 }
@@ -283,8 +427,19 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/order-status-history` — Request Body**
 ```json
 {
-  "orderId": "number",
-  "status": "string"
+  "orderId": 7,
+  "status": "processing"
+}
+```
+
+**`GET /api/order-status-history/order/7` — Response `200`**
+```json
+{
+  "success": true,
+  "data": [
+    { "id": 1, "orderId": 7, "status": "pending",    "date": "2026-06-22T10:30:00.000Z" },
+    { "id": 2, "orderId": 7, "status": "processing", "date": "2026-06-22T11:00:00.000Z" }
+  ]
 }
 ```
 
@@ -301,33 +456,47 @@ The system exposes two independent REST APIs and one web frontend.
 | 39 | `PUT` | `/api/shipping-configs/:id` | — | Update shipping rule |
 | 40 | `DELETE` | `/api/shipping-configs/:id` | — | Delete shipping rule |
 
-**`GET /api/shipping-configs/lookup` — Query Parameters**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `baseProvince` | `string` | ✅ | Origin province |
-| `destinationProvince` | `string` | ✅ | Destination province |
+**`GET /api/shipping-configs/lookup?baseProvince=Pichincha&destinationProvince=Guayas` — Response `200`**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 2,
+    "baseProvince": "Pichincha",
+    "destinationProvince": "Guayas",
+    "additionalCost": 3.50
+  }
+}
+```
 
 **`POST /api/shipping-configs` — Request Body**
 ```json
 {
-  "baseProvince": "string",
-  "destinationProvince": "string",
-  "additionalCost": "number"
+  "baseProvince": "Azuay",
+  "destinationProvince": "Pichincha",
+  "additionalCost": 4.00
 }
 ```
 
 ---
 
-## 4. Business Service — `http://localhost:3002`
+## 4. Business Service
 
 > **Public API.** Called by the Frontend and external clients.
+
+**Local:** `http://localhost:5017`  
+**Production:** `http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com`
 
 ### 4.0 System
 
 | # | Method | URI | Auth | Description |
 |---|--------|-----|------|-------------|
 | 41 | `GET` | `/health` | — | Service health check |
+
+**Response `200`**
+```json
+{ "status": "ok", "service": "business-service", "port": "8080" }
+```
 
 ---
 
@@ -342,20 +511,20 @@ The system exposes two independent REST APIs and one web frontend.
 **`POST /api/auth/register` — Request Body**
 ```json
 {
-  "name": "string",
-  "email": "string",
-  "password": "string",
-  "phone": "string | null",
-  "address": "string | null",
-  "province": "string | null"
+  "name": "María García",
+  "email": "maria.garcia@email.com",
+  "password": "MiPassword123!",
+  "phone": "0987654321",
+  "address": "Av. Amazonas N12-34",
+  "province": "Pichincha"
 }
 ```
 
 **`POST /api/auth/login` — Request Body**
 ```json
 {
-  "email": "string",
-  "password": "string"
+  "email": "maria.garcia@email.com",
+  "password": "MiPassword123!"
 }
 ```
 
@@ -365,19 +534,35 @@ The system exposes two independent REST APIs and one web frontend.
   "success": true,
   "data": {
     "user": {
-      "id": 1,
-      "name": "Jane Doe",
-      "email": "jane@example.com",
+      "id": 5,
+      "name": "María García",
+      "email": "maria.garcia@email.com",
       "role": "customer"
     },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoibWFyaWEuZ2FyY2lhQGVtYWlsLmNvbSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTc1MDU5MDAwMCwiZXhwIjoxNzUxMTk0ODAwfQ.XXXXXXXXXXXXXXXXXXXXX"
   }
 }
 ```
 
 **`GET /api/auth/profile` — Authorization Header**
 ```
-Authorization: Bearer <jwt_token>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**`GET /api/auth/profile` — Response `200`**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 5,
+    "name": "María García",
+    "email": "maria.garcia@email.com",
+    "phone": "0987654321",
+    "address": "Av. Amazonas N12-34",
+    "province": "Pichincha",
+    "role": "customer"
+  }
+}
 ```
 
 **Status Codes**
@@ -403,28 +588,39 @@ Authorization: Bearer <jwt_token>
 | 50 | `PATCH` | `/api/products/:id/stock` | 🔐 Admin | — | Update stock level |
 | 51 | `DELETE` | `/api/products/:id` | 🔐 Admin | — | Delete product |
 
-**`GET /api/products` — Query Parameters**
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `categoryId` | `integer` | ❌ | Filter products by category |
-
-**`POST /api/products` — Request Body**
+**`GET /api/products?categoryId=1` — Response `200`**
 ```json
 {
-  "name": "string",
-  "description": "string | null",
-  "price": "number",
-  "stock": "number",
-  "status": "active | inactive",
-  "allowsCustomization": "boolean",
-  "categoryId": "number"
+  "success": true,
+  "data": [
+    {
+      "id": 8,
+      "name": "Vasija de Barro Pintada",
+      "description": "Vasija artesanal con diseños precolombinos.",
+      "price": 45.00,
+      "stock": 8,
+      "status": "active",
+      "allowsCustomization": true,
+      "category": { "id": 1, "name": "Cerámica" },
+      "photos": [
+        { "id": 3, "url": "https://example.com/vasija-1.jpg", "order": 0 }
+      ]
+    }
+  ]
 }
 ```
 
-**`PATCH /api/products/:id/stock` — Request Body**
+**`POST /api/products` — Request Body** *(Admin required — include JWT)*
 ```json
-{ "stock": "number" }
+{
+  "name": "Collar de Tagua Tallada",
+  "description": "Collar artesanal elaborado con tagua natural tallada a mano.",
+  "price": 28.50,
+  "stock": 20,
+  "status": "active",
+  "allowsCustomization": false,
+  "categoryId": 2
+}
 ```
 
 ---
@@ -440,30 +636,54 @@ Authorization: Bearer <jwt_token>
 | 56 | `PATCH` | `/api/orders/:id/status` | 🔐 Admin | **Change order status** (state machine enforced) |
 | 57 | `PATCH` | `/api/orders/:id/approve-customized` | 🔐 Admin | **Approve a pending customized order** |
 
-**`POST /api/orders` — Request Body**
+**`POST /api/orders` — Request Body** *(Guest order — no token needed)*
 ```json
 {
-  "contactName": "string",
-  "email": "string",
-  "phone": "string",
-  "address": "string",
-  "province": "string",
+  "contactName": "Carlos Mendoza",
+  "email": "carlos.mendoza@gmail.com",
+  "phone": "0998877665",
+  "address": "Calle Bolívar 23-10, Cuenca",
+  "province": "Azuay",
   "items": [
     {
-      "productId": "number",
-      "quantity": "number",
-      "customizationDetails": "string | null"
+      "productId": 8,
+      "quantity": 2,
+      "customizationDetails": null
+    },
+    {
+      "productId": 3,
+      "quantity": 1,
+      "customizationDetails": "Grabado con iniciales: CM"
     }
   ]
+}
+```
+
+**`POST /api/orders` — Response `201`**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 7,
+    "referenceNumber": "ORD-LM3K2X-AFBC",
+    "contactName": "Carlos Mendoza",
+    "email": "carlos.mendoza@gmail.com",
+    "province": "Azuay",
+    "shippingCost": 4.00,
+    "total": 99.00,
+    "status": "pending",
+    "isCustomized": true,
+    "createdAt": "2026-06-22T10:30:00.000Z"
+  }
 }
 ```
 
 > [!NOTE]
 > If the request includes a valid JWT, the order is linked to the authenticated user automatically via `userId`. Guest orders are also supported (no token required).
 
-**`PATCH /api/orders/:id/status` — Request Body**
+**`PATCH /api/orders/:id/status` — Request Body** *(Admin JWT required)*
 ```json
-{ "status": "processing | shipped | delivered | cancelled" }
+{ "status": "processing" }
 ```
 
 **Valid Status Transitions (State Machine)**
@@ -482,18 +702,25 @@ pending ──→ processing ──→ shipped ──→ delivered
 | `delivered` | *(terminal — no transitions)* |
 | `cancelled` | *(terminal — no transitions)* |
 
-**`POST /api/orders` — Response `201`**
+**`GET /api/orders/reference/ORD-LM3K2X-AFBC` — Response `200`**
 ```json
 {
   "success": true,
   "data": {
     "id": 7,
     "referenceNumber": "ORD-LM3K2X-AFBC",
-    "total": 125.50,
-    "shippingCost": 5.00,
-    "status": "pending",
-    "isCustomized": false,
-    "createdAt": "2026-06-20T21:30:00.000Z"
+    "contactName": "Carlos Mendoza",
+    "status": "processing",
+    "total": 99.00,
+    "createdAt": "2026-06-22T10:30:00.000Z",
+    "details": [
+      { "productId": 8, "quantity": 2, "unitPrice": 45.00 },
+      { "productId": 3, "quantity": 1, "unitPrice": 5.00 }
+    ],
+    "statusHistory": [
+      { "status": "pending",    "date": "2026-06-22T10:30:00.000Z" },
+      { "status": "processing", "date": "2026-06-22T11:00:00.000Z" }
+    ]
   }
 }
 ```
@@ -516,13 +743,6 @@ pending ──→ processing ──→ shipped ──→ delivered
 | # | Method | URI | Auth | Query Params | Description |
 |---|--------|-----|------|-------------|-------------|
 | 58 | `GET` | `/api/reports/sales` | 🔐 Admin | `?startDate=&endDate=` | Sales report with revenue & order stats |
-
-**`GET /api/reports/sales` — Query Parameters**
-
-| Parameter | Type | Required | Format | Description |
-|-----------|------|----------|--------|-------------|
-| `startDate` | `string` | ❌ | ISO 8601 | Filter start date (default: epoch) |
-| `endDate` | `string` | ❌ | ISO 8601 | Filter end date (default: now) |
 
 **Example:** `GET /api/reports/sales?startDate=2026-01-01&endDate=2026-06-30`
 
@@ -547,50 +767,47 @@ pending ──→ processing ──→ shipped ──→ delivered
         "cancelled": 3
       }
     },
-    "orders": [ /* full order list */ ]
+    "orders": [
+      {
+        "id": 7,
+        "referenceNumber": "ORD-LM3K2X-AFBC",
+        "total": 99.00,
+        "status": "processing",
+        "createdAt": "2026-06-22T10:30:00.000Z"
+      }
+    ]
   }
 }
 ```
 
 ---
 
-## 5. Frontend Route Map — `http://localhost:3000`
+## 5. Frontend Route Map
+
+**Local:** `http://localhost:3017`  
+**Production:** `http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com`
 
 ### Public Routes (No authentication required)
 
 | Route | Page | Description |
 |-------|------|-------------|
-| `/` | Home | Hero section + feature highlights + CTA |
+| `/` | Redirect → `/products` | Home redirect |
 | `/products` | Product Listing | Browse with category filter |
-| `/products/:id` | Product Detail | Full product page + add to cart |
-| `/gallery` | Photo Gallery | Artisan photo showcase |
-| `/cart` | Shopping Cart | Review cart items |
-| `/checkout` | Checkout | Contact info + order placement |
-| `/orders/reference/:ref` | Order Tracking | Track by reference number |
-
-### Authentication Routes
-
-| Route | Page | Redirects After |
-|-------|------|----------------|
-| `/login` | Login Form | `/` or `/admin/dashboard` (if admin) |
-| `/register` | Register Form | `/` |
+| `/login` | Login Form | Authenticate user |
+| `/register` | Register Form | Create customer account |
+| `/orders` | Order Tracking | Track orders |
 
 ### Customer Routes (Requires login)
 
 | Route | Page | Description |
 |-------|------|-------------|
-| `/orders` | My Orders | Customer order history |
-| `/profile` | My Profile | Update contact info |
+| `/orders` | My Orders | Customer order history (JWT required) |
 
 ### Admin Routes (Requires `role: admin`)
 
 | Route | Page | Description |
 |-------|------|-------------|
 | `/admin/dashboard` | Dashboard | KPIs, recent orders, low-stock alerts |
-| `/admin/products` | Manage Products | CRUD + stock management |
-| `/admin/orders` | Manage Orders | View & change all order statuses |
-| `/admin/shipping` | Shipping Config | Province-based shipping rules |
-| `/admin/reports` | Sales Reports | Revenue charts with date filters |
 
 ---
 
@@ -602,7 +819,7 @@ All API responses from both services follow this consistent shape:
 ```json
 {
   "success": true,
-  "data": { /* resource or array */ }
+  "data": { }
 }
 ```
 
@@ -610,7 +827,7 @@ All API responses from both services follow this consistent shape:
 ```json
 {
   "success": false,
-  "message": "Descriptive error message"
+  "message": "Product with id 99 not found"
 }
 ```
 
@@ -624,30 +841,100 @@ All API responses from both services follow this consistent shape:
 **Payload structure:**
 ```json
 {
-  "userId": 1,
-  "email": "user@example.com",
-  "role": "customer | admin"
+  "userId": 5,
+  "email": "maria.garcia@email.com",
+  "role": "customer"
 }
 ```
 
 ### Guard Levels
 
 | Symbol | Level | Condition |
-|--------|-------|-----------|
+|--------|-------|-----------| 
 | — | Public | No token required |
 | 🔐 User | Authenticated | Valid JWT, any role |
 | 🔐 Admin | Admin only | Valid JWT with `role: admin` |
 
+### Admin Test Credentials (Development only)
+
+> [!CAUTION]
+> These are development-only credentials. Do not use in production.
+
+```json
+{
+  "email": "admin@artisanshop.com",
+  "password": "Admin2026!"
+}
+```
+
 ---
 
-## 8. URI Inventory Summary
+## 8. Quick Test Examples (cURL)
+
+### Health Checks — Production
+```bash
+# CRUD Service
+curl http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com/health
+
+# Business Service
+curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/health
+
+# Frontend
+curl http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com
+```
+
+### Register & Login
+```bash
+# Register
+curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"María García","email":"maria@test.com","password":"Test1234!"}'
+
+# Login
+curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"maria@test.com","password":"Test1234!"}'
+```
+
+### Place an Order (Guest)
+```bash
+curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "contactName": "Carlos Mendoza",
+    "email": "carlos@test.com",
+    "phone": "0998877665",
+    "address": "Calle Bolívar 23-10",
+    "province": "Azuay",
+    "items": [{"productId": 1, "quantity": 1, "customizationDetails": null}]
+  }'
+```
+
+### Admin — Change Order Status
+```bash
+# First get token via login as admin, then:
+curl -X PATCH http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/orders/7/status \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <admin_token>" \
+  -d '{"status": "processing"}'
+```
+
+### Sales Report
+```bash
+curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/reports/sales?startDate=2026-01-01&endDate=2026-12-31 \
+  -H "Authorization: Bearer <admin_token>"
+```
+
+---
+
+## 9. URI Inventory Summary
 
 | Service | Total Endpoints |
 |---------|----------------|
 | CRUD Service | 40 |
 | Business Service | 17 |
-| Frontend Routes | 15 |
-| **Total** | **72** |
+| Frontend Routes | 5 |
+| **Total** | **62** |
 
 ### CRUD Service by Resource
 
@@ -666,11 +953,11 @@ All API responses from both services follow this consistent shape:
 
 ### Business Service by Resource
 
-| Resource | GET | POST | PATCH | Total |
-|----------|-----|------|-------|-------|
-| `/health` | 1 | — | — | 1 |
-| `/api/auth` | 1 | 2 | — | 3 |
-| `/api/products` | 3 | 1 | 1 | 5 + 1 DELETE = **6** |
-| `/api/orders` | 3 | 1 | 2 | 6 |
-| `/api/reports` | 1 | — | — | 1 |
-| **Total** | **9** | **4** | **3** | **17** |
+| Resource | GET | POST | PATCH | DELETE | Total |
+|----------|-----|------|-------|--------|-------|
+| `/health` | 1 | — | — | — | 1 |
+| `/api/auth` | 1 | 2 | — | — | 3 |
+| `/api/products` | 3 | 1 | 1 | 1 | 6 |
+| `/api/orders` | 3 | 1 | 2 | — | 6 |
+| `/api/reports` | 1 | — | — | — | 1 |
+| **Total** | **9** | **4** | **3** | **1** | **17** |
