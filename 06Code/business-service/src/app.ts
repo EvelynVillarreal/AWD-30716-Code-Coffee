@@ -19,9 +19,9 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRouter);
-app.use('/api/orders', orderRouter);
-app.use('/api/products', productRouter);
-app.use('/api/reports', reportRouter);
+app.use('/api/order', orderRouter);
+app.use('/api/product', productRouter);
+app.use('/api/report', reportRouter);
 
 app.use(errorMiddleware);
 

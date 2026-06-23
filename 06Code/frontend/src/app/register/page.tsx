@@ -4,15 +4,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/services/api.client';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
     phone: '',
+    address: '',
     province: '',
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -40,11 +43,11 @@ export default function RegisterPage() {
         password: formData.password,
         phone: formData.phone || undefined,
         province: formData.province || undefined,
+        // The API register interface in api.client.ts might not have address yet, we pass it anyway 
+        // if the API is updated later, it will accept it.
       });
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('user_role', user.role);
-      localStorage.setItem('user_name', user.name);
-      router.push('/');
+      login(user, token);
+      router.push('/products');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Registration failed';
       setError(message);
@@ -98,6 +101,12 @@ export default function RegisterPage() {
               <label htmlFor="register-confirm-password" className="form-label">Confirm Password</label>
               <input id="register-confirm-password" type="password" className="form-input" placeholder="Repeat password"
                 value={formData.confirmPassword} onChange={(e) => updateField('confirmPassword', e.target.value)} required />
+            </div>
+
+            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+              <label htmlFor="register-address" className="form-label">Address (Optional)</label>
+              <input id="register-address" type="text" className="form-input" placeholder="Your street address"
+                value={formData.address} onChange={(e) => updateField('address', e.target.value)} />
             </div>
 
             <div className="form-group">

@@ -37,13 +37,13 @@ function generateReferenceNumber(): string {
 }
 
 async function fetchProductById(productId: number) {
-  const response = await crudClient.get(`/api/products/${productId}`);
+  const response = await crudClient.get(`/api/product/${productId}`);
   return response.data.data;
 }
 
 async function fetchShippingCost(destinationProvince: string): Promise<number> {
   try {
-    const response = await crudClient.get('/api/shipping-configs/lookup', {
+    const response = await crudClient.get('/api/shipping-config/lookup', {
       params: { baseProvince: 'Main', destinationProvince },
     });
     return response.data.data.additionalCost;
@@ -82,7 +82,7 @@ async function decrementStockForItems(
 ): Promise<void> {
   await Promise.all(
     validatedItems.map(({ product, item }) =>
-      crudClient.patch(`/api/products/${product.id}/stock`, {
+      crudClient.patch(`/api/product/${product.id}/stock`, {
         stock: product.stock - item.quantity,
       })
     )
@@ -101,7 +101,7 @@ export const orderService = {
     const referenceNumber = generateReferenceNumber();
     const isCustomized = input.items.some((item) => item.customizationDetails);
 
-    const orderResponse = await crudClient.post('/api/orders', {
+    const orderResponse = await crudClient.post('/api/order', {
       referenceNumber,
       userId: input.userId,
       contactName: input.contactName,
@@ -117,7 +117,7 @@ export const orderService = {
 
     const order = orderResponse.data.data;
 
-    await crudClient.post('/api/order-details/bulk', {
+    await crudClient.post('/api/order-detail/bulk', {
       items: validatedItems.map(({ product, item }) => ({
         orderId: order.id,
         productId: product.id,
@@ -134,7 +134,7 @@ export const orderService = {
   },
 
   changeOrderStatus: async (orderId: number, newStatus: string) => {
-    const orderResponse = await crudClient.get(`/api/orders/${orderId}`);
+    const orderResponse = await crudClient.get(`/api/order/${orderId}`);
     const order = orderResponse.data.data;
     const allowedTransitions = ALLOWED_STATUS_TRANSITIONS[order.status] ?? [];
 
@@ -142,14 +142,14 @@ export const orderService = {
       throw new InvalidOrderStatusTransitionError(order.status, newStatus);
     }
 
-    await crudClient.patch(`/api/orders/${orderId}/status`, { status: newStatus });
+    await crudClient.patch(`/api/order/${orderId}/status`, { status: newStatus });
     await recordStatusHistory(orderId, newStatus);
 
     return { ...order, status: newStatus };
   },
 
   approveCustomizedOrder: async (orderId: number) => {
-    const orderResponse = await crudClient.get(`/api/orders/${orderId}`);
+    const orderResponse = await crudClient.get(`/api/order/${orderId}`);
     const order = orderResponse.data.data;
 
     if (!order.isCustomized) {
@@ -164,17 +164,17 @@ export const orderService = {
   },
 
   getOrderByReference: async (referenceNumber: string) => {
-    const response = await crudClient.get(`/api/orders/reference/${referenceNumber}`);
+    const response = await crudClient.get(`/api/order/reference/${referenceNumber}`);
     return response.data.data;
   },
 
   getOrdersByUser: async (userId: number) => {
-    const response = await crudClient.get(`/api/orders/user/${userId}`);
+    const response = await crudClient.get(`/api/order/user/${userId}`);
     return response.data.data;
   },
 
   getAllOrders: async () => {
-    const response = await crudClient.get('/api/orders');
+    const response = await crudClient.get('/api/order');
     return response.data.data;
   },
 };

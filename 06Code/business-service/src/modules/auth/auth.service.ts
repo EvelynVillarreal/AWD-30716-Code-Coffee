@@ -37,7 +37,7 @@ export const authService = {
   register: async (input: RegisterInput) => {
     const passwordHash = await hashPassword(input.password);
 
-    const response = await crudClient.post('/api/users', {
+    const response = await crudClient.post('/api/user', {
       name: input.name,
       email: input.email,
       passwordHash,
@@ -54,7 +54,7 @@ export const authService = {
   },
 
   login: async (input: LoginInput) => {
-    const response = await crudClient.get(`/api/users/email/${input.email}`).catch(() => {
+    const response = await crudClient.get(`/api/user/email/${input.email}`).catch(() => {
       throw new UnauthorizedError('Invalid email or password');
     });
 

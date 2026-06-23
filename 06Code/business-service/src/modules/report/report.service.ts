@@ -36,7 +36,7 @@ function aggregateSalesSummary(orders: Order[]) {
 
 export const reportService = {
   getSalesReport: async (startDateStr?: string, endDateStr?: string) => {
-    const response = await crudClient.get('/api/orders');
+    const response = await crudClient.get('/api/order');
     const allOrders: Order[] = response.data.data;
 
     const startDate = startDateStr ? new Date(startDateStr) : new Date(0);

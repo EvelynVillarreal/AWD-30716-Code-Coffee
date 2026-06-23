@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authApi } from '@/services/api.client';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +21,10 @@ export default function LoginPage() {
 
     try {
       const { user, token } = await authApi.login(email, password);
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('user_role', user.role);
-      localStorage.setItem('user_name', user.name);
-      router.push(user.role === 'admin' ? '/admin/dashboard' : '/');
+      login(user, token);
+      router.push(user.role === 'admin' ? '/admin/dashboard' : '/products');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Login failed';
+      const message = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
       setError(message);
     } finally {
       setIsLoading(false);

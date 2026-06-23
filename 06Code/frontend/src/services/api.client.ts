@@ -43,54 +43,54 @@ export const authApi = {
 // Product endpoints
 export const productApi = {
   getAll: (categoryId?: number) =>
-    apiClient.get<ApiResponse<Product[]>>('/api/products', {
+    apiClient.get<ApiResponse<Product[]>>('/api/product', {
       params: categoryId ? { categoryId } : undefined,
     }).then((r) => r.data.data),
 
   getById: (id: number) =>
-    apiClient.get<ApiResponse<Product>>(`/api/products/${id}`).then((r) => r.data.data),
+    apiClient.get<ApiResponse<Product>>(`/api/product/${id}`).then((r) => r.data.data),
 
   getCategories: () =>
-    apiClient.get<ApiResponse<Category[]>>('/api/products/categories').then((r) => r.data.data),
+    apiClient.get<ApiResponse<Category[]>>('/api/product/categories').then((r) => r.data.data),
 
   create: (data: Partial<Product>) =>
-    apiClient.post<ApiResponse<Product>>('/api/products', data).then((r) => r.data.data),
+    apiClient.post<ApiResponse<Product>>('/api/product', data).then((r) => r.data.data),
 
   update: (id: number, data: Partial<Product>) =>
-    apiClient.put<ApiResponse<Product>>(`/api/products/${id}`, data).then((r) => r.data.data),
+    apiClient.put<ApiResponse<Product>>(`/api/product/${id}`, data).then((r) => r.data.data),
 
   updateStock: (id: number, stock: number) =>
-    apiClient.patch<ApiResponse<Product>>(`/api/products/${id}/stock`, { stock }).then((r) => r.data.data),
+    apiClient.patch<ApiResponse<Product>>(`/api/product/${id}/stock`, { stock }).then((r) => r.data.data),
 
   remove: (id: number) =>
-    apiClient.delete(`/api/products/${id}`),
+    apiClient.delete(`/api/product/${id}`),
 };
 
 // Order endpoints
 export const orderApi = {
   placeOrder: (data: PlaceOrderInput) =>
-    apiClient.post<ApiResponse<Order>>('/api/orders', data).then((r) => r.data.data),
+    apiClient.post<ApiResponse<Order>>('/api/order', data).then((r) => r.data.data),
 
   getMyOrders: () =>
-    apiClient.get<ApiResponse<Order[]>>('/api/orders/my-orders').then((r) => r.data.data),
+    apiClient.get<ApiResponse<Order[]>>('/api/order/my-orders').then((r) => r.data.data),
 
   getByReference: (reference: string) =>
-    apiClient.get<ApiResponse<Order>>(`/api/orders/reference/${reference}`).then((r) => r.data.data),
+    apiClient.get<ApiResponse<Order>>(`/api/order/reference/${reference}`).then((r) => r.data.data),
 
   getAllOrders: () =>
-    apiClient.get<ApiResponse<Order[]>>('/api/orders').then((r) => r.data.data),
+    apiClient.get<ApiResponse<Order[]>>('/api/order').then((r) => r.data.data),
 
   changeStatus: (id: number, status: string) =>
-    apiClient.patch<ApiResponse<Order>>(`/api/orders/${id}/status`, { status }).then((r) => r.data.data),
+    apiClient.patch<ApiResponse<Order>>(`/api/order/${id}/status`, { status }).then((r) => r.data.data),
 
   approveCustomized: (id: number) =>
-    apiClient.patch<ApiResponse<Order>>(`/api/orders/${id}/approve-customized`).then((r) => r.data.data),
+    apiClient.patch<ApiResponse<Order>>(`/api/order/${id}/approve-customized`).then((r) => r.data.data),
 };
 
 // Report endpoints
 export const reportApi = {
   getSalesReport: (startDate?: string, endDate?: string) =>
-    apiClient.get<ApiResponse<SalesReport>>('/api/reports/sales', {
+    apiClient.get<ApiResponse<SalesReport>>('/api/report/sales', {
       params: { startDate, endDate },
     }).then((r) => r.data.data),
 };

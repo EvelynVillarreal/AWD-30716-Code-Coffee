@@ -9,6 +9,7 @@ generator client {
 datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
@@ -24,7 +25,6 @@ model User {
 
   orders Order[]
 
-  @@map("users")
 }
 
 model Category {
@@ -33,7 +33,6 @@ model Category {
 
   products Product[]
 
-  @@map("categories")
 }
 
 model Product {
@@ -50,7 +49,6 @@ model Product {
   photos       ProductPhoto[]
   orderDetails OrderDetail[]
 
-  @@map("products")
 }
 
 model ProductPhoto {
@@ -61,7 +59,6 @@ model ProductPhoto {
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@map("product_photos")
 }
 
 model Order {
@@ -83,7 +80,6 @@ model Order {
   details      OrderDetail[]
   statusHistory OrderStatusHistory[]
 
-  @@map("orders")
 }
 
 model OrderDetail {
@@ -97,7 +93,6 @@ model OrderDetail {
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
 
-  @@map("order_details")
 }
 
 model OrderStatusHistory {
@@ -108,7 +103,6 @@ model OrderStatusHistory {
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  @@map("order_status_history")
 }
 
 model ShippingConfig {
@@ -118,5 +112,4 @@ model ShippingConfig {
   additionalCost      Float
 
   @@unique([baseProvince, destinationProvince])
-  @@map("shipping_configs")
 }

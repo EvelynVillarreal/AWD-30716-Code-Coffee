@@ -22,14 +22,14 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'crud-service', port: PORT });
 });
 
-app.use('/api/users', userRouter);
-app.use('/api/categories', categoryRouter);
-app.use('/api/products', productRouter);
-app.use('/api/product-photos', productPhotoRouter);
-app.use('/api/orders', orderRouter);
-app.use('/api/order-details', orderDetailRouter);
+app.use('/api/user', userRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/product', productRouter);
+app.use('/api/product-photo', productPhotoRouter);
+app.use('/api/order', orderRouter);
+app.use('/api/order-detail', orderDetailRouter);
 app.use('/api/order-status-history', orderStatusHistoryRouter);
-app.use('/api/shipping-configs', shippingConfigRouter);
+app.use('/api/shipping-config', shippingConfigRouter);
 
 app.use(errorMiddleware);
 
