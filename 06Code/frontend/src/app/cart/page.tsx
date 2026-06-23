@@ -1,6 +1,7 @@
 'use client';
 
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -10,6 +11,7 @@ function formatPrice(amount: number): string {
 
 export default function CartPage() {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const { items, totalItems, updateQuantity, removeItem } = useCart();
 
   const cartTotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -101,8 +103,19 @@ export default function CartPage() {
             </span>
           </div>
 
-          <button onClick={() => router.push('/checkout')} className="btn btn-primary btn-lg" style={{ width: '100%', justifyContent: 'center' }}>
-            Proceed to Checkout
+          <button 
+            onClick={() => {
+              if (!isLoggedIn) {
+                alert("Debes estar registrado e iniciar sesión para poder realizar una compra.");
+                router.push('/login');
+                return;
+              }
+              router.push('/checkout');
+            }} 
+            className="btn btn-primary btn-lg" 
+            style={{ width: '100%', justifyContent: 'center' }}
+          >
+            Proceder al Checkout
           </button>
         </div>
       </div>

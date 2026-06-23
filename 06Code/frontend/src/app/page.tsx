@@ -1,9 +1,54 @@
+'use client';
+
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { productApi } from '@/services/api.client';
+import { Product, Category } from '@/types';
+import ProductCard from '@/components/product/ProductCard';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function HomePage() {
+  const { isLoggedIn } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    loadProducts(selectedCategory);
+  }, [selectedCategory]);
+
+  async function loadCategories() {
+    try {
+      const data = await productApi.getCategories();
+      setCategories(data);
+    } catch {
+      // Non-blocking
+    }
+  }
+
+  async function loadProducts(categoryId?: number) {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await productApi.getAll(categoryId);
+      setProducts(data);
+    } catch {
+      setError('Failed to load products. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
-    <div className="page-wrapper" style={{ minHeight: 'calc(100vh - 64px)' }}>
-      <section className="hero" style={{ padding: 'var(--space-20) var(--space-6)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <div className="page-wrapper">
+      {/* Hero Section */}
+      <section className="hero" style={{ padding: 'var(--space-20) var(--space-6)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div className="container">
           <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🏺</span>
           <h1 className="hero-title animate-fade-in" style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)', maxWidth: '900px', margin: '0 auto var(--space-4)' }}>
@@ -13,34 +58,83 @@ export default function HomePage() {
             Discover unique pieces created by local artisans. Every item tells a story of skill, dedication, and cultural heritage.
           </p>
           
-          <div className="animate-fade-in" style={{ animationDelay: '0.2s', display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/products" className="btn btn-primary btn-lg">
-              Explore Collection
-            </Link>
-            <Link href="/register" className="btn btn-secondary btn-lg">
-              Join Our Community
-            </Link>
-          </div>
+          {/* Action Buttons based on Auth state */}
+          {!isLoggedIn && (
+            <div className="animate-fade-in" style={{ animationDelay: '0.2s', display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/login" className="btn btn-primary btn-lg">
+                Iniciar Sesión
+              </Link>
+              <Link href="/register" className="btn btn-secondary btn-lg">
+                Registrarse
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
-      <section style={{ padding: 'var(--space-16) var(--space-6)', background: 'var(--color-bg-secondary)' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-8)' }}>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: 'var(--space-3)' }}>🎨</span>
-            <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-2)' }}>Unique Designs</h3>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)' }}>Each piece is distinct and carries the unique touch of its creator.</p>
-          </div>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: 'var(--space-3)' }}>🌿</span>
-            <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-2)' }}>Sustainable</h3>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)' }}>We use ethically sourced materials that respect the environment.</p>
-          </div>
-          <div className="card" style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: 'var(--space-3)' }}>🤝</span>
-            <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-2)' }}>Fair Trade</h3>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)' }}>Direct support to artisans, ensuring fair compensation for their art.</p>
-          </div>
+      {/* Catalog Section */}
+      <section style={{ padding: 'var(--space-12) var(--space-6)', background: 'var(--color-bg-secondary)' }}>
+        <div className="container">
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: 'var(--space-2)' }}>Catálogo de Productos</h2>
+          <p className="section-subtitle" style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
+            Explora nuestra colección de piezas artesanales
+          </p>
+
+          {/* Category Filter */}
+          {categories.length > 0 && (
+            <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 'var(--space-8)' }}>
+              <button
+                className={`btn btn-sm ${selectedCategory === undefined ? 'btn-primary' : 'btn-ghost'}`}
+                onClick={() => setSelectedCategory(undefined)}
+              >
+                Todos
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  className={`btn btn-sm ${selectedCategory === category.id ? 'btn-primary' : 'btn-ghost'}`}
+                  onClick={() => setSelectedCategory(category.id)}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && <div className="alert alert-error">{error}</div>}
+
+          {/* Loading State */}
+          {isLoading && (
+            <div style={{ textAlign: 'center', padding: 'var(--space-16)' }}>
+              <div className="spinner" style={{ margin: '0 auto', width: 40, height: 40 }} />
+              <p style={{ marginTop: 'var(--space-4)', color: 'var(--color-text-muted)' }}>
+                Cargando catálogo...
+              </p>
+            </div>
+          )}
+
+          {/* Product Grid */}
+          {!isLoading && products.length > 0 && (
+            <div className="product-grid animate-fade-in">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && products.length === 0 && !error && (
+            <div style={{ textAlign: 'center', padding: 'var(--space-16)' }}>
+              <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🏺</span>
+              <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-2)' }}>
+                No se encontraron productos
+              </h3>
+              <p style={{ color: 'var(--color-text-muted)' }}>
+                Intenta con otra categoría o vuelve más tarde.
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>
