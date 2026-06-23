@@ -26,7 +26,7 @@
 └──────────────────────┬──────────────────────────────┘
                        │ Prisma ORM
 ┌──────────────────────▼──────────────────────────────┐
-│   SQLite Database (dev.db)                          │
+│   PostgreSQL Database (Supabase)                    │
 │   8 tables from UML Class Diagram                   │
 └─────────────────────────────────────────────────────┘
 ```
@@ -68,7 +68,7 @@
 ```bash
 cd 06Code/crud-service
 npm install
-npx prisma migrate dev     # Creates SQLite DB
+npx prisma db push         # Syncs PostgreSQL DB
 npm run dev                # Runs on http://localhost:4017
 ```
 
@@ -110,15 +110,15 @@ npm run dev                # Runs on http://localhost:3017
 | Method | Route | Description |
 |--------|-------|-------------|
 | GET | `/health` | Health check |
-| GET/POST | `/api/users` | List / create users |
-| GET/PUT/DELETE | `/api/users/:id` | Read / update / delete user |
-| GET | `/api/users/email/:email` | Find user by email |
-| GET/POST | `/api/products` | List / create products |
-| PATCH | `/api/products/:id/stock` | Update stock |
-| GET/POST | `/api/orders` | List / create orders |
-| PATCH | `/api/orders/:id/status` | Update order status |
-| GET/POST | `/api/shipping-configs` | List / create shipping rules |
-| GET | `/api/shipping-configs/lookup` | Get cost by province pair |
+| GET/POST | `/api/user` | List / create users |
+| GET/PUT/DELETE | `/api/user/:id` | Read / update / delete user |
+| GET | `/api/user/email/:email` | Find user by email |
+| GET/POST | `/api/product` | List / create products |
+| PATCH | `/api/product/:id/stock` | Update stock |
+| GET/POST | `/api/order` | List / create orders |
+| PATCH | `/api/order/:id/status` | Update order status |
+| GET/POST | `/api/shipping-config` | List / create shipping rules |
+| GET | `/api/shipping-config/lookup` | Get cost by province pair |
 
 ### Business Service (`http://localhost:5017`)
 
@@ -128,13 +128,13 @@ npm run dev                # Runs on http://localhost:3017
 | POST | `/api/auth/register` | — | Register new user |
 | POST | `/api/auth/login` | — | Login, get JWT |
 | GET | `/api/auth/profile` | User | Get current user |
-| GET | `/api/products` | — | Browse products |
-| POST | `/api/products` | Admin | Create product |
-| POST | `/api/orders` | — | Place order |
-| GET | `/api/orders/my-orders` | User | My order history |
-| PATCH | `/api/orders/:id/status` | Admin | Change order status |
-| PATCH | `/api/orders/:id/approve-customized` | Admin | Approve custom order |
-| GET | `/api/reports/sales` | Admin | Sales report |
+| GET | `/api/product` | — | Browse products |
+| POST | `/api/product` | Admin | Create product |
+| POST | `/api/order` | — | Place order |
+| GET | `/api/order/my-orders` | User | My order history |
+| PATCH | `/api/order/:id/status` | Admin | Change order status |
+| PATCH | `/api/order/:id/approve-customized` | Admin | Approve custom order |
+| GET | `/api/report/sales` | Admin | Sales report |
 
 ---
 
@@ -166,5 +166,5 @@ CSS variables in `frontend/src/styles/globals.css`.
 | Frontend | Next.js 14, TypeScript, Vanilla CSS |
 | Business Service | Express 4, TypeScript, Axios, JWT, bcryptjs |
 | CRUD Service | Express 4, TypeScript, Prisma ORM |
-| Database | SQLite (dev) |
+| Database | PostgreSQL (Supabase) |
 | Language | TypeScript (strict) |

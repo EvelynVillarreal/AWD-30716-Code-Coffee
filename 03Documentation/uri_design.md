@@ -37,13 +37,13 @@
 
 | Convention | Rule | Example |
 |-----------|------|---------| 
-| **Resource names** | Lowercase, plural, kebab-case | `/api/order-details` |
+| **Resource names** | Lowercase, plural, kebab-case | `/api/order-detail` |
 | **Path parameters** | `:paramName` camelCase | `/:id`, `/:userId` |
 | **Query parameters** | camelCase | `?categoryId=2`, `?startDate=` |
-| **Versioning** | Prefix `/api/` (version implicit v1) | `/api/products` |
-| **Sub-resources** | Nested path with parent id | `/api/order-details/order/:orderId` |
-| **Actions** | Specific sub-path for non-CRUD actions | `PATCH /api/orders/:id/status` |
-| **Lookup endpoints** | Named sub-path before `:id` | `/api/users/email/:email` |
+| **Versioning** | Prefix `/api/` (version implicit v1) | `/api/product` |
+| **Sub-resources** | Nested path with parent id | `/api/order-detail/order/:orderId` |
+| **Actions** | Specific sub-path for non-CRUD actions | `PATCH /api/order/:id/status` |
+| **Lookup endpoints** | Named sub-path before `:id` | `/api/user/email/:email` |
 
 ### HTTP Method → CRUD Mapping
 
@@ -77,18 +77,18 @@
 
 ---
 
-### 3.1 Users — `/api/users`
+### 3.1 Users — `/api/user`
 
 | # | Method | URI | Description |
 |---|--------|-----|-------------|
-| 2 | `GET` | `/api/users` | List all users |
-| 3 | `GET` | `/api/users/:id` | Get user by ID |
-| 4 | `GET` | `/api/users/email/:email` | Get user by email address |
-| 5 | `POST` | `/api/users` | Create a new user |
-| 6 | `PUT` | `/api/users/:id` | Update user (full) |
-| 7 | `DELETE` | `/api/users/:id` | Delete user |
+| 2 | `GET` | `/api/user` | List all users |
+| 3 | `GET` | `/api/user/:id` | Get user by ID |
+| 4 | `GET` | `/api/user/email/:email` | Get user by email address |
+| 5 | `POST` | `/api/user` | Create a new user |
+| 6 | `PUT` | `/api/user/:id` | Update user (full) |
+| 7 | `DELETE` | `/api/user/:id` | Delete user |
 
-**`POST /api/users` — Request Body**
+**`POST /api/user` — Request Body**
 ```json
 {
   "name": "María García",
@@ -101,7 +101,7 @@
 }
 ```
 
-**`POST /api/users` — Response `201`**
+**`POST /api/user` — Response `201`**
 ```json
 {
   "success": true,
@@ -117,7 +117,7 @@
 }
 ```
 
-**`PUT /api/users/:id` — Request Body**
+**`PUT /api/user/:id` — Request Body**
 ```json
 {
   "name": "María García López",
@@ -138,22 +138,22 @@
 
 ---
 
-### 3.2 Categories — `/api/categories`
+### 3.2 Categories — `/api/category`
 
 | # | Method | URI | Description |
 |---|--------|-----|-------------|
-| 8 | `GET` | `/api/categories` | List all categories (sorted A-Z) |
-| 9 | `GET` | `/api/categories/:id` | Get category by ID (includes products) |
-| 10 | `POST` | `/api/categories` | Create category |
-| 11 | `PUT` | `/api/categories/:id` | Update category name |
-| 12 | `DELETE` | `/api/categories/:id` | Delete category |
+| 8 | `GET` | `/api/category` | List all categories (sorted A-Z) |
+| 9 | `GET` | `/api/category/:id` | Get category by ID (includes products) |
+| 10 | `POST` | `/api/category` | Create category |
+| 11 | `PUT` | `/api/category/:id` | Update category name |
+| 12 | `DELETE` | `/api/category/:id` | Delete category |
 
-**`POST /api/categories` — Request Body**
+**`POST /api/category` — Request Body**
 ```json
 { "name": "Tejidos Artesanales" }
 ```
 
-**`POST /api/categories` — Response `201`**
+**`POST /api/category` — Response `201`**
 ```json
 {
   "success": true,
@@ -161,7 +161,7 @@
 }
 ```
 
-**`GET /api/categories` — Response `200`**
+**`GET /api/category` — Response `200`**
 ```json
 {
   "success": true,
@@ -185,18 +185,18 @@
 
 ---
 
-### 3.3 Products — `/api/products`
+### 3.3 Products — `/api/product`
 
 | # | Method | URI | Query Params | Description |
 |---|--------|-----|-------------|-------------|
-| 13 | `GET` | `/api/products` | `?categoryId={int}` | List all products (optional category filter) |
-| 14 | `GET` | `/api/products/:id` | — | Get product by ID (includes category + photos) |
-| 15 | `POST` | `/api/products` | — | Create product |
-| 16 | `PUT` | `/api/products/:id` | — | Update product (full) |
-| 17 | `PATCH` | `/api/products/:id/stock` | — | Update stock quantity only |
-| 18 | `DELETE` | `/api/products/:id` | — | Delete product |
+| 13 | `GET` | `/api/product` | `?categoryId={int}` | List all products (optional category filter) |
+| 14 | `GET` | `/api/product/:id` | — | Get product by ID (includes category + photos) |
+| 15 | `POST` | `/api/product` | — | Create product |
+| 16 | `PUT` | `/api/product/:id` | — | Update product (full) |
+| 17 | `PATCH` | `/api/product/:id/stock` | — | Update stock quantity only |
+| 18 | `DELETE` | `/api/product/:id` | — | Delete product |
 
-**`POST /api/products` — Request Body**
+**`POST /api/product` — Request Body**
 ```json
 {
   "name": "Vasija de Barro Pintada",
@@ -209,7 +209,7 @@
 }
 ```
 
-**`POST /api/products` — Response `201`**
+**`POST /api/product` — Response `201`**
 ```json
 {
   "success": true,
@@ -226,12 +226,12 @@
 }
 ```
 
-**`PATCH /api/products/:id/stock` — Request Body**
+**`PATCH /api/product/:id/stock` — Request Body**
 ```json
 { "stock": 8 }
 ```
 
-**`GET /api/products/:id` — Response `200`**
+**`GET /api/product/:id` — Response `200`**
 ```json
 {
   "success": true,
@@ -261,15 +261,15 @@
 
 ---
 
-### 3.4 Product Photos — `/api/product-photos`
+### 3.4 Product Photos — `/api/product-photo`
 
 | # | Method | URI | Description |
 |---|--------|-----|-------------|
-| 19 | `GET` | `/api/product-photos/product/:productId` | Get all photos for a product (ordered) |
-| 20 | `POST` | `/api/product-photos` | Add a photo to a product |
-| 21 | `DELETE` | `/api/product-photos/:id` | Delete a photo |
+| 19 | `GET` | `/api/product-photo/product/:productId` | Get all photos for a product (ordered) |
+| 20 | `POST` | `/api/product-photo` | Add a photo to a product |
+| 21 | `DELETE` | `/api/product-photo/:id` | Delete a photo |
 
-**`POST /api/product-photos` — Request Body**
+**`POST /api/product-photo` — Request Body**
 ```json
 {
   "productId": 8,
@@ -278,7 +278,7 @@
 }
 ```
 
-**`POST /api/product-photos` — Response `201`**
+**`POST /api/product-photo` — Response `201`**
 ```json
 {
   "success": true,
@@ -288,19 +288,19 @@
 
 ---
 
-### 3.5 Orders — `/api/orders`
+### 3.5 Orders — `/api/order`
 
 | # | Method | URI | Description |
 |---|--------|-----|-------------|
-| 22 | `GET` | `/api/orders` | List all orders (with details + history) |
-| 23 | `GET` | `/api/orders/:id` | Get order by ID (full details) |
-| 24 | `GET` | `/api/orders/reference/:reference` | Get order by reference number |
-| 25 | `GET` | `/api/orders/user/:userId` | Get all orders for a user |
-| 26 | `POST` | `/api/orders` | Create order record |
-| 27 | `PATCH` | `/api/orders/:id/status` | Update order status field |
-| 28 | `DELETE` | `/api/orders/:id` | Delete order |
+| 22 | `GET` | `/api/order` | List all orders (with details + history) |
+| 23 | `GET` | `/api/order/:id` | Get order by ID (full details) |
+| 24 | `GET` | `/api/order/reference/:reference` | Get order by reference number |
+| 25 | `GET` | `/api/order/user/:userId` | Get all orders for a user |
+| 26 | `POST` | `/api/order` | Create order record |
+| 27 | `PATCH` | `/api/order/:id/status` | Update order status field |
+| 28 | `DELETE` | `/api/order/:id` | Delete order |
 
-**`POST /api/orders` — Request Body**
+**`POST /api/order` — Request Body**
 ```json
 {
   "referenceNumber": "ORD-LM3K2X-AFBC",
@@ -317,7 +317,7 @@
 }
 ```
 
-**`POST /api/orders` — Response `201`**
+**`POST /api/order` — Response `201`**
 ```json
 {
   "success": true,
@@ -339,23 +339,23 @@
 }
 ```
 
-**`PATCH /api/orders/:id/status` — Request Body**
+**`PATCH /api/order/:id/status` — Request Body**
 ```json
 { "status": "processing" }
 ```
 
 ---
 
-### 3.6 Order Details — `/api/order-details`
+### 3.6 Order Details — `/api/order-detail`
 
 | # | Method | URI | Description |
 |---|--------|-----|-------------|
-| 29 | `GET` | `/api/order-details/order/:orderId` | Get all line items for an order |
-| 30 | `POST` | `/api/order-details` | Add single line item |
-| 31 | `POST` | `/api/order-details/bulk` | Add multiple line items at once |
-| 32 | `DELETE` | `/api/order-details/:id` | Delete line item |
+| 29 | `GET` | `/api/order-detail/order/:orderId` | Get all line items for an order |
+| 30 | `POST` | `/api/order-detail` | Add single line item |
+| 31 | `POST` | `/api/order-detail/bulk` | Add multiple line items at once |
+| 32 | `DELETE` | `/api/order-detail/:id` | Delete line item |
 
-**`POST /api/order-details` — Request Body**
+**`POST /api/order-detail` — Request Body**
 ```json
 {
   "orderId": 7,
@@ -366,7 +366,7 @@
 }
 ```
 
-**`POST /api/order-details/bulk` — Request Body**
+**`POST /api/order-detail/bulk` — Request Body**
 ```json
 {
   "items": [
@@ -388,7 +388,7 @@
 }
 ```
 
-**`GET /api/order-details/order/:orderId` — Response `200`**
+**`GET /api/order-detail/order/:orderId` — Response `200`**
 ```json
 {
   "success": true,
@@ -445,18 +445,18 @@
 
 ---
 
-### 3.8 Shipping Configurations — `/api/shipping-configs`
+### 3.8 Shipping Configurations — `/api/shipping-config`
 
 | # | Method | URI | Query Params | Description |
 |---|--------|-----|-------------|-------------|
-| 35 | `GET` | `/api/shipping-configs` | — | List all shipping rules |
-| 36 | `GET` | `/api/shipping-configs/lookup` | `?baseProvince=&destinationProvince=` | Find cost by province pair |
-| 37 | `GET` | `/api/shipping-configs/:id` | — | Get shipping config by ID |
-| 38 | `POST` | `/api/shipping-configs` | — | Create shipping rule |
-| 39 | `PUT` | `/api/shipping-configs/:id` | — | Update shipping rule |
-| 40 | `DELETE` | `/api/shipping-configs/:id` | — | Delete shipping rule |
+| 35 | `GET` | `/api/shipping-config` | — | List all shipping rules |
+| 36 | `GET` | `/api/shipping-config/lookup` | `?baseProvince=&destinationProvince=` | Find cost by province pair |
+| 37 | `GET` | `/api/shipping-config/:id` | — | Get shipping config by ID |
+| 38 | `POST` | `/api/shipping-config` | — | Create shipping rule |
+| 39 | `PUT` | `/api/shipping-config/:id` | — | Update shipping rule |
+| 40 | `DELETE` | `/api/shipping-config/:id` | — | Delete shipping rule |
 
-**`GET /api/shipping-configs/lookup?baseProvince=Pichincha&destinationProvince=Guayas` — Response `200`**
+**`GET /api/shipping-config/lookup?baseProvince=Pichincha&destinationProvince=Guayas` — Response `200`**
 ```json
 {
   "success": true,
@@ -469,7 +469,7 @@
 }
 ```
 
-**`POST /api/shipping-configs` — Request Body**
+**`POST /api/shipping-config` — Request Body**
 ```json
 {
   "baseProvince": "Azuay",
@@ -576,19 +576,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-### 4.2 Products — `/api/products`
+### 4.2 Products — `/api/product`
 
 | # | Method | URI | Auth | Query Params | Description |
 |---|--------|-----|------|-------------|-------------|
-| 45 | `GET` | `/api/products/categories` | — | — | List all product categories |
-| 46 | `GET` | `/api/products` | — | `?categoryId={int}` | Browse all products |
-| 47 | `GET` | `/api/products/:id` | — | — | Get single product details |
-| 48 | `POST` | `/api/products` | Admin | — | Create a new product |
-| 49 | `PUT` | `/api/products/:id` | Admin | — | Update product data |
-| 50 | `PATCH` | `/api/products/:id/stock` | Admin | — | Update stock level |
-| 51 | `DELETE` | `/api/products/:id` | Admin | — | Delete product |
+| 45 | `GET` | `/api/product/categories` | — | — | List all product categories |
+| 46 | `GET` | `/api/product` | — | `?categoryId={int}` | Browse all products |
+| 47 | `GET` | `/api/product/:id` | — | — | Get single product details |
+| 48 | `POST` | `/api/product` | Admin | — | Create a new product |
+| 49 | `PUT` | `/api/product/:id` | Admin | — | Update product data |
+| 50 | `PATCH` | `/api/product/:id/stock` | Admin | — | Update stock level |
+| 51 | `DELETE` | `/api/product/:id` | Admin | — | Delete product |
 
-**`GET /api/products?categoryId=1` — Response `200`**
+**`GET /api/product?categoryId=1` — Response `200`**
 ```json
 {
   "success": true,
@@ -610,7 +610,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-**`POST /api/products` — Request Body** *(Admin required — include JWT)*
+**`POST /api/product` — Request Body** *(Admin required — include JWT)*
 ```json
 {
   "name": "Collar de Tagua Tallada",
@@ -625,18 +625,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-### 4.3 Orders — `/api/orders`
+### 4.3 Orders — `/api/order`
 
 | # | Method | URI | Auth | Description |
 |---|--------|-----|------|-------------|
-| 52 | `POST` | `/api/orders` | — | **Place order** (validates stock, calculates total, decrements stock) |
-| 53 | `GET` | `/api/orders/my-orders` | User | Get orders of the authenticated customer |
-| 54 | `GET` | `/api/orders/reference/:reference` | — | Track order by reference number |
-| 55 | `GET` | `/api/orders` | Admin | List all orders |
-| 56 | `PATCH` | `/api/orders/:id/status` | Admin | **Change order status** (state machine enforced) |
-| 57 | `PATCH` | `/api/orders/:id/approve-customized` | Admin | **Approve a pending customized order** |
+| 52 | `POST` | `/api/order` | — | **Place order** (validates stock, calculates total, decrements stock) |
+| 53 | `GET` | `/api/order/my-orders` | User | Get orders of the authenticated customer |
+| 54 | `GET` | `/api/order/reference/:reference` | — | Track order by reference number |
+| 55 | `GET` | `/api/order` | Admin | List all orders |
+| 56 | `PATCH` | `/api/order/:id/status` | Admin | **Change order status** (state machine enforced) |
+| 57 | `PATCH` | `/api/order/:id/approve-customized` | Admin | **Approve a pending customized order** |
 
-**`POST /api/orders` — Request Body** *(Guest order — no token needed)*
+**`POST /api/order` — Request Body** *(Guest order — no token needed)*
 ```json
 {
   "contactName": "Carlos Mendoza",
@@ -659,7 +659,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-**`POST /api/orders` — Response `201`**
+**`POST /api/order` — Response `201`**
 ```json
 {
   "success": true,
@@ -681,7 +681,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 > [!NOTE]
 > If the request includes a valid JWT, the order is linked to the authenticated user automatically via `userId`. Guest orders are also supported (no token required).
 
-**`PATCH /api/orders/:id/status` — Request Body** *(Admin JWT required)*
+**`PATCH /api/order/:id/status` — Request Body** *(Admin JWT required)*
 ```json
 { "status": "processing" }
 ```
@@ -702,7 +702,7 @@ pending ──→ processing ──→ shipped ──→ delivered
 | `delivered` | *(terminal — no transitions)* |
 | `cancelled` | *(terminal — no transitions)* |
 
-**`GET /api/orders/reference/ORD-LM3K2X-AFBC` — Response `200`**
+**`GET /api/order/reference/ORD-LM3K2X-AFBC` — Response `200`**
 ```json
 {
   "success": true,
@@ -738,13 +738,13 @@ pending ──→ processing ──→ shipped ──→ delivered
 
 ---
 
-### 4.4 Reports — `/api/reports`
+### 4.4 Reports — `/api/report`
 
 | # | Method | URI | Auth | Query Params | Description |
 |---|--------|-----|------|-------------|-------------|
-| 58 | `GET` | `/api/reports/sales` | Admin | `?startDate=&endDate=` | Sales report with revenue & order stats |
+| 58 | `GET` | `/api/report/sales` | Admin | `?startDate=&endDate=` | Sales report with revenue & order stats |
 
-**Example:** `GET /api/reports/sales?startDate=2026-01-01&endDate=2026-06-30`
+**Example:** `GET /api/report/sales?startDate=2026-01-01&endDate=2026-06-30`
 
 **Response `200`**
 ```json
@@ -898,7 +898,7 @@ curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk
 
 ### Place an Order (Guest)
 ```bash
-curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/orders \
+curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/order \
   -H "Content-Type: application/json" \
   -d '{
     "contactName": "Carlos Mendoza",
@@ -913,7 +913,7 @@ curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk
 ### Admin — Change Order Status
 ```bash
 # First get token via login as admin, then:
-curl -X PATCH http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/orders/7/status \
+curl -X PATCH http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/order/7/status \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <admin_token>" \
   -d '{"status": "processing"}'
@@ -921,7 +921,7 @@ curl -X PATCH http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstal
 
 ### Sales Report
 ```bash
-curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/reports/sales?startDate=2026-01-01&endDate=2026-12-31 \
+curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/report/sales?startDate=2026-01-01&endDate=2026-12-31 \
   -H "Authorization: Bearer <admin_token>"
 ```
 
@@ -941,14 +941,14 @@ curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api
 | Resource | GET | POST | PUT | PATCH | DELETE | Total |
 |----------|-----|------|-----|-------|--------|-------|
 | `/health` | 1 | — | — | — | — | 1 |
-| `/api/users` | 3 | 1 | 1 | — | 1 | 6 |
-| `/api/categories` | 2 | 1 | 1 | — | 1 | 5 |
-| `/api/products` | 2 | 1 | 1 | 1 | 1 | 6 |
-| `/api/product-photos` | 1 | 1 | — | — | 1 | 3 |
-| `/api/orders` | 4 | 1 | — | 1 | 1 | 7 |
-| `/api/order-details` | 1 | 2 | — | — | 1 | 4 |
+| `/api/user` | 3 | 1 | 1 | — | 1 | 6 |
+| `/api/category` | 2 | 1 | 1 | — | 1 | 5 |
+| `/api/product` | 2 | 1 | 1 | 1 | 1 | 6 |
+| `/api/product-photo` | 1 | 1 | — | — | 1 | 3 |
+| `/api/order` | 4 | 1 | — | 1 | 1 | 7 |
+| `/api/order-detail` | 1 | 2 | — | — | 1 | 4 |
 | `/api/order-status-history` | 1 | 1 | — | — | — | 2 |
-| `/api/shipping-configs` | 3 | 1 | 1 | — | 1 | 6 |
+| `/api/shipping-config` | 3 | 1 | 1 | — | 1 | 6 |
 | **Total** | **18** | **9** | **4** | **2** | **6** | **40** |
 
 ### Business Service by Resource
@@ -957,7 +957,7 @@ curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api
 |----------|-----|------|-------|--------|-------|
 | `/health` | 1 | — | — | — | 1 |
 | `/api/auth` | 1 | 2 | — | — | 3 |
-| `/api/products` | 3 | 1 | 1 | 1 | 6 |
-| `/api/orders` | 3 | 1 | 2 | — | 6 |
-| `/api/reports` | 1 | — | — | — | 1 |
+| `/api/product` | 3 | 1 | 1 | 1 | 6 |
+| `/api/order` | 3 | 1 | 2 | — | 6 |
+| `/api/report` | 1 | — | — | — | 1 |
 | **Total** | **9** | **4** | **3** | **1** | **17** |
