@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const crudClient = axios.create({
-  baseURL: process.env.CRUD_SERVICE_URL ?? 'http://localhost:3001',
+  baseURL: process.env.CRUD_SERVICE_URL ?? 'http://localhost:4017',
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
 });

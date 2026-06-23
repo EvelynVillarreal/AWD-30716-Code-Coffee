@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ApiResponse, AuthResponse, PlaceOrderInput, Order, Product, Category, SalesReport } from '@/types';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BUSINESS_SERVICE_URL ?? 'http://localhost:3002',
+  baseURL: process.env.NEXT_PUBLIC_BUSINESS_SERVICE_URL ?? 'http://localhost:5017',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
 });
