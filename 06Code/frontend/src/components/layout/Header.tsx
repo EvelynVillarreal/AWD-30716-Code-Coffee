@@ -58,16 +58,16 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }} className="desktop-nav">
           <Link href="/products" style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
-            Products
+            Productos
           </Link>
           {isLoggedIn && (
             <Link href="/orders" style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
-              My Orders
+              Mis Pedidos
             </Link>
           )}
           {isAdmin && (
             <Link href="/admin/dashboard" style={{ color: 'var(--color-text-accent)', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
-              Admin Dashboard
+              Panel de Administración
             </Link>
           )}
         </nav>
@@ -79,32 +79,32 @@ export default function Header() {
               onClick={toggleTheme}
               className="btn btn-ghost btn-sm"
               style={{ fontSize: '1.2rem', padding: 'var(--space-1) var(--space-2)' }}
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={theme === 'dark' ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
             >
               {theme === 'dark' ? '☀️' : '🌙'}
             </button>
           )}
 
           <Link href="/cart" className="btn btn-ghost btn-sm">
-            🛒 Cart {isMounted && totalItems > 0 && `(${totalItems})`}
+            🛒 Carrito {isMounted && totalItems > 0 && `(${totalItems})`}
           </Link>
 
           {isMounted && isLoggedIn ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
               <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', display: 'none' }}>
-                Hello, {user?.name.split(' ')[0]}
+                Hola, {user?.name.split(' ')[0]}
               </span>
               <button onClick={handleLogout} className="btn btn-secondary btn-sm">
-                Sign Out
+                Cerrar Sesión
               </button>
             </div>
           ) : isMounted ? (
             <>
               <Link href="/login" className="btn btn-ghost btn-sm">
-                Sign In
+                Iniciar Sesión
               </Link>
               <Link href="/register" className="btn btn-primary btn-sm">
-                Join Us
+                Registrarse
               </Link>
             </>
           ) : null}

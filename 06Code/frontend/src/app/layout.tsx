@@ -5,8 +5,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'Artisan Shop — Handcrafted with Passion',
-  description: 'Discover unique handcrafted artisan products. Browse our collection, place custom orders, and support local artisans.',
+  title: 'Artisan Shop — Hecho a Mano con Pasión',
+  description: 'Descubre productos artesanales únicos. Explora nuestra colección, realiza pedidos personalizados y apoya a los artesanos locales.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

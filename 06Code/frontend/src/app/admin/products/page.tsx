@@ -26,7 +26,7 @@ export default function AdminProductsPage() {
       const data = await productApi.getAll();
       setProducts(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load products');
+      setError(err instanceof Error ? err.message : 'Error al cargar los productos');
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +41,7 @@ export default function AdminProductsPage() {
     } catch (err) {
       // Revert if API fails
       setProducts(prev => prev.map(p => p.id === id ? { ...p, status: currentStatus } : p));
-      alert('Failed to update product status');
+      alert('Error al actualizar el estado del producto');
     }
   }
 
@@ -50,12 +50,12 @@ export default function AdminProductsPage() {
       <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-8)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <div>
-            <h1 className="section-title">Products Management</h1>
-            <p className="section-subtitle" style={{ margin: 0 }}>Manage catalog, pricing, and inventory</p>
+            <h1 className="section-title">Administración de Productos</h1>
+            <p className="section-subtitle" style={{ margin: 0 }}>Administra catálogo, precios e inventario</p>
           </div>
           
           <Link href="/admin/products/new" className="btn btn-primary">
-            + Add New Product
+            + Agregar Nuevo Producto
           </Link>
         </div>
 
@@ -70,19 +70,19 @@ export default function AdminProductsPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>Category</th>
-                  <th>Price</th>
+                  <th>Producto</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
                   <th>Stock</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {products.length === 0 ? (
                   <tr>
                     <td colSpan={6} style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-                      No products found. Start by adding one.
+                      No se encontraron productos. Empieza agregando uno.
                     </td>
                   </tr>
                 ) : (
@@ -100,7 +100,7 @@ export default function AdminProductsPage() {
                           <span style={{ fontWeight: 600 }}>{product.name}</span>
                         </div>
                       </td>
-                      <td>{product.category?.name || 'Uncategorized'}</td>
+                      <td>{product.category?.name || 'Sin categoría'}</td>
                       <td style={{ fontWeight: 600 }}>{formatPrice(product.price)}</td>
                       <td>
                         <span style={{ color: product.stock <= 5 ? 'var(--color-warning)' : 'inherit', fontWeight: product.stock <= 5 ? 700 : 400 }}>
@@ -113,12 +113,12 @@ export default function AdminProductsPage() {
                           className={`badge ${product.status === 'active' ? 'badge-active' : 'badge-inactive'}`}
                           style={{ border: 'none', cursor: 'pointer' }}
                         >
-                          {product.status === 'active' ? 'Active' : 'Draft'}
+                          {product.status === 'active' ? 'Activo' : 'Borrador'}
                         </button>
                       </td>
                       <td>
                         <Link href={`/admin/products/${product.id}/edit`} className="btn btn-ghost btn-sm">
-                          Edit
+                          Editar
                         </Link>
                       </td>
                     </tr>

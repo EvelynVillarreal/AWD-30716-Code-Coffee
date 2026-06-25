@@ -24,7 +24,7 @@ export default function LoginPage() {
       login(user, token);
       router.push(user.role === 'admin' ? '/admin/dashboard' : '/products');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Login failed. Please check your credentials.';
+      const message = err instanceof Error ? err.message : 'Error al iniciar sesión. Por favor verifica tus credenciales.';
       setError(message);
     } finally {
       setIsLoading(false);
@@ -43,10 +43,10 @@ export default function LoginPage() {
         <div style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
           <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: 'var(--space-3)' }}>☕</span>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-2)' }}>
-            Welcome Back
+            Bienvenido de Nuevo
           </h1>
           <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
-            Sign in to your Artisan Shop account
+            Inicia sesión en tu cuenta de Artisan Shop
           </p>
         </div>
 
@@ -54,12 +54,12 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label htmlFor="login-email" className="form-label">Email Address</label>
+            <label htmlFor="login-email" className="form-label">Correo Electrónico</label>
             <input
               id="login-email"
               type="email"
               className="form-input"
-              placeholder="you@example.com"
+              placeholder="tu@ejemplo.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -68,12 +68,12 @@ export default function LoginPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="login-password" className="form-label">Password</label>
+            <label htmlFor="login-password" className="form-label">Contraseña</label>
             <input
               id="login-password"
               type="password"
               className="form-input"
-              placeholder="Your password"
+              placeholder="Tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -88,14 +88,14 @@ export default function LoginPage() {
             style={{ width: '100%', justifyContent: 'center' }}
             disabled={isLoading}
           >
-            {isLoading ? <><span className="spinner" />Signing in...</> : 'Sign In'}
+            {isLoading ? <><span className="spinner" />Iniciando sesión...</> : 'Iniciar Sesión'}
           </button>
         </form>
 
         <p style={{ textAlign: 'center', marginTop: 'var(--space-6)', fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)' }}>
-          Don&apos;t have an account?{' '}
+          ¿No tienes una cuenta?{' '}
           <Link href="/register">
-            Create one
+            Crea una
           </Link>
         </p>
       </div>

@@ -34,7 +34,7 @@ export default function OrdersPage() {
       const data = await orderApi.getMyOrders();
       setOrders(data);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to load orders';
+      const message = err instanceof Error ? err.message : 'Error al cargar pedidos';
       setError(message);
     } finally {
       setIsLoading(false);
@@ -54,8 +54,8 @@ export default function OrdersPage() {
   return (
     <ProtectedRoute>
       <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
-        <h1 className="section-title" style={{ marginBottom: 'var(--space-2)' }}>My Orders</h1>
-        <p className="section-subtitle">Track your orders and view history</p>
+        <h1 className="section-title" style={{ marginBottom: 'var(--space-2)' }}>Mis Pedidos</h1>
+        <p className="section-subtitle">Rastrea tus pedidos y mira tu historial</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
@@ -63,12 +63,12 @@ export default function OrdersPage() {
           <div style={{ textAlign: 'center', padding: 'var(--space-16)' }} className="glass-card">
             <span style={{ fontSize: '3rem', display: 'block', marginBottom: 'var(--space-4)' }}>📦</span>
             <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-2)' }}>
-              No orders yet
+              Aún no hay pedidos
             </h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--space-6)' }}>
-              Start exploring our collection and place your first order.
+              Comienza a explorar nuestra colección y haz tu primer pedido.
             </p>
-            <Link href="/products" className="btn btn-primary">Browse Products</Link>
+            <Link href="/products" className="btn btn-primary">Explorar Productos</Link>
           </div>
         )}
 
@@ -78,7 +78,7 @@ export default function OrdersPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
                 <div>
                   <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-1)' }}>
-                    Reference
+                    Referencia
                   </p>
                   <p style={{ fontWeight: 600, fontFamily: 'var(--font-display)' }}>
                     {order.referenceNumber}
@@ -91,12 +91,12 @@ export default function OrdersPage() {
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-4)' }}>
                 <div>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-1)' }}>Date</p>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-1)' }}>Fecha</p>
                   <p style={{ fontSize: 'var(--text-sm)' }}>{formatDate(order.createdAt)}</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-1)' }}>Items</p>
-                  <p style={{ fontSize: 'var(--text-sm)' }}>{order.details?.length ?? 0} item(s)</p>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-1)' }}>Artículos</p>
+                  <p style={{ fontSize: 'var(--text-sm)' }}>{order.details?.length ?? 0} artículo(s)</p>
                 </div>
                 <div>
                   <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-1)' }}>Total</p>
@@ -106,7 +106,7 @@ export default function OrdersPage() {
                 </div>
                 {order.isCustomized && (
                   <div>
-                    <span className="badge badge-active">Custom Order</span>
+                    <span className="badge badge-active">Pedido Personalizado</span>
                   </div>
                 )}
               </div>

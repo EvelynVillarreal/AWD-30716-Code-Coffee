@@ -37,7 +37,7 @@ export default function AdminOrdersPage() {
       const data = await orderApi.getAllOrders();
       setOrders(data);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load orders');
+      setError(err instanceof Error ? err.message : 'Error al cargar pedidos');
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +49,7 @@ export default function AdminOrdersPage() {
       // Optimistic update
       setOrders((prev) => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Failed to update status');
+      alert(err instanceof Error ? err.message : 'Error al actualizar el estado');
       // Reload on failure
       loadOrders();
     }
@@ -64,8 +64,8 @@ export default function AdminOrdersPage() {
       <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-8)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
           <div>
-            <h1 className="section-title">Order Management</h1>
-            <p className="section-subtitle" style={{ margin: 0 }}>Review and process customer orders</p>
+            <h1 className="section-title">Administración de Pedidos</h1>
+            <p className="section-subtitle" style={{ margin: 0 }}>Revisa y procesa pedidos de clientes</p>
           </div>
           
           <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
@@ -75,12 +75,12 @@ export default function AdminOrdersPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               style={{ padding: 'var(--space-2) var(--space-4)', width: 'auto' }}
             >
-              <option value="all">All Statuses</option>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all">Todos los Estados</option>
+              <option value="pending">Pendiente</option>
+              <option value="processing">Procesando</option>
+              <option value="shipped">Enviado</option>
+              <option value="delivered">Entregado</option>
+              <option value="cancelled">Cancelado</option>
             </select>
           </div>
         </div>
@@ -96,27 +96,27 @@ export default function AdminOrdersPage() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Order Ref</th>
-                  <th>Date</th>
-                  <th>Customer</th>
-                  <th>Contact</th>
+                  <th>Ref de Pedido</th>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Contacto</th>
                   <th>Total</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
-                      No orders found matching the criteria.
+                      No se encontraron pedidos con esos criterios.
                     </td>
                   </tr>
                 ) : (
                   filteredOrders.map((order) => (
                     <tr key={order.id}>
                       <td style={{ fontWeight: 600 }}>{order.referenceNumber}
-                        {order.isCustomized && <span className="badge badge-active" style={{ fontSize: '10px', marginLeft: 'var(--space-2)' }}>Custom</span>}
+                        {order.isCustomized && <span className="badge badge-active" style={{ fontSize: '10px', marginLeft: 'var(--space-2)' }}>Personalizado</span>}
                       </td>
                       <td>{formatDate(order.createdAt)}</td>
                       <td>{order.contactName}</td>
@@ -135,11 +135,11 @@ export default function AdminOrdersPage() {
                           value={order.status}
                           onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
                         >
-                          <option value="pending">Pending</option>
-                          <option value="processing">Processing</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
+                          <option value="pending">Pendiente</option>
+                          <option value="processing">Procesando</option>
+                          <option value="shipped">Enviado</option>
+                          <option value="delivered">Entregado</option>
+                          <option value="cancelled">Cancelado</option>
                         </select>
                       </td>
                     </tr>

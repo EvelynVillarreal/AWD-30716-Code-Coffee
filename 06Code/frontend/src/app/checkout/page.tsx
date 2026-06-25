@@ -54,7 +54,7 @@ export default function CheckoutPage() {
       clearCart();
       router.push('/orders');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to place order');
+      setError(err instanceof Error ? err.message : 'Error al realizar el pedido');
     } finally {
       setIsLoading(false);
     }
@@ -64,9 +64,9 @@ export default function CheckoutPage() {
     return (
       <div className="container" style={{ padding: 'var(--space-20) var(--space-6)', textAlign: 'center' }}>
         <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🛒</span>
-        <h2 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-4)' }}>Your cart is empty</h2>
+        <h2 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-4)' }}>Tu carrito está vacío</h2>
         <button onClick={() => router.push('/products')} className="btn btn-primary">
-          Browse Products
+          Explorar Productos
         </button>
       </div>
     );
@@ -75,8 +75,8 @@ export default function CheckoutPage() {
   return (
     <ProtectedRoute>
       <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
-        <h1 className="section-title">Checkout</h1>
-        <p className="section-subtitle">Complete your order securely</p>
+        <h1 className="section-title">Finalizar Compra</h1>
+        <p className="section-subtitle">Completa tu pedido de forma segura</p>
 
         {error && <div className="alert alert-error">{error}</div>}
 
@@ -84,23 +84,23 @@ export default function CheckoutPage() {
           {/* Form Section */}
           <div className="card">
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-6)' }}>
-              Shipping & Contact Info
+              Información de Envío y Contacto
             </h2>
             <form id="checkout-form" onSubmit={handleCheckout}>
               <div className="form-group">
-                <label htmlFor="contactName" className="form-label">Full Name</label>
+                <label htmlFor="contactName" className="form-label">Nombre Completo</label>
                 <input id="contactName" type="text" className="form-input" required
                   value={formData.contactName} onChange={(e) => updateField('contactName', e.target.value)} />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                 <div className="form-group">
-                  <label htmlFor="email" className="form-label">Email Address</label>
+                  <label htmlFor="email" className="form-label">Correo Electrónico</label>
                   <input id="email" type="email" className="form-input" required
                     value={formData.email} onChange={(e) => updateField('email', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="phone" className="form-label">Phone Number (Optional)</label>
+                  <label htmlFor="phone" className="form-label">Número de Teléfono (Opcional)</label>
                   <input id="phone" type="tel" className="form-input"
                     value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} />
                 </div>
@@ -108,12 +108,12 @@ export default function CheckoutPage() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-4)' }}>
                 <div className="form-group">
-                  <label htmlFor="address" className="form-label">Shipping Address</label>
+                  <label htmlFor="address" className="form-label">Dirección de Envío</label>
                   <input id="address" type="text" className="form-input" required
                     value={formData.address} onChange={(e) => updateField('address', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="province" className="form-label">Province</label>
+                  <label htmlFor="province" className="form-label">Provincia</label>
                   <input id="province" type="text" className="form-input" required
                     value={formData.province} onChange={(e) => updateField('province', e.target.value)} />
                 </div>
@@ -124,7 +124,7 @@ export default function CheckoutPage() {
           {/* Order Summary */}
           <div className="glass-card" style={{ position: 'sticky', top: '80px' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-4)' }}>
-              Order Summary
+              Resumen del Pedido
             </h2>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
@@ -134,7 +134,7 @@ export default function CheckoutPage() {
                     <span style={{ fontWeight: 600 }}>{item.quantity}x</span> {item.product.name}
                     {item.customizationDetails && (
                       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                        Custom: {item.customizationDetails}
+                        Personalizado: {item.customizationDetails}
                       </div>
                     )}
                   </div>
@@ -161,7 +161,7 @@ export default function CheckoutPage() {
               style={{ width: '100%', justifyContent: 'center' }}
               disabled={isLoading}
             >
-              {isLoading ? <><span className="spinner" />Processing...</> : `Place Order (${totalItems} items)`}
+              {isLoading ? <><span className="spinner" />Procesando...</> : `Realizar Pedido (${totalItems} artículos)`}
             </button>
           </div>
         </div>

@@ -51,7 +51,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             padding: '2px 8px',
             borderRadius: 'var(--radius-full)',
           }}>
-            Only {product.stock} left
+            Solo quedan {product.stock}
           </span>
         )}
 
@@ -65,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             justifyContent: 'center',
           }}>
             <span style={{ color: 'var(--color-text-muted)', fontWeight: 600, fontSize: 'var(--text-sm)' }}>
-              Out of Stock
+              Agotado
             </span>
           </div>
         )}
@@ -120,7 +120,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {product.allowsCustomization && (
             <span className="badge badge-active" style={{ fontSize: '10px' }}>
-              Customizable
+              Personalizable
             </span>
           )}
         </div>
@@ -131,7 +131,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="btn btn-primary"
           style={{ width: '100%', marginTop: 'var(--space-4)', justifyContent: 'center' }}
         >
-          View Details
+          Ver Detalles
         </Link>
       </div>
     </article>

@@ -20,12 +20,12 @@ export default function CartPage() {
     return (
       <div className="container" style={{ padding: 'var(--space-20) var(--space-6)', textAlign: 'center' }}>
         <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🛒</span>
-        <h1 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-4)' }}>Your Cart is Empty</h1>
+        <h1 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-4)' }}>Tu Carrito está Vacío</h1>
         <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--space-8)' }}>
-          Looks like you haven&apos;t added any items to your cart yet.
+          Parece que aún no has agregado ningún artículo a tu carrito.
         </p>
         <Link href="/products" className="btn btn-primary btn-lg">
-          Browse Products
+          Explorar Productos
         </Link>
       </div>
     );
@@ -33,8 +33,8 @@ export default function CartPage() {
 
   return (
     <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
-      <h1 className="section-title">Shopping Cart</h1>
-      <p className="section-subtitle">You have {totalItems} items in your cart</p>
+      <h1 className="section-title">Carrito de Compras</h1>
+      <p className="section-subtitle">Tienes {totalItems} artículos en tu carrito</p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 'var(--space-8)', alignItems: 'start' }} className="cart-grid">
         {/* Cart Items */}
@@ -55,7 +55,7 @@ export default function CartPage() {
                     <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-lg)', margin: 0 }}>{item.product.name}</h3>
                     {item.customizationDetails && (
                       <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>
-                        <strong style={{ color: 'var(--color-text-secondary)' }}>Custom:</strong> {item.customizationDetails}
+                        <strong style={{ color: 'var(--color-text-secondary)' }}>Personalizado:</strong> {item.customizationDetails}
                       </p>
                     )}
                   </div>
@@ -82,7 +82,7 @@ export default function CartPage() {
         {/* Order Summary */}
         <div className="glass-card" style={{ position: 'sticky', top: '80px' }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-6)' }}>
-            Summary
+            Resumen
           </h2>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-4)', color: 'var(--color-text-secondary)' }}>
@@ -90,14 +90,14 @@ export default function CartPage() {
             <span>{formatPrice(cartTotal)}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-6)', color: 'var(--color-text-secondary)' }}>
-            <span>Shipping</span>
-            <span>Calculated at checkout</span>
+            <span>Envío</span>
+            <span>Calculado al finalizar la compra</span>
           </div>
 
           <hr className="divider" style={{ margin: 'var(--space-4) 0' }} />
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-6)' }}>
-            <span style={{ fontSize: 'var(--text-lg)', fontWeight: 600 }}>Total Estimate</span>
+            <span style={{ fontSize: 'var(--text-lg)', fontWeight: 600 }}>Estimado Total</span>
             <span style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-honey)', fontFamily: 'var(--font-display)' }}>
               {formatPrice(cartTotal)}
             </span>

@@ -33,10 +33,10 @@ export default function ProductDetailPage() {
       // Re-using getAll and finding by id since getById might not exist yet in api.client
       const allProducts = await productApi.getAll();
       const found = allProducts.find((p: Product) => p.id === id);
-      if (!found) throw new Error('Product not found');
+      if (!found) throw new Error('Producto no encontrado');
       setProduct(found);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load product details');
+      setError(err instanceof Error ? err.message : 'Error al cargar los detalles del producto');
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +45,7 @@ export default function ProductDetailPage() {
   function handleAddToCart() {
     if (!product) return;
     addItem(product, quantity, product.allowsCustomization ? customization : undefined);
-    alert('Added to cart!');
+    alert('¡Agregado al carrito!');
   }
 
   if (isLoading) {
@@ -60,10 +60,10 @@ export default function ProductDetailPage() {
     return (
       <div className="container" style={{ padding: 'var(--space-12) var(--space-6)', textAlign: 'center' }}>
         <div className="alert alert-error" style={{ justifyContent: 'center' }}>
-          {error || 'Product not found'}
+          {error || 'Producto no encontrado'}
         </div>
         <button onClick={() => router.push('/products')} className="btn btn-secondary" style={{ marginTop: 'var(--space-4)' }}>
-          Back to Products
+          Volver a Productos
         </button>
       </div>
     );
@@ -74,7 +74,7 @@ export default function ProductDetailPage() {
   return (
     <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
       <button onClick={() => router.push('/products')} className="btn btn-ghost btn-sm" style={{ marginBottom: 'var(--space-6)' }}>
-        ← Back to Products
+        ← Volver a Productos
       </button>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-12)' }}>
@@ -102,7 +102,7 @@ export default function ProductDetailPage() {
           </p>
 
           <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-base)', lineHeight: 1.8, marginBottom: 'var(--space-8)' }}>
-            {product.description || 'No description available for this handcrafted item.'}
+            {product.description || 'No hay descripción disponible para este artículo artesanal.'}
           </p>
 
           <hr className="divider" style={{ margin: 'var(--space-6) 0' }} />
@@ -110,7 +110,7 @@ export default function ProductDetailPage() {
           {product.stock > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
               <p style={{ color: product.stock <= 3 ? 'var(--color-warning)' : 'var(--color-success)', fontWeight: 600 }}>
-                {product.stock <= 3 ? `Only ${product.stock} items left in stock!` : 'In Stock'}
+                {product.stock <= 3 ? `¡Solo quedan ${product.stock} artículos en stock!` : 'En Stock'}
               </p>
 
               <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center' }}>
@@ -123,11 +123,11 @@ export default function ProductDetailPage() {
 
               {product.allowsCustomization && (
                 <div className="form-group" style={{ marginTop: 'var(--space-4)' }}>
-                  <label htmlFor="customization" className="form-label">Customization Details</label>
+                  <label htmlFor="customization" className="form-label">Detalles de Personalización</label>
                   <textarea
                     id="customization"
                     className="form-textarea"
-                    placeholder="Enter engraving text, color preferences, or special requests..."
+                    placeholder="Ingresa texto de grabado, preferencias de color o solicitudes especiales..."
                     value={customization}
                     onChange={(e) => setCustomization(e.target.value)}
                     style={{ minHeight: '80px' }}
@@ -136,12 +136,12 @@ export default function ProductDetailPage() {
               )}
 
               <button onClick={handleAddToCart} className="btn btn-primary btn-lg" style={{ marginTop: 'var(--space-4)', width: '100%', justifyContent: 'center' }}>
-                Add to Cart
+                Agregar al Carrito
               </button>
             </div>
           ) : (
             <div className="alert alert-error" style={{ justifyContent: 'center' }}>
-              Currently Out of Stock
+              Actualmente Agotado
             </div>
           )}
         </div>

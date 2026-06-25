@@ -36,7 +36,7 @@ export default function ProductsPage() {
       const data = await productApi.getAll(categoryId);
       setProducts(data);
     } catch {
-      setError('Failed to load products. Please try again.');
+      setError('Error al cargar los productos. Por favor, inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -46,9 +46,9 @@ export default function ProductsPage() {
     <div className="container" style={{ padding: 'var(--space-12) var(--space-6)' }}>
       {/* Page Header */}
       <div style={{ marginBottom: 'var(--space-8)' }}>
-        <h1 className="section-title">Our Collection</h1>
+        <h1 className="section-title">Nuestra Colección</h1>
         <p className="section-subtitle">
-          Handcrafted pieces made with passion — browse by category or explore all
+          Piezas hechas a mano con pasión — explora por categoría o mira todas
         </p>
 
         {/* Category Filter */}
@@ -59,7 +59,7 @@ export default function ProductsPage() {
               className={`btn btn-sm ${selectedCategory === undefined ? 'btn-primary' : 'btn-ghost'}`}
               onClick={() => setSelectedCategory(undefined)}
             >
-              All
+              Todos
             </button>
             {categories.map((category) => (
               <button
@@ -83,7 +83,7 @@ export default function ProductsPage() {
         <div style={{ textAlign: 'center', padding: 'var(--space-16)' }}>
           <div className="spinner" style={{ margin: '0 auto', width: 40, height: 40 }} />
           <p style={{ marginTop: 'var(--space-4)', color: 'var(--color-text-muted)' }}>
-            Loading collection...
+            Cargando colección...
           </p>
         </div>
       )}
@@ -102,10 +102,10 @@ export default function ProductsPage() {
         <div style={{ textAlign: 'center', padding: 'var(--space-16)' }}>
           <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🏺</span>
           <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: 'var(--space-2)' }}>
-            No products found
+            No se encontraron productos
           </h3>
           <p style={{ color: 'var(--color-text-muted)' }}>
-            Try a different category or check back soon.
+            Intenta con otra categoría o vuelve pronto.
           </p>
         </div>
       )}

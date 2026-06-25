@@ -1,11 +1,11 @@
 import { OrderStatus } from '@/types';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
-  pending: 'Pending',
-  processing: 'Processing',
-  shipped: 'Shipped',
-  delivered: 'Delivered',
-  cancelled: 'Cancelled',
+  pending: 'Pendiente',
+  processing: 'Procesando',
+  shipped: 'Enviado',
+  delivered: 'Entregado',
+  cancelled: 'Cancelado',
 };
 
 type OrderStatusBadgeProps = {

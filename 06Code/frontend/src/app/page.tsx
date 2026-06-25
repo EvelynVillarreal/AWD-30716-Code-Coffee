@@ -39,7 +39,7 @@ export default function HomePage() {
       const data = await productApi.getAll(categoryId);
       setProducts(data);
     } catch {
-      setError('Failed to load products. Please try again.');
+      setError('Error al cargar los productos. Por favor, inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -52,10 +52,10 @@ export default function HomePage() {
         <div className="container">
           <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🏺</span>
           <h1 className="hero-title animate-fade-in" style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)', maxWidth: '900px', margin: '0 auto var(--space-4)' }}>
-            Handcrafted With Passion
+            Hecho a Mano con Pasión
           </h1>
           <p className="hero-subtitle animate-fade-in" style={{ animationDelay: '0.1s', fontSize: 'var(--text-xl)', maxWidth: '700px', margin: '0 auto var(--space-8)' }}>
-            Discover unique pieces created by local artisans. Every item tells a story of skill, dedication, and cultural heritage.
+            Descubre piezas únicas creadas por artesanos locales. Cada artículo cuenta una historia de habilidad, dedicación y herencia cultural.
           </p>
           
           {/* Action Buttons based on Auth state */}

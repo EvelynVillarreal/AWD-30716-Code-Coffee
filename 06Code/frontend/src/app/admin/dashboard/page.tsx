@@ -48,7 +48,7 @@ export default function AdminDashboardPage() {
       await orderApi.changeStatus(orderId, newStatus);
       loadDashboardData();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Failed to update status');
+      alert(err instanceof Error ? err.message : 'Error al actualizar el estado');
     }
   }
 
@@ -66,17 +66,17 @@ export default function AdminDashboardPage() {
     <ProtectedRoute adminOnly>
       <div className="container" style={{ padding: 'var(--space-8) var(--space-6)' }}>
         <div style={{ marginBottom: 'var(--space-8)' }}>
-          <h1 className="section-title">Admin Dashboard</h1>
-          <p style={{ color: 'var(--color-text-muted)' }}>Manage your Artisan Shop</p>
+          <h1 className="section-title">Panel de Administración</h1>
+          <p style={{ color: 'var(--color-text-muted)' }}>Administra tu Tienda de Artesanía</p>
         </div>
 
         {/* Quick Nav */}
         <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-8)', flexWrap: 'wrap' }}>
           {[
-            { label: '📦 All Orders', href: '/admin/orders' },
-            { label: '🏺 Products', href: '/admin/products' },
-            { label: '🚚 Shipping', href: '/admin/shipping' },
-            { label: '📊 Reports', href: '/admin/reports' },
+            { label: '📦 Todos los Pedidos', href: '/admin/orders' },
+            { label: '🏺 Productos', href: '/admin/products' },
+            { label: '🚚 Envío', href: '/admin/shipping' },
+            { label: '📊 Reportes', href: '/admin/reports' },
           ].map((item) => (
             <Link key={item.href} href={item.href} className="btn btn-ghost btn-sm">
               {item.label}
@@ -88,10 +88,10 @@ export default function AdminDashboardPage() {
         {reportSummary && (
           <div className="admin-grid" style={{ marginBottom: 'var(--space-8)' }}>
             {[
-              { label: 'Total Revenue', value: formatPrice(reportSummary.totalRevenue), icon: '💰' },
-              { label: 'Total Orders', value: reportSummary.totalOrders, icon: '📦' },
-              { label: 'Avg. Order Value', value: formatPrice(reportSummary.averageOrderValue), icon: '📈' },
-              { label: 'Low Stock Items', value: products.length, icon: '⚠️' },
+              { label: 'Ingresos Totales', value: formatPrice(reportSummary.totalRevenue), icon: '💰' },
+              { label: 'Pedidos Totales', value: reportSummary.totalOrders, icon: '📦' },
+              { label: 'Valor Promedio del Pedido', value: formatPrice(reportSummary.averageOrderValue), icon: '📈' },
+              { label: 'Artículos con Bajo Stock', value: products.length, icon: '⚠️' },
             ].map((stat) => (
               <div key={stat.label} className="glass-card" style={{ textAlign: 'center' }}>
                 <span style={{ fontSize: '1.8rem', display: 'block', marginBottom: 'var(--space-2)' }}>
@@ -111,18 +111,18 @@ export default function AdminDashboardPage() {
         {/* Recent Orders */}
         <div className="card" style={{ marginBottom: 'var(--space-6)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-xl)' }}>Recent Orders</h2>
-            <Link href="/admin/orders" className="btn btn-ghost btn-sm">View All</Link>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-xl)' }}>Pedidos Recientes</h2>
+            <Link href="/admin/orders" className="btn btn-ghost btn-sm">Ver Todos</Link>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Reference</th>
-                  <th>Customer</th>
+                  <th>Referencia</th>
+                  <th>Cliente</th>
                   <th>Total</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -140,11 +140,11 @@ export default function AdminDashboardPage() {
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
                       >
-                        <option value="pending">Pending</option>
-                        <option value="processing">Processing</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="processing">Procesando</option>
+                        <option value="shipped">Enviado</option>
+                        <option value="delivered">Entregado</option>
+                        <option value="cancelled">Cancelado</option>
                       </select>
                     </td>
                   </tr>
@@ -158,7 +158,7 @@ export default function AdminDashboardPage() {
         {products.length > 0 && (
           <div className="card">
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-xl)', marginBottom: 'var(--space-4)' }}>
-              ⚠️ Low Stock Alert
+              ⚠️ Alerta de Bajo Stock
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
               {products.map((product) => (
@@ -173,13 +173,13 @@ export default function AdminDashboardPage() {
                 }}>
                   <span style={{ fontSize: 'var(--text-sm)' }}>{product.name}</span>
                   <span style={{ color: 'var(--color-warning)', fontWeight: 700, fontSize: 'var(--text-sm)' }}>
-                    {product.stock} left
+                    {product.stock} restantes
                   </span>
                 </div>
               ))}
             </div>
             <Link href="/admin/products" className="btn btn-ghost btn-sm" style={{ marginTop: 'var(--space-4)' }}>
-              Manage Stock →
+              Administrar Stock →
             </Link>
           </div>
         )}
