@@ -629,14 +629,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 | # | Method | URI | Auth | Description |
 |---|--------|-----|------|-------------|
-| 52 | `POST` | `/api/order` | — | **Place order** (validates stock, calculates total, decrements stock) |
+| 52 | `POST` | `/api/order` | User | **Place order** (validates stock, calculates total, decrements stock) |
 | 53 | `GET` | `/api/order/my-orders` | User | Get orders of the authenticated customer |
 | 54 | `GET` | `/api/order/reference/:reference` | — | Track order by reference number |
 | 55 | `GET` | `/api/order` | Admin | List all orders |
 | 56 | `PATCH` | `/api/order/:id/status` | Admin | **Change order status** (state machine enforced) |
 | 57 | `PATCH` | `/api/order/:id/approve-customized` | Admin | **Approve a pending customized order** |
 
-**`POST /api/order` — Request Body** *(Guest order — no token needed)*
+**`POST /api/order` — Request Body** *(User JWT required)*
 ```json
 {
   "contactName": "Carlos Mendoza",
@@ -679,7 +679,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 > [!NOTE]
-> If the request includes a valid JWT, the order is linked to the authenticated user automatically via `userId`. Guest orders are also supported (no token required).
+> A valid JWT is required to place an order. The order is automatically linked to the authenticated user via `userId`.
 
 **`PATCH /api/order/:id/status` — Request Body** *(Admin JWT required)*
 ```json
