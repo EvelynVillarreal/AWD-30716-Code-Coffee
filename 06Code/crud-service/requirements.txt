@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+sqlmodel
+pg8000
+python-dotenv
+pydantic
