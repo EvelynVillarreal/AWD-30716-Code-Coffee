@@ -4,7 +4,7 @@ python3 -m venv venv
 ./venv/bin/pip install -r requirements.txt
 
 # Start the Python FastAPI server in the background using the venv
-PYTHONPATH=. ./venv/bin/python -m uvicorn src.modules.product.main:app --port 8000 &
+./venv/bin/python run_uvicorn.py &
 
 # Start the Node.js Express server in the foreground
 node dist/app.js
