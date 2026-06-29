@@ -1,1 +1,2 @@
-web: bash start.sh
+web: node dist/app.js
+api: bash start_api.sh
