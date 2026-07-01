@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlmodel import Session, select
-from models import Product, ProductCreate, ProductUpdate
+from .models import Product, ProductCreate, ProductUpdate
 
 class ProductRepository:
     def find_all(self, session: Session, categoryId: Optional[int] = None) -> List[Product]:

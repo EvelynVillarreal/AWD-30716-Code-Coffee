@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from sqlmodel import Session
 from typing import Optional
-from models import ProductCreate, ProductUpdate, ProductUpdateStock
-from product_repository import product_repository
+from .models import ProductCreate, ProductUpdate, ProductUpdateStock
+from .product_repository import product_repository
 
 class ProductController:
     def get_all(self, session: Session, categoryId: Optional[int] = None):

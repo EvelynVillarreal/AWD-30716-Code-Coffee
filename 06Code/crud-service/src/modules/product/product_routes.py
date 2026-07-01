@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status, Query
 from sqlmodel import Session
 from typing import Optional
-from database import get_session
-from models import ProductCreate, ProductUpdate, ProductUpdateStock
-from product_controller import product_controller
+from .database import get_session
+from .models import ProductCreate, ProductUpdate, ProductUpdateStock
+from .product_controller import product_controller
 
 product_router = APIRouter()
 
