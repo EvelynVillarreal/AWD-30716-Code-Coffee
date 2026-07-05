@@ -5,7 +5,7 @@ import cors from 'cors';
 import { errorMiddleware } from './shared/middleware/error.middleware';
 import userRouter from './modules/user/user.routes';
 import categoryRouter from './modules/category/category.routes';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import productRouter from './modules/product/product.routes';
 import productPhotoRouter from './modules/product-photo/product-photo.routes';
 import orderRouter from './modules/order/order.routes';
 import orderDetailRouter from './modules/order-detail/order-detail.routes';
@@ -16,17 +16,6 @@ const app = express();
 const PORT = process.env.PORT ?? 3001;
 
 app.use(cors());
-
-// Proxy for Product API (handled by Python)
-// MUST BE BEFORE express.json() so the request body stream isn't consumed
-app.use(
-  '/api/product',
-  createProxyMiddleware({
-    target: 'http://127.0.0.1:8000',
-    changeOrigin: true,
-  })
-);
-
 app.use(express.json());
 
 app.get('/health', (_req, res) => {
@@ -35,6 +24,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/api/user', userRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/product', productRouter);
 app.use('/api/product-photo', productPhotoRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/order-detail', orderDetailRouter);
