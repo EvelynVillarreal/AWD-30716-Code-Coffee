@@ -68,4 +68,31 @@ export const productController = {
       next(error);
     }
   },
+
+  createCategory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const category = await productService.createCategory(req.body);
+      res.status(201).json({ success: true, data: category });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  updateCategory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const category = await productService.updateCategory(Number(req.params.id), req.body);
+      res.json({ success: true, data: category });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  deleteCategory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await productService.deleteCategory(Number(req.params.id));
+      res.json({ success: true, message: 'Category deleted' });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

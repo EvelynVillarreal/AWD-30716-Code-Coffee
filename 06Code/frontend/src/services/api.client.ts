@@ -53,6 +53,15 @@ export const productApi = {
   getCategories: () =>
     apiClient.get<ApiResponse<Category[]>>('/api/product/categories').then((r) => r.data.data),
 
+  createCategory: (data: Partial<Category>) =>
+    apiClient.post<ApiResponse<Category>>('/api/product/categories', data).then((r) => r.data.data),
+
+  updateCategory: (id: number, data: Partial<Category>) =>
+    apiClient.put<ApiResponse<Category>>(`/api/product/categories/${id}`, data).then((r) => r.data.data),
+
+  removeCategory: (id: number) =>
+    apiClient.delete(`/api/product/categories/${id}`),
+
   create: (data: Partial<Product>) =>
     apiClient.post<ApiResponse<Product>>('/api/product', data).then((r) => r.data.data),
 

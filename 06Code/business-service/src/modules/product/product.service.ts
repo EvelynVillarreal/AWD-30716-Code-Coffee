@@ -36,4 +36,18 @@ export const productService = {
     const response = await crudClient.get('/api/category');
     return response.data.data;
   },
+
+  createCategory: async (data: unknown) => {
+    const response = await crudClient.post('/api/category', data);
+    return response.data.data;
+  },
+
+  updateCategory: async (id: number, data: unknown) => {
+    const response = await crudClient.put(`/api/category/${id}`, data);
+    return response.data.data;
+  },
+
+  deleteCategory: async (id: number) => {
+    await crudClient.delete(`/api/category/${id}`);
+  },
 };
