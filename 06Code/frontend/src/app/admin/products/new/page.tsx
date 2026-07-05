@@ -30,7 +30,7 @@ export default function NewProductPage() {
 
   async function loadCategories() {
     try {
-      const data = await productApi.getCategories();
+      const data = await productApi.getCategories(true);
       setCategories(data);
     } catch {
       // Non-blocking
@@ -47,9 +47,18 @@ export default function NewProductPage() {
     setError(null);
 
     try {
-      // Mock API call since productApi.create doesn't exist yet
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('¡Producto creado con éxito! (Operación simulada)');
+      await productApi.create({
+        name: formData.name,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock, 10),
+        categoryId: parseInt(formData.categoryId, 10),
+        allowsCustomization: formData.allowsCustomization,
+        status: formData.isActive ? 'active' : 'inactive',
+        // Our updated business-service expects photoUrl to create the ProductPhoto
+        ...(formData.photoUrl && { photoUrl: formData.photoUrl })
+      });
+      alert('¡Producto creado con éxito!');
       router.push('/admin/products');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al crear el producto');

@@ -7,6 +7,7 @@ import authRouter from './modules/auth/auth.routes';
 import orderRouter from './modules/order/order.routes';
 import productRouter from './modules/product/product.routes';
 import reportRouter from './modules/report/report.routes';
+import shippingRouter from './modules/shipping/shipping.routes';
 
 const app = express();
 const PORT = process.env.PORT ?? 3002;
@@ -22,6 +23,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/product', productRouter);
 app.use('/api/report', reportRouter);
+app.use('/api/shipping', shippingRouter);
 
 app.use(errorMiddleware);
 

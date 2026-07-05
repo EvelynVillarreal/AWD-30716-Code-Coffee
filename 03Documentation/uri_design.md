@@ -21,9 +21,9 @@
 
 | Service | URL | Status |
 |---------|-----|--------|
-| **CRUD Service** | `http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com` | Green |
-| **Business Service** | `http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com` | Green |
-| **Frontend** | `http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com` | Ready |
+| **CRUD Service** | `https://dhu121lf5djay.cloudfront.net` | Green |
+| **Business Service** | `https://d10yexkiobm8fr.cloudfront.net` | Green |
+| **Frontend** | `https://d16t94mhejiolk.cloudfront.net` | Ready |
 | **Database** | Supabase PostgreSQL — `aws-1-us-west-2.pooler.supabase.com:6543` | Connected |
 
 > [!IMPORTANT]
@@ -62,7 +62,7 @@
 > **Internal use only.** Called exclusively by the Business Service.
 
 **Local:** `http://localhost:4017`  
-**Production:** `http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com`
+**Production:** `https://dhu121lf5djay.cloudfront.net`
 
 ### 3.0 System
 
@@ -485,7 +485,7 @@
 > **Public API.** Called by the Frontend and external clients.
 
 **Local:** `http://localhost:5017`  
-**Production:** `http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com`
+**Production:** `https://d10yexkiobm8fr.cloudfront.net`
 
 ### 4.0 System
 
@@ -785,7 +785,7 @@ pending ──→ processing ──→ shipped ──→ delivered
 ## 5. Frontend Route Map
 
 **Local:** `http://localhost:3017`  
-**Production:** `http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com`
+**Production:** `https://d16t94mhejiolk.cloudfront.net`
 
 ### Public Routes (No authentication required)
 
@@ -874,31 +874,31 @@ All API responses from both services follow this consistent shape:
 ### Health Checks — Production
 ```bash
 # CRUD Service
-curl http://artisan-crud-env.eba-tmhpspx3.us-east-1.elasticbeanstalk.com/health
+curl https://dhu121lf5djay.cloudfront.net/health
 
 # Business Service
-curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/health
+curl https://d10yexkiobm8fr.cloudfront.net/health
 
 # Frontend
-curl http://artisan-frontend-env.eba-p9ieurrh.us-east-1.elasticbeanstalk.com
+curl https://d16t94mhejiolk.cloudfront.net
 ```
 
 ### Register & Login
 ```bash
 # Register
-curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/auth/register \
+curl -X POST https://d10yexkiobm8fr.cloudfront.net/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"María García","email":"maria@test.com","password":"Test1234!"}'
 
 # Login
-curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/auth/login \
+curl -X POST https://d10yexkiobm8fr.cloudfront.net/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"maria@test.com","password":"Test1234!"}'
 ```
 
 ### Place an Order (Guest)
 ```bash
-curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/order \
+curl -X POST https://d10yexkiobm8fr.cloudfront.net/api/order \
   -H "Content-Type: application/json" \
   -d '{
     "contactName": "Carlos Mendoza",
@@ -913,7 +913,7 @@ curl -X POST http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk
 ### Admin — Change Order Status
 ```bash
 # First get token via login as admin, then:
-curl -X PATCH http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/order/7/status \
+curl -X PATCH https://d10yexkiobm8fr.cloudfront.net/api/order/7/status \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <admin_token>" \
   -d '{"status": "processing"}'
@@ -921,7 +921,7 @@ curl -X PATCH http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstal
 
 ### Sales Report
 ```bash
-curl http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/report/sales?startDate=2026-01-01&endDate=2026-12-31 \
+curl https://d10yexkiobm8fr.cloudfront.net/api/report/sales?startDate=2026-01-01&endDate=2026-12-31 \
   -H "Authorization: Bearer <admin_token>"
 ```
 

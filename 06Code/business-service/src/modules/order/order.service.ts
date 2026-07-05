@@ -44,7 +44,7 @@ async function fetchProductById(productId: number) {
 async function fetchShippingCost(destinationProvince: string): Promise<number> {
   try {
     const response = await crudClient.get('/api/shipping-config/lookup', {
-      params: { baseProvince: 'Main', destinationProvince },
+      params: { baseProvince: 'Pichincha', destinationProvince },
     });
     return response.data.data.additionalCost;
   } catch {

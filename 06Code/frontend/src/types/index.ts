@@ -15,6 +15,7 @@ export type User = {
 export type Category = {
   id: number;
   name: string;
+  isActive: boolean;
 };
 
 export type ProductPhoto = {

@@ -75,6 +75,7 @@ export default function AdminDashboardPage() {
           {[
             { label: '📦 Todos los Pedidos', href: '/admin/orders' },
             { label: '🏺 Productos', href: '/admin/products' },
+            { label: '📂 Categorías', href: '/admin/categories' },
             { label: '🚚 Envío', href: '/admin/shipping' },
             { label: '📊 Reportes', href: '/admin/reports' },
           ].map((item) => (

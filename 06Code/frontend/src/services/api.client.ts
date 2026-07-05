@@ -50,8 +50,10 @@ export const productApi = {
   getById: (id: number) =>
     apiClient.get<ApiResponse<Product>>(`/api/product/${id}`).then((r) => r.data.data),
 
-  getCategories: () =>
-    apiClient.get<ApiResponse<Category[]>>('/api/product/categories').then((r) => r.data.data),
+  getCategories: (includeInactive?: boolean) =>
+    apiClient.get<ApiResponse<Category[]>>('/api/product/categories', {
+      params: includeInactive ? { includeInactive: 'true' } : undefined
+    }).then((r) => r.data.data),
 
   createCategory: (data: Partial<Category>) =>
     apiClient.post<ApiResponse<Category>>('/api/product/categories', data).then((r) => r.data.data),
@@ -99,9 +101,29 @@ export const orderApi = {
 // Report endpoints
 export const reportApi = {
   getSalesReport: (startDate?: string, endDate?: string) =>
-    apiClient.get<ApiResponse<SalesReport>>('/api/report/sales', {
+    apiClient.get<ApiResponse<any>>('/api/report/sales', {
       params: { startDate, endDate },
     }).then((r) => r.data.data),
+};
+
+// Shipping Config endpoints
+export const shippingApi = {
+  getAll: () =>
+    apiClient.get<ApiResponse<any[]>>('/api/shipping').then((r) => r.data.data),
+  
+  create: (data: any) =>
+    apiClient.post<ApiResponse<any>>('/api/shipping', data).then((r) => r.data.data),
+    
+  update: (id: number, data: any) =>
+    apiClient.put<ApiResponse<any>>(`/api/shipping/${id}`, data).then((r) => r.data.data),
+    
+  remove: (id: number) =>
+    apiClient.delete(`/api/shipping/${id}`),
+
+  calculateCost: (province: string) =>
+    apiClient.get<ApiResponse<{cost: number}>>('/api/shipping/calculate', {
+      params: { province }
+    }).then((r) => r.data.data.cost),
 };
 
 export default apiClient;

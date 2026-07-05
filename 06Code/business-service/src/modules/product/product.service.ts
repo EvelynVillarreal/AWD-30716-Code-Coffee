@@ -13,14 +13,40 @@ export const productService = {
     return response.data.data;
   },
 
-  createProduct: async (data: unknown) => {
-    const response = await crudClient.post('/api/product', data);
-    return response.data.data;
+  createProduct: async (data: any) => {
+    const { photoUrl, ...productData } = data;
+    const response = await crudClient.post('/api/product', productData);
+    const product = response.data.data;
+
+    if (photoUrl) {
+      await crudClient.post('/api/product-photo', {
+        productId: product.id,
+        url: photoUrl,
+        order: 0,
+      });
+      // Fetch the updated product with the photo attached
+      const updatedResponse = await crudClient.get(`/api/product/${product.id}`);
+      return updatedResponse.data.data;
+    }
+    return product;
   },
 
-  updateProduct: async (id: number, data: unknown) => {
-    const response = await crudClient.put(`/api/product/${id}`, data);
-    return response.data.data;
+  updateProduct: async (id: number, data: any) => {
+    const { photoUrl, ...productData } = data;
+    const response = await crudClient.put(`/api/product/${id}`, productData);
+    const product = response.data.data;
+
+    if (photoUrl) {
+      // For simplicity, just add the new photo. In a full system, you might delete old ones first.
+      await crudClient.post('/api/product-photo', {
+        productId: product.id,
+        url: photoUrl,
+        order: 0,
+      });
+      const updatedResponse = await crudClient.get(`/api/product/${product.id}`);
+      return updatedResponse.data.data;
+    }
+    return product;
   },
 
   updateStock: async (id: number, stock: number) => {

@@ -38,7 +38,7 @@ export default function ProductFormPage() {
 
   async function loadCategories() {
     try {
-      const data = await productApi.getCategories();
+      const data = await productApi.getCategories(true);
       setCategories(data);
     } catch {
       // Non-blocking
@@ -47,9 +47,7 @@ export default function ProductFormPage() {
 
   async function loadProduct() {
     try {
-      // Mock finding by ID since we might not have getById yet
-      const allProducts = await productApi.getAll();
-      const product = allProducts.find((p: Product) => p.id === productId);
+      const product = await productApi.getById(productId);
       
       if (product) {
         setFormData({
@@ -79,12 +77,31 @@ export default function ProductFormPage() {
     setIsSaving(true);
     setError(null);
 
-    // Mock API payload construction. In a real app we would call productApi.create or update.
-    // The exact implementation depends on the backend.
     try {
-      // Simulate API call for demonstration purposes
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('¡Producto guardado con éxito! (Operación simulada)');
+      if (isEditing) {
+        await productApi.update(productId, {
+          name: formData.name,
+          description: formData.description,
+          price: parseFloat(formData.price),
+          stock: parseInt(formData.stock, 10),
+          categoryId: parseInt(formData.categoryId, 10),
+          allowsCustomization: formData.allowsCustomization,
+          status: formData.isActive ? 'active' : 'inactive',
+          ...(formData.photoUrl && { photoUrl: formData.photoUrl })
+        });
+      } else {
+        await productApi.create({
+          name: formData.name,
+          description: formData.description,
+          price: parseFloat(formData.price),
+          stock: parseInt(formData.stock, 10),
+          categoryId: parseInt(formData.categoryId, 10),
+          allowsCustomization: formData.allowsCustomization,
+          status: formData.isActive ? 'active' : 'inactive',
+          ...(formData.photoUrl && { photoUrl: formData.photoUrl })
+        });
+      }
+      alert('¡Producto guardado con éxito!');
       router.push('/admin/products');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al guardar el producto');

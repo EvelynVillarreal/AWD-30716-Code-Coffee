@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { orderApi } from '@/services/api.client';
+import { orderApi, shippingApi } from '@/services/api.client';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 function formatPrice(amount: number): string {
@@ -17,6 +17,8 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shippingCost, setShippingCost] = useState(0);
+  const [calculatingShipping, setCalculatingShipping] = useState(false);
 
   const [formData, setFormData] = useState({
     contactName: user?.name || '',
@@ -26,7 +28,28 @@ export default function CheckoutPage() {
     province: user?.province || '',
   });
 
-  const cartTotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const cartSubtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const cartTotal = cartSubtotal + shippingCost;
+
+  useEffect(() => {
+    if (!formData.province) {
+      setShippingCost(0);
+      return;
+    }
+    const timeout = setTimeout(async () => {
+      setCalculatingShipping(true);
+      try {
+        const cost = await shippingApi.calculateCost(formData.province);
+        setShippingCost(cost);
+      } catch {
+        setShippingCost(0);
+      } finally {
+        setCalculatingShipping(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [formData.province]);
 
   function updateField(field: string, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -100,8 +123,8 @@ export default function CheckoutPage() {
                     value={formData.email} onChange={(e) => updateField('email', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="phone" className="form-label">Número de Teléfono (Opcional)</label>
-                  <input id="phone" type="tel" className="form-input"
+                  <label htmlFor="phone" className="form-label">Número de Teléfono</label>
+                  <input id="phone" type="tel" className="form-input" required
                     value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} />
                 </div>
               </div>
@@ -113,7 +136,7 @@ export default function CheckoutPage() {
                     value={formData.address} onChange={(e) => updateField('address', e.target.value)} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="province" className="form-label">Provincia</label>
+                  <label htmlFor="province" className="form-label">Provincia (Destino)</label>
                   <input id="province" type="text" className="form-input" required
                     value={formData.province} onChange={(e) => updateField('province', e.target.value)} />
                 </div>
@@ -147,6 +170,19 @@ export default function CheckoutPage() {
 
             <hr className="divider" style={{ margin: 'var(--space-4) 0' }} />
 
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
+              <span style={{ fontSize: 'var(--text-sm)' }}>Subtotal</span>
+              <span style={{ fontWeight: 600 }}>{formatPrice(cartSubtotal)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-6)' }}>
+              <span style={{ fontSize: 'var(--text-sm)' }}>Envío</span>
+              <span style={{ fontWeight: 600 }}>
+                {calculatingShipping ? 'Calculando...' : (shippingCost === 0 ? 'Gratis o No Disponible' : formatPrice(shippingCost))}
+              </span>
+            </div>
+
+            <hr className="divider" style={{ margin: 'var(--space-4) 0' }} />
+
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-6)' }}>
               <span style={{ fontSize: 'var(--text-lg)', fontWeight: 600 }}>Total</span>
               <span style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--color-honey)', fontFamily: 'var(--font-display)' }}>
@@ -159,7 +195,7 @@ export default function CheckoutPage() {
               type="submit"
               className="btn btn-primary btn-lg"
               style={{ width: '100%', justifyContent: 'center' }}
-              disabled={isLoading}
+              disabled={isLoading || calculatingShipping}
             >
               {isLoading ? <><span className="spinner" />Procesando...</> : `Realizar Pedido (${totalItems} artículos)`}
             </button>

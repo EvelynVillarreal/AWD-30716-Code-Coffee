@@ -60,9 +60,13 @@ export const productController = {
     }
   },
 
-  getCategories: async (_req: Request, res: Response, next: NextFunction) => {
+  getCategories: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const categories = await productService.getAllCategories();
+      const includeInactive = req.query.includeInactive === 'true';
+      let categories = await productService.getAllCategories();
+      if (!includeInactive) {
+        categories = categories.filter((c: any) => c.isActive !== false);
+      }
       res.json({ success: true, data: categories });
     } catch (error) {
       next(error);

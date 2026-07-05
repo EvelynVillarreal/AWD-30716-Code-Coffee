@@ -1,6 +1,6 @@
 import prismaClient from '../../shared/prisma/prisma.client';
 
-export type CreateCategoryInput = { name: string };
+export type CreateCategoryInput = { name: string; isActive?: boolean };
 export type UpdateCategoryInput = Partial<CreateCategoryInput>;
 
 export const categoryRepository = {

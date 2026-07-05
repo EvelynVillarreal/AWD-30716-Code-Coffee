@@ -30,6 +30,7 @@ model User {
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
+  isActive Boolean   @default(true)
 
   products Product[]
 

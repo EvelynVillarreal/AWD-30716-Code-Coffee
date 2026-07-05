@@ -2,7 +2,7 @@ async function makeAdmin() {
   try {
     // 1. Register the user
     console.log("Registering user...");
-    const res = await fetch('http://artisan-business-env.eba-qmrdkji7.us-east-1.elasticbeanstalk.com/api/auth/register', {
+    const res = await fetch('https://d10yexkiobm8fr.cloudfront.net/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
