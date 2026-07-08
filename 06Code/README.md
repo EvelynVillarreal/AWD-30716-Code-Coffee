@@ -88,6 +88,35 @@ npm run dev                # Runs on http://localhost:3017
 
 ---
 
+## Deployment (AWS Elastic Beanstalk)
+
+Deployments are handled via the Elastic Beanstalk CLI (`eb cli`). The `eb deploy` command bundles and deploys the most recent **git commit**, so always ensure your changes are committed locally before deploying.
+
+### 1. Deploying the CRUD Service
+```bash
+cd 06Code/crud-service
+git commit -am "Your update message"
+eb deploy
+```
+
+### 2. Deploying the Business Service
+```bash
+cd 06Code/business-service
+git commit -am "Your update message"
+eb deploy
+```
+
+### 3. Deploying the Frontend (Next.js)
+```bash
+cd 06Code/frontend
+git commit -am "Your update message"
+eb deploy
+```
+
+> **Note:** Wait for the terminal to output `INFO: Environment update completed successfully.` (usually takes 2-4 minutes). The Next.js build process is executed automatically on the AWS server during deployment.
+
+---
+
 ## Entities (from UML Class Diagram)
 
 | Entity | Description |
