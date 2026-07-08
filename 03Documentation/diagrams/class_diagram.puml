@@ -1,0 +1,80 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+
+class User {
+  +id: Int
+  +name: String
+  +email: String
+  +passwordHash: String
+  +phone: String?
+  +address: String?
+  +province: String?
+  +role: String
+}
+
+class Category {
+  +id: Int
+  +name: String
+  +isActive: Boolean
+}
+
+class Product {
+  +id: Int
+  +name: String
+  +description: String?
+  +price: Float
+  +stock: Int
+  +status: String
+  +allowsCustomization: Boolean
+}
+
+class ProductPhoto {
+  +id: Int
+  +url: String
+  +order: Int
+}
+
+class Order {
+  +id: Int
+  +referenceNumber: String
+  +contactName: String
+  +email: String
+  +phone: String
+  +address: String
+  +province: String
+  +shippingCost: Float
+  +total: Float
+  +status: String
+  +isCustomized: Boolean
+  +createdAt: DateTime
+}
+
+class OrderDetail {
+  +id: Int
+  +quantity: Int
+  +unitPrice: Float
+  +customizationDetails: String?
+}
+
+class OrderStatusHistory {
+  +id: Int
+  +status: String
+  +date: DateTime
+}
+
+class ShippingConfig {
+  +id: Int
+  +baseProvince: String
+  +destinationProvince: String
+  +additionalCost: Float
+}
+
+User "1" -- "0..*" Order
+Category "1" -- "0..*" Product
+Product "1" *-- "0..*" ProductPhoto
+Product "1" -- "0..*" OrderDetail
+Order "1" *-- "1..*" OrderDetail
+Order "1" *-- "1..*" OrderStatusHistory
+@enduml

@@ -1,0 +1,45 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam monochrome true
+skinparam shadowing false
+
+actor "Guest" as g
+actor "Customer" as c
+actor "Admin" as a
+
+g <|-- c
+
+rectangle "Artisan Shop System" {
+  usecase "Browse Products" as UC1
+  usecase "View Product Details" as UC2
+  usecase "Register Account" as UC3
+  usecase "Login" as UC4
+  
+  usecase "Place Order" as UC5
+  usecase "Track Order" as UC6
+  usecase "View Order History" as UC7
+  
+  usecase "Manage Products" as UC8
+  usecase "Manage Categories" as UC9
+  usecase "Update Order Status" as UC10
+  usecase "View Sales Reports" as UC11
+  usecase "Configure Shipping" as UC12
+}
+
+g --> UC1
+g --> UC2
+g --> UC3
+g --> UC4
+g --> UC6
+
+c --> UC5
+c --> UC7
+
+a --> UC8
+a --> UC9
+a --> UC10
+a --> UC11
+a --> UC12
+
+@enduml
