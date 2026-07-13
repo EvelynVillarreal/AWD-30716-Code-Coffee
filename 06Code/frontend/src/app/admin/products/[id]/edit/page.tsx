@@ -29,6 +29,9 @@ export default function ProductFormPage() {
     photoUrl: '',
   });
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageBase64, setImageBase64] = useState<string | null>(null);
+
   useEffect(() => {
     loadCategories();
     if (isEditing) {
@@ -60,6 +63,7 @@ export default function ProductFormPage() {
           isActive: product.status === 'active',
           photoUrl: product.photos?.[0]?.url || '',
         });
+        setImagePreview(product.photos?.[0]?.url || null);
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al cargar el producto');
@@ -70,6 +74,25 @@ export default function ProductFormPage() {
 
   function updateField(field: string, value: string | boolean) {
     setFormData(prev => ({ ...prev, [field]: value }));
+  }
+
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('La imagen no debe superar los 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64String = event.target?.result as string;
+      setImageBase64(base64String);
+      setImagePreview(base64String);
+      updateField('photoUrl', '');
+    };
+    reader.readAsDataURL(file);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -87,7 +110,7 @@ export default function ProductFormPage() {
           categoryId: parseInt(formData.categoryId, 10),
           allowsCustomization: formData.allowsCustomization,
           status: formData.isActive ? 'active' : 'inactive',
-          ...(formData.photoUrl && { photoUrl: formData.photoUrl })
+          ...(imageBase64 ? { photoUrl: imageBase64 } : (formData.photoUrl && { photoUrl: formData.photoUrl }))
         });
       } else {
         await productApi.create({
@@ -98,7 +121,7 @@ export default function ProductFormPage() {
           categoryId: parseInt(formData.categoryId, 10),
           allowsCustomization: formData.allowsCustomization,
           status: formData.isActive ? 'active' : 'inactive',
-          ...(formData.photoUrl && { photoUrl: formData.photoUrl })
+          ...(imageBase64 ? { photoUrl: imageBase64 } : (formData.photoUrl && { photoUrl: formData.photoUrl }))
         });
       }
       alert('¡Producto guardado con éxito!');
@@ -172,14 +195,44 @@ export default function ProductFormPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="photoUrl">URL de la Imagen del Producto</label>
-              <input id="photoUrl" type="url" className="form-input" placeholder="https://..."
-                value={formData.photoUrl} onChange={e => updateField('photoUrl', e.target.value)} />
-              <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginTop: 'var(--space-1)' }}>
-                <strong>Estrategia de Subida de Imágenes:</strong> Dado que enlaces externos como Pinterest bloquean la incrustación,
-                recomendamos subir tus imágenes a un almacenamiento público (como Supabase Storage o Cloudinary)
-                y pegar la URL pública directa aquí.
-              </p>
+              <label className="form-label">Imagen del Producto (Elige una opción)</label>
+              
+              <div style={{ padding: 'var(--space-4)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)' }}>
+                <label className="form-label" style={{ fontSize: 'var(--text-sm)', marginBottom: 'var(--space-2)' }}>
+                  Opción 1: Subir desde el dispositivo (Recomendado, Max 2MB)
+                </label>
+                <input 
+                  type="file" 
+                  accept="image/png, image/jpeg" 
+                  className="form-input" 
+                  onChange={handleImageUpload} 
+                />
+              </div>
+
+              <div style={{ padding: 'var(--space-4)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
+                <label className="form-label" htmlFor="photoUrl" style={{ fontSize: 'var(--text-sm)', marginBottom: 'var(--space-2)' }}>
+                  Opción 2: Pegar URL externa
+                </label>
+                <input id="photoUrl" type="url" className="form-input" placeholder="https://..."
+                  value={formData.photoUrl} onChange={e => {
+                    updateField('photoUrl', e.target.value);
+                    if (e.target.value) {
+                      setImageBase64(null);
+                      setImagePreview(e.target.value);
+                    } else if (!imageBase64) {
+                      setImagePreview(null);
+                    }
+                  }} />
+              </div>
+
+              {imagePreview && (
+                <div style={{ marginTop: 'var(--space-4)' }}>
+                  <label className="form-label">Previsualización:</label>
+                  <div style={{ width: '150px', height: '150px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: 'var(--space-4)', margin: 'var(--space-6) 0' }}>
