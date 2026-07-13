@@ -25,6 +25,7 @@ export default function AdminOrdersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadOrders();
@@ -55,9 +56,13 @@ export default function AdminOrdersPage() {
     }
   }
 
-  const filteredOrders = statusFilter === 'all' 
-    ? orders 
-    : orders.filter(o => o.status === statusFilter);
+  const filteredOrders = orders.filter(o => {
+    const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = o.contactName.toLowerCase().includes(searchLower) ||
+                          o.referenceNumber.toLowerCase().includes(searchLower);
+    return matchesStatus && matchesSearch;
+  });
 
   return (
     <ProtectedRoute adminOnly>
@@ -69,6 +74,14 @@ export default function AdminOrdersPage() {
           </div>
           
           <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Buscar por cliente o referencia..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ padding: 'var(--space-2) var(--space-4)', minWidth: '250px' }}
+            />
             <select 
               className="form-select" 
               value={statusFilter} 

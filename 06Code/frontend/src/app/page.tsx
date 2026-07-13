@@ -14,6 +14,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadCategories();
@@ -37,7 +38,8 @@ export default function HomePage() {
     setError(null);
     try {
       const data = await productApi.getAll(categoryId);
-      setProducts(data);
+      const activeProducts = data.filter(p => p.status === 'active' && p.category?.isActive !== false);
+      setProducts(activeProducts);
     } catch {
       setError('Error al cargar los productos. Por favor, inténtalo de nuevo.');
     } finally {
@@ -101,6 +103,19 @@ export default function HomePage() {
             </div>
           )}
 
+          {/* Search Bar */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--space-8)' }}>
+            <div style={{ width: '100%', maxWidth: '400px' }}>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Buscar por nombre o descripción..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
           {/* Error State */}
           {error && <div className="alert alert-error">{error}</div>}
 
@@ -117,7 +132,10 @@ export default function HomePage() {
           {/* Product Grid */}
           {!isLoading && products.length > 0 && (
             <div className="product-grid animate-fade-in">
-              {products.map((product) => (
+              {products.filter(p => 
+                p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                (p.description && p.description.toLowerCase().includes(searchTerm.toLowerCase()))
+              ).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
