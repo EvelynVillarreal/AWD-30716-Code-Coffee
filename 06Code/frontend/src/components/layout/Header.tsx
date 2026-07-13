@@ -56,7 +56,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }} className="hide-mobile">
+        <nav style={{ alignItems: 'center', gap: 'var(--space-6)' }} className="hide-mobile">
           <Link href="/products" style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
             Productos
           </Link>
@@ -73,7 +73,7 @@ export default function Header() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        <div className="hide-mobile" style={{ alignItems: 'center', gap: 'var(--space-3)' }}>
           {isMounted && (
             <button
               onClick={toggleTheme}
@@ -111,7 +111,7 @@ export default function Header() {
         </div>
 
         {/* Mobile Toggle Button */}
-        <div className="hide-desktop" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <div className="hide-desktop" style={{ alignItems: 'center', gap: 'var(--space-2)' }}>
           {isMounted && (
             <button
               onClick={toggleTheme}
@@ -141,7 +141,6 @@ export default function Header() {
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--color-border)',
           padding: 'var(--space-4)',
-          display: 'flex',
           flexDirection: 'column',
           gap: 'var(--space-4)',
           boxShadow: 'var(--shadow-md)',
