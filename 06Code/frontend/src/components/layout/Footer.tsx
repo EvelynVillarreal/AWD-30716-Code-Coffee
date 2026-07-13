@@ -73,7 +73,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div style={{
+        <div className="flex-col-mobile" style={{
           borderTop: '1px solid var(--color-border)',
           paddingTop: 'var(--space-6)',
           display: 'flex',
@@ -81,6 +81,7 @@ export default function Footer() {
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: 'var(--space-4)',
+          textAlign: 'center',
         }}>
           <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
             © {currentYear} Artisan Shop. Hecho a mano con ❤️

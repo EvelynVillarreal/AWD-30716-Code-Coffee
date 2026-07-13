@@ -48,7 +48,7 @@ export default function HomePage() {
   return (
     <div className="page-wrapper">
       {/* Hero Section */}
-      <section className="hero" style={{ padding: 'var(--space-20) var(--space-6)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <section className="hero" style={{ padding: 'clamp(var(--space-10), 8vw, var(--space-20)) var(--space-4)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div className="container">
           <span style={{ fontSize: '4rem', display: 'block', marginBottom: 'var(--space-4)' }}>🏺</span>
           <h1 className="hero-title animate-fade-in" style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)', maxWidth: '900px', margin: '0 auto var(--space-4)' }}>
@@ -60,7 +60,7 @@ export default function HomePage() {
           
           {/* Action Buttons based on Auth state */}
           {!isLoggedIn && (
-            <div className="animate-fade-in" style={{ animationDelay: '0.2s', display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="animate-fade-in flex-col-mobile" style={{ animationDelay: '0.2s', display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/login" className="btn btn-primary btn-lg">
                 Iniciar Sesión
               </Link>

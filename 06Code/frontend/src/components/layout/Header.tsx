@@ -56,7 +56,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }} className="desktop-nav">
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }} className="hide-mobile">
           <Link href="/products" style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', fontWeight: 500 }}>
             Productos
           </Link>
@@ -73,7 +73,7 @@ export default function Header() {
         </nav>
 
         {/* Desktop Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           {isMounted && (
             <button
               onClick={toggleTheme}
@@ -109,7 +109,73 @@ export default function Header() {
             </>
           ) : null}
         </div>
+
+        {/* Mobile Toggle Button */}
+        <div className="hide-desktop" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          {isMounted && (
+            <button
+              onClick={toggleTheme}
+              className="btn btn-ghost btn-sm"
+              style={{ fontSize: '1.2rem', padding: 'var(--space-1) var(--space-2)' }}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          )}
+          <Link href="/cart" className="btn btn-ghost btn-sm" style={{ padding: 'var(--space-1) var(--space-2)', fontSize: '1.2rem' }}>
+            🛒 {isMounted && totalItems > 0 && <span style={{ fontSize: '0.8rem', marginLeft: '4px' }}>{totalItems}</span>}
+          </Link>
+          <button onClick={handleMobileMenuToggle} className="btn btn-ghost btn-sm" style={{ padding: 'var(--space-1) var(--space-2)', fontSize: '1.5rem' }}>
+            {isMobileMenuOpen ? '✕' : '☰'}
+          </button>
+        </div>
       </div>
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-open hide-desktop" style={{
+          position: 'absolute',
+          top: '64px',
+          left: 0,
+          right: 0,
+          background: 'var(--header-bg)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid var(--color-border)',
+          padding: 'var(--space-4)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-4)',
+          boxShadow: 'var(--shadow-md)',
+        }}>
+          <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--color-text-primary)', fontSize: 'var(--text-lg)', fontWeight: 500 }}>
+            Productos
+          </Link>
+          {isLoggedIn && (
+            <Link href="/orders" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--color-text-primary)', fontSize: 'var(--text-lg)', fontWeight: 500 }}>
+              Mis Pedidos
+            </Link>
+          )}
+          {isAdmin && (
+            <Link href="/admin/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--color-text-accent)', fontSize: 'var(--text-lg)', fontWeight: 600 }}>
+              Panel de Administración
+            </Link>
+          )}
+          <hr className="divider" style={{ margin: 'var(--space-2) 0' }} />
+          {isMounted && isLoggedIn ? (
+            <button onClick={handleLogout} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+              Cerrar Sesión
+            </button>
+          ) : isMounted ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+              <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="btn btn-ghost" style={{ justifyContent: 'center' }}>
+                Iniciar Sesión
+              </Link>
+              <Link href="/register" onClick={() => setIsMobileMenuOpen(false)} className="btn btn-primary" style={{ justifyContent: 'center' }}>
+                Registrarse
+              </Link>
+            </div>
+          ) : null}
+        </div>
+      )}
     </header>
   );
 }

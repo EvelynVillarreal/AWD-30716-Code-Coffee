@@ -19,7 +19,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <article className="card" style={{ padding: 0, overflow: 'hidden' }}>
       {/* Product Image */}
       <div style={{
-        height: '220px',
+        aspectRatio: '4/3',
         background: 'var(--color-bg-elevated)',
         display: 'flex',
         alignItems: 'center',
