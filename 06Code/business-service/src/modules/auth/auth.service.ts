@@ -7,9 +7,9 @@ export type RegisterInput = {
   name: string;
   email: string;
   password: string;
-  phone?: string;
-  address?: string;
-  province?: string;
+  phone: string;
+  address: string;
+  province: string;
 };
 
 export type LoginInput = {
@@ -35,6 +35,15 @@ async function comparePasswords(plain: string, hashed: string): Promise<boolean>
 
 export const authService = {
   register: async (input: RegisterInput) => {
+    if (!input.phone || !input.address || !input.province) {
+      throw new BusinessError(400, 'El teléfono, dirección y provincia son obligatorios para el registro.');
+    }
+
+    const ecuadorPhoneRegex = /^(\+593|0)[2-9]\d{7,8}$/;
+    if (!ecuadorPhoneRegex.test(input.phone)) {
+      throw new BusinessError(400, 'El número de teléfono debe ser un número válido de Ecuador.');
+    }
+
     const passwordHash = await hashPassword(input.password);
 
     const response = await crudClient.post('/api/user', {
@@ -55,13 +64,13 @@ export const authService = {
 
   login: async (input: LoginInput) => {
     const response = await crudClient.get(`/api/user/email/${input.email}`).catch(() => {
-      throw new UnauthorizedError('Invalid email or password');
+      throw new UnauthorizedError('Correo o contraseña incorrectos');
     });
 
     const user = response.data.data;
     const passwordMatch = await comparePasswords(input.password, user.passwordHash);
 
-    if (!passwordMatch) throw new UnauthorizedError('Invalid email or password');
+    if (!passwordMatch) throw new UnauthorizedError('Correo o contraseña incorrectos');
 
     const token = generateToken(user.id, user.email, user.role);
 

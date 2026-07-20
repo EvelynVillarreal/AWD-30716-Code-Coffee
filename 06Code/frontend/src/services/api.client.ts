@@ -30,7 +30,7 @@ apiClient.interceptors.response.use(
 
 // Auth endpoints
 export const authApi = {
-  register: (data: { name: string; email: string; password: string; phone?: string; province?: string }) =>
+  register: (data: { name: string; email: string; password: string; phone: string; province: string; address: string }) =>
     apiClient.post<ApiResponse<AuthResponse>>('/api/auth/register', data).then((r) => r.data.data),
 
   login: (email: string, password: string) =>

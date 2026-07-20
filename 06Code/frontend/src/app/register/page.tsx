@@ -34,6 +34,17 @@ export default function RegisterPage() {
       return;
     }
 
+    if (!formData.address || !formData.province || !formData.phone) {
+      setError('Por favor completa los datos de envío (Dirección, Provincia y Teléfono)');
+      return;
+    }
+
+    const ecuadorPhoneRegex = /^(\+593|0)[2-9]\d{7,8}$/;
+    if (!ecuadorPhoneRegex.test(formData.phone)) {
+      setError('El número de teléfono debe ser válido para Ecuador (Ej: 0987654321 o 022123456)');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -41,10 +52,9 @@ export default function RegisterPage() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        phone: formData.phone || undefined,
-        province: formData.province || undefined,
-        // The API register interface in api.client.ts might not have address yet, we pass it anyway 
-        // if the API is updated later, it will accept it.
+        phone: formData.phone,
+        address: formData.address,
+        province: formData.province,
       });
       login(user, token);
       router.push('/products');
@@ -73,6 +83,11 @@ export default function RegisterPage() {
           <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
             Crea tu cuenta de Artisan Shop
           </p>
+        </div>
+
+        <div className="alert alert-info" style={{ marginBottom: 'var(--space-4)' }}>
+          <span style={{ marginRight: '8px' }}>🚚</span>
+          <strong>Nota importante:</strong> Actualmente solo realizamos envíos dentro de Ecuador. Por favor, asegúrate de proveer una dirección, provincia y teléfono válidos.
         </div>
 
         {error && <div className="alert alert-error">{error}</div>}
@@ -104,21 +119,21 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-              <label htmlFor="register-address" className="form-label">Dirección (Opcional)</label>
-              <input id="register-address" type="text" className="form-input" placeholder="Dirección de tu calle"
-                value={formData.address} onChange={(e) => updateField('address', e.target.value)} />
+              <label htmlFor="register-address" className="form-label">Dirección de Envío</label>
+              <input id="register-address" type="text" className="form-input" placeholder="Dirección completa"
+                value={formData.address} onChange={(e) => updateField('address', e.target.value)} required />
             </div>
 
             <div className="form-group">
-              <label htmlFor="register-phone" className="form-label">Teléfono (Opcional)</label>
-              <input id="register-phone" type="tel" className="form-input" placeholder="+1 555 0100"
-                value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} />
+              <label htmlFor="register-phone" className="form-label">Teléfono (Ecuador)</label>
+              <input id="register-phone" type="tel" className="form-input" placeholder="0987654321"
+                value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} required />
             </div>
 
             <div className="form-group">
-              <label htmlFor="register-province" className="form-label">Provincia (Opcional)</label>
+              <label htmlFor="register-province" className="form-label">Provincia</label>
               <input id="register-province" type="text" className="form-input" placeholder="Tu provincia"
-                value={formData.province} onChange={(e) => updateField('province', e.target.value)} />
+                value={formData.province} onChange={(e) => updateField('province', e.target.value)} required />
             </div>
           </div>
 
