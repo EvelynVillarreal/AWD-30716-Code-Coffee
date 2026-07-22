@@ -90,6 +90,14 @@ npm run dev                # Runs on http://localhost:3017
 
 ## Deployment (AWS Elastic Beanstalk)
 
+### Live Environments
+
+- **Frontend**: https://d16t94mhejiolk.cloudfront.net
+- **Business Service**: https://d10yexkiobm8fr.cloudfront.net
+- **CRUD Service**: https://dhu121lf5djay.cloudfront.net
+
+### Deployment Process
+
 Deployments are handled via the Elastic Beanstalk CLI (`eb cli`). The `eb deploy` command bundles and deploys the most recent **git commit**, so always ensure your changes are committed locally before deploying.
 
 ### 1. Deploying the CRUD Service
@@ -134,7 +142,7 @@ eb deploy
 
 ## API Reference
 
-### CRUD Service (`http://localhost:4017`)
+### CRUD Service (Local: `http://localhost:4017` | Prod: `https://dhu121lf5djay.cloudfront.net`)
 
 | Method | Route | Description |
 |--------|-------|-------------|
@@ -149,7 +157,7 @@ eb deploy
 | GET/POST | `/api/shipping-config` | List / create shipping rules |
 | GET | `/api/shipping-config/lookup` | Get cost by province pair |
 
-### Business Service (`http://localhost:5017`)
+### Business Service (Local: `http://localhost:5017` | Prod: `https://d10yexkiobm8fr.cloudfront.net`)
 
 | Method | Route | Auth | Description |
 |--------|-------|------|-------------|
@@ -164,6 +172,8 @@ eb deploy
 | PATCH | `/api/order/:id/status` | Admin | Change order status |
 | PATCH | `/api/order/:id/approve-customized` | Admin | Approve custom order |
 | GET | `/api/report/sales` | Admin | Sales report |
+| GET/POST/PUT/DELETE | `/api/shipping` | Admin | Manage shipping configs |
+| GET | `/api/shipping/calculate` | — | Calculate shipping cost |
 
 ---
 
@@ -188,11 +198,20 @@ CSS variables in `frontend/src/styles/globals.css`.
 
 ---
 
+## Programming Paradigms Applied
+
+- **Non-blocking / Asynchronous Data Flow**: Extensive use of `async`/`await` and Promises in backend controllers and frontend API services to prevent blocking the main thread during I/O operations.
+- **Lambda Expressions**: Widespread use of Arrow Functions (`=>`) for concise anonymous functions, callbacks, and maintaining lexical `this` scope (e.g., Axios interceptors).
+- **Functional Programming**: Declarative data transformations using higher-order array methods like `.map()`, `.filter()`, and `.reduce()` (JavaScript's equivalent to the Streams API).
+- **Reactive Programming**: The frontend uses React's reactive state management (`useState`, `useEffect`) and Context API to automatically trigger UI updates when underlying data changes.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 14, TypeScript, Vanilla CSS |
+| Frontend | Next.js 16, TypeScript, Vanilla CSS |
 | Business Service | Express 4, TypeScript, Axios, JWT, bcryptjs |
 | CRUD Service | Express 4, TypeScript, Prisma ORM |
 | Database | PostgreSQL (Supabase) |
