@@ -70,6 +70,25 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+
+          {/* Contacto */}
+          <div>
+            <h6 style={{ color: 'var(--color-text-accent)', marginBottom: 'var(--space-4)', fontSize: 'var(--text-sm)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              Contacto
+            </h6>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+              <li>
+                <a href="tel:0993669942" style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
+                  Tel: 0993669942
+                </a>
+              </li>
+              <li>
+                <a href="mailto:salgado.66.guadalupe@gmail.com" style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', textDecoration: 'none' }}>
+                  Email: salgado.66.guadalupe@gmail.com
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Bottom Bar */}
