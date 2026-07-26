@@ -4,6 +4,7 @@ import {
   InvalidOrderStatusTransitionError,
   BusinessError,
 } from '../../shared/errors/business.errors';
+import { emailService } from '../../shared/email/email.service';
 
 export type OrderItem = {
   productId: number;
@@ -129,6 +130,9 @@ export const orderService = {
 
     await recordStatusHistory(order.id, 'pending');
     await decrementStockForItems(validatedItems);
+
+    // Send order confirmation email asynchronously
+    emailService.sendOrderConfirmation(input.email, input.contactName, referenceNumber, total);
 
     return order;
   },

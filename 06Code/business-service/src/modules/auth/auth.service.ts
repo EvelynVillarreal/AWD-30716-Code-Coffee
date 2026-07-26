@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crudClient from '../../shared/http/crud.client';
 import { BusinessError, UnauthorizedError } from '../../shared/errors/business.errors';
+import { emailService } from '../../shared/email/email.service';
 
 export type RegisterInput = {
   name: string;
@@ -58,6 +59,9 @@ export const authService = {
 
     const user = response.data.data;
     const token = generateToken(user.id, user.email, user.role);
+
+    // Send welcome email asynchronously
+    emailService.sendWelcomeEmail(user.email, user.name);
 
     return { user: { ...user, passwordHash: undefined }, token };
   },
