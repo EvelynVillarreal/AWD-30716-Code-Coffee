@@ -1,18 +1,22 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const DESTINATION_EMAIL = 'ehvillarreal@espe.edu.ec';
-const SENDER_EMAIL = 'onboarding@resend.dev';
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 export const emailService = {
   sendWelcomeEmail: async (destination: string, name: string) => {
     try {
-      const { data, error } = await resend.emails.send({
-        from: `Artisan Shop <${SENDER_EMAIL}>`,
-        to: [DESTINATION_EMAIL],
+      const info = await transporter.sendMail({
+        from: `"Artisan Shop" <${process.env.SMTP_USER}>`,
+        to: destination,
         subject: '¡Bienvenido a Artisan Shop!',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -22,9 +26,7 @@ export const emailService = {
           </div>
         `,
       });
-
-      if (error) console.error('Error sending welcome email:', error);
-      return data;
+      return info;
     } catch (err) {
       console.error('Exception sending welcome email:', err);
     }
@@ -32,9 +34,9 @@ export const emailService = {
 
   sendOrderConfirmation: async (destination: string, name: string, referenceNumber: string, total: number) => {
     try {
-      const { data, error } = await resend.emails.send({
-        from: `Artisan Shop <${SENDER_EMAIL}>`,
-        to: [DESTINATION_EMAIL],
+      const info = await transporter.sendMail({
+        from: `"Artisan Shop" <${process.env.SMTP_USER}>`,
+        to: destination,
         subject: `Confirmación de Pedido ${referenceNumber} - Artisan Shop`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -45,11 +47,10 @@ export const emailService = {
           </div>
         `,
       });
-
-      if (error) console.error('Error sending order confirmation:', error);
-      return data;
+      return info;
     } catch (err) {
       console.error('Exception sending order confirmation email:', err);
     }
   }
 };
+
