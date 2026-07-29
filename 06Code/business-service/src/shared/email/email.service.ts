@@ -51,6 +51,34 @@ export const emailService = {
     } catch (err) {
       console.error('Exception sending order confirmation email:', err);
     }
+  },
+
+  sendOrderStatusUpdate: async (destination: string, name: string, referenceNumber: string, newStatus: string) => {
+    try {
+      const statusMap: Record<string, string> = {
+        'processing': 'Procesando',
+        'shipped': 'Enviado',
+        'delivered': 'Entregado',
+        'cancelled': 'Cancelado'
+      };
+      const translatedStatus = statusMap[newStatus] || newStatus;
+      
+      const info = await transporter.sendMail({
+        from: `"Artisan Shop" <${process.env.SMTP_USER}>`,
+        to: destination,
+        subject: `Actualización de Pedido ${referenceNumber} - Artisan Shop`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Hola, ${name}</h2>
+            <p>Te informamos que el estado de tu pedido con referencia <strong>${referenceNumber}</strong> ha cambiado a: <strong>${translatedStatus}</strong>.</p>
+            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          </div>
+        `,
+      });
+      return info;
+    } catch (err) {
+      console.error('Exception sending order status update email:', err);
+    }
   }
 };
 

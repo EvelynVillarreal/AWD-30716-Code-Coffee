@@ -148,6 +148,8 @@ export const orderService = {
 
     await crudClient.patch(`/api/order/${orderId}/status`, { status: newStatus });
     await recordStatusHistory(orderId, newStatus);
+    
+    emailService.sendOrderStatusUpdate(order.email, order.contactName, order.referenceNumber, newStatus);
 
     return { ...order, status: newStatus };
   },
