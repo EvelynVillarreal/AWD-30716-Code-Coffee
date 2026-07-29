@@ -56,7 +56,6 @@ export default function RegisterPage() {
         address: formData.address,
         province: formData.province,
       });
-      // login(user, token);
       router.push('/login');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al registrarse';

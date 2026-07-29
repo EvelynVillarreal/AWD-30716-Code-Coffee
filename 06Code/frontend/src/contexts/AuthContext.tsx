@@ -11,6 +11,7 @@ type AuthContextType = {
   isAdmin: boolean;
   login: (user: User, token: string) => void;
   logout: () => void;
+  isLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -51,12 +52,14 @@ function loadStoredAuth(): { user: User | null; token: string | null } {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const stored = loadStoredAuth();
     setUser(stored.user);
     setToken(stored.token);
+    setIsLoading(false);
   }, []);
 
   function login(newUser: User, newToken: string): void {
@@ -77,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = isLoggedIn && user?.role === 'admin';
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoggedIn, isAdmin, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoggedIn, isAdmin, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
