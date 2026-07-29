@@ -16,7 +16,9 @@ function isOrderWithinDateRange(order: Order, startDate: Date, endDate: Date): b
 }
 
 function aggregateSalesSummary(orders: Order[], products: any[]) {
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+  const totalRevenue = orders
+    .filter(order => order.status !== 'pending' && order.status !== 'cancelled')
+    .reduce((sum, order) => sum + order.total, 0);
   const totalOrders = orders.length;
   const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 

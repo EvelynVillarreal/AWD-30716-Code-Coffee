@@ -56,8 +56,8 @@ export default function RegisterPage() {
         address: formData.address,
         province: formData.province,
       });
-      login(user, token);
-      router.push('/products');
+      // login(user, token);
+      router.push('/login');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al registrarse';
       setError(message);
@@ -132,8 +132,33 @@ export default function RegisterPage() {
 
             <div className="form-group">
               <label htmlFor="register-province" className="form-label">Provincia</label>
-              <input id="register-province" type="text" className="form-input" placeholder="Tu provincia"
-                value={formData.province} onChange={(e) => updateField('province', e.target.value)} required />
+              <select id="register-province" className="form-input" value={formData.province} onChange={(e) => updateField('province', e.target.value)} required>
+                <option value="" disabled>Selecciona tu provincia</option>
+                <option value="Azuay">Azuay</option>
+                <option value="Bolívar">Bolívar</option>
+                <option value="Cañar">Cañar</option>
+                <option value="Carchi">Carchi</option>
+                <option value="Chimborazo">Chimborazo</option>
+                <option value="Cotopaxi">Cotopaxi</option>
+                <option value="El Oro">El Oro</option>
+                <option value="Esmeraldas">Esmeraldas</option>
+                <option value="Galápagos">Galápagos</option>
+                <option value="Guayas">Guayas</option>
+                <option value="Imbabura">Imbabura</option>
+                <option value="Loja">Loja</option>
+                <option value="Los Ríos">Los Ríos</option>
+                <option value="Manabí">Manabí</option>
+                <option value="Morona Santiago">Morona Santiago</option>
+                <option value="Napo">Napo</option>
+                <option value="Orellana">Orellana</option>
+                <option value="Pastaza">Pastaza</option>
+                <option value="Pichincha">Pichincha</option>
+                <option value="Santa Elena">Santa Elena</option>
+                <option value="Santo Domingo de los Tsáchilas">Santo Domingo de los Tsáchilas</option>
+                <option value="Sucumbíos">Sucumbíos</option>
+                <option value="Tungurahua">Tungurahua</option>
+                <option value="Zamora Chinchipe">Zamora Chinchipe</option>
+              </select>
             </div>
           </div>
 
